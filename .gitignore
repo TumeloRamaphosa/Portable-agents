@@ -1,6 +1,8 @@
 .autopush.log
 .playwright-mcp/
 portable-agents-pov-needle.png
+mission-control/live-agent-demo/out/AUTONOMOUS_NOTE.md
+mission-control/live-agent-demo/out/actions.log
 .DS_Store
 __pycache__/
 *.pyc

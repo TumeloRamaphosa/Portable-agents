@@ -47,6 +47,7 @@ open mission-control/course/index.html
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `mission-control/course/` | Field training — first-person POV navigation and NEEDLE compass UI (separate surface) |
+| `mission-control/live-agent-demo/` | Runnable pulse watcher — autonomous `out/` notes on anomaly |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |
