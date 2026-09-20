@@ -32,6 +32,10 @@ building. That constraint is the product.
 ```bash
 # Mission Control console — no build step, no dependencies
 open mission-control/index.html
+
+# Portable Agents POV course (NEEDLE + first-person checkpoints)
+open portable-agents/index.html
+# Optional: from repo root, `python3 -m http.server 8080` then visit /portable-agents/
 ```
 
 ---
@@ -42,6 +46,7 @@ open mission-control/index.html
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
+| `portable-agents/` | Field training course — first-person POV navigation and NEEDLE bearing UI |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |

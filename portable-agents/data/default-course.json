@@ -1,0 +1,55 @@
+{
+  "id": "sovereign-operator-i",
+  "title": "Sovereign Operator I",
+  "subtitle": "Portable Agents field course — offline-first inference and agent ops on the Black Cloud Node.",
+  "steps": [
+    {
+      "id": "orient",
+      "short": "Orient",
+      "tag": "orientation",
+      "title": "Orient on the stack",
+      "bearing": 12,
+      "body": "You are at the entry point of the sovereign path. Mission Control is the pane of glass; the Black Cloud Node is the body you carry. NEEDLE keeps your bearing toward the next checkpoint while you move in first-person — not across a timeline."
+    },
+    {
+      "id": "airgap",
+      "short": "Air-gap",
+      "tag": "security",
+      "title": "Validate air-gap mode",
+      "bearing": 48,
+      "body": "Cut outbound network paths and confirm the agent loop still closes on local weights. Rwanda’s requirement is bare metal, on-premise, fully offline — this checkpoint is the proof."
+    },
+    {
+      "id": "litellm",
+      "short": "Gateway",
+      "tag": "routing",
+      "title": "LiteLLM gateway at :4000",
+      "bearing": 95,
+      "body": "Route Qwen, DeepSeek, and Llama through one OpenAI-compatible endpoint on the device. Portable agents never hard-code vendor URLs; they speak to the local gateway."
+    },
+    {
+      "id": "fleet",
+      "short": "Fleet",
+      "tag": "agents",
+      "title": "Deploy the six-agent fleet",
+      "bearing": 142,
+      "body": "NALEDI-CEO signs; SCHALK owns channel; JENSEN owns compute; KIGALI owns corridors; CASHCLAW models; RALF coordinates. Each agent has a lane — no overlap on deals."
+    },
+    {
+      "id": "needle",
+      "short": "NEEDLE",
+      "tag": "navigation",
+      "title": "Calibrate NEEDLE navigation",
+      "bearing": 188,
+      "body": "NEEDLE is the on-device navigation agent for training and field procedures. It reads course bearing from the path ahead and keeps the operator facing forward through checkpoints instead of panning a left-to-right map."
+    },
+    {
+      "id": "handoff",
+      "short": "Handoff",
+      "tag": "deployment",
+      "title": "Ministerial handoff package",
+      "bearing": 224,
+      "body": "Export the module catalog, offline stack image, and this POV course as the UNDP-vettable pilot artefact. One or two concrete things — specified tightly enough to survive review."
+    }
+  ]
+}

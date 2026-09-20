@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portable Agents — POV Course</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/course.css">
+</head>
+<body class="pov-course">
+  <div class="pov-shell" data-pov-root>
+    <header class="pov-topbar">
+      <a class="pov-brand" href="../mission-control/index.html">PORTABLE<span>AGENTS</span></a>
+      <span style="font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase">Field training · POV navigation</span>
+      <div class="spacer"></div>
+      <a href="../mission-control/index.html" style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">← Mission Control</a>
+    </header>
+
+    <p class="pov-kicker" id="course-kicker">Black Cloud Node</p>
+    <h1 class="pov-title" id="course-title">Sovereign Operator I</h1>
+    <p class="pov-sub" id="course-sub">Move through the course as if you are on the path — not scrolling a left-to-right map. NEEDLE shows bearing to the next checkpoint.</p>
+
+    <div class="pov-layout">
+      <aside class="needle-panel" aria-label="NEEDLE navigation">
+        <h2>NEEDLE</h2>
+        <p class="needle-agent">On-device agent · <b>NEEDLE</b> · path orientation</p>
+        <div class="needle-mount" data-needle-mount></div>
+        <div class="needle-readout">
+          <div class="row"><span>Bearing</span><span data-needle-bearing>0°</span></div>
+          <div class="row"><span>Next</span><span data-needle-target>—</span></div>
+          <div class="row"><span>Range</span><span data-needle-distance>—</span></div>
+          <div class="row"><span>Agent</span><span data-needle-agent-status">Linked · on-device</span></div>
+        </div>
+      </aside>
+
+      <section class="pov-stage-wrap" aria-label="Course viewport">
+        <div class="pov-hud">
+          <span data-pov-hud-step>Facing checkpoint 1 · POV navigation</span>
+          <button type="button" class="pov-map-toggle" data-pov-map-toggle>Path overview (legacy map)</button>
+        </div>
+        <div class="pov-viewport" data-pov-viewport>
+          <div class="pov-corridor" data-pov-corridor>
+            <div class="pov-floor" aria-hidden="true"></div>
+            <article class="pov-step-card" data-pov-step-card>
+              <div class="step-meta" data-step-meta>Checkpoint 1</div>
+              <h3 data-step-title>Loading…</h3>
+              <p data-step-body></p>
+            </article>
+          </div>
+          <div class="pov-vignette" aria-hidden="true"></div>
+        </div>
+        <div class="pov-controls">
+          <button type="button" data-pov-back>← Retreat</button>
+          <button type="button" class="primary" data-pov-forward>Advance →</button>
+          <span class="pov-hint">Keys: A / D or ← / →</span>
+        </div>
+        <div class="pov-map-drawer" data-pov-map-drawer>
+          <p>Legacy left-to-right path (secondary). Primary navigation is first-person POV above.</p>
+          <div class="pov-map-track" data-pov-map-track></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="application/json" id="embedded-course">
+  {"id":"sovereign-operator-i","title":"Sovereign Operator I","subtitle":"Portable Agents field course — offline-first inference and agent ops on the Black Cloud Node.","steps":[{"id":"orient","short":"Orient","tag":"orientation","title":"Orient on the stack","bearing":12,"body":"You are at the entry point of the sovereign path. Mission Control is the pane of glass; the Black Cloud Node is the body you carry. NEEDLE keeps your bearing toward the next checkpoint while you move in first-person — not across a timeline."},{"id":"airgap","short":"Air-gap","tag":"security","title":"Validate air-gap mode","bearing":48,"body":"Cut outbound network paths and confirm the agent loop still closes on local weights. Rwanda's requirement is bare metal, on-premise, fully offline — this checkpoint is the proof."},{"id":"litellm","short":"Gateway","tag":"routing","title":"LiteLLM gateway at :4000","bearing":95,"body":"Route Qwen, DeepSeek, and Llama through one OpenAI-compatible endpoint on the device. Portable agents never hard-code vendor URLs; they speak to the local gateway."},{"id":"fleet","short":"Fleet","tag":"agents","title":"Deploy the six-agent fleet","bearing":142,"body":"NALEDI-CEO signs; SCHALK owns channel; JENSEN owns compute; KIGALI owns corridors; CASHCLAW models; RALF coordinates. Each agent has a lane — no overlap on deals."},{"id":"needle","short":"NEEDLE","tag":"navigation","title":"Calibrate NEEDLE navigation","bearing":188,"body":"NEEDLE is the on-device navigation agent for training and field procedures. It reads course bearing from the path ahead and keeps the operator facing forward through checkpoints instead of panning a left-to-right map."},{"id":"handoff","short":"Handoff","tag":"deployment","title":"Ministerial handoff package","bearing":224,"body":"Export the module catalog, offline stack image, and this POV course as the UNDP-vettable pilot artefact. One or two concrete things — specified tightly enough to survive review."}]}
+  </script>
+  <script src="components/needle.js"></script>
+  <script src="components/pov-course.js"></script>
+  <script>
+    (function () {
+      var root = document.querySelector("[data-pov-root]");
+      function boot(course) {
+        document.getElementById("course-title").textContent = course.title;
+        if (course.subtitle) {
+          document.getElementById("course-sub").textContent = course.subtitle;
+        }
+        new PovCourseNav({ root: root, course: course });
+      }
+      var embedded = document.getElementById("embedded-course");
+      if (embedded && embedded.textContent) {
+        try {
+          boot(JSON.parse(embedded.textContent));
+          return;
+        } catch (e) { /* try fetch */ }
+      }
+      fetch("data/default-course.json")
+        .then(function (r) {
+          if (!r.ok) throw new Error("course load failed");
+          return r.json();
+        })
+        .then(boot)
+        .catch(function () {
+          boot({
+            title: "Sovereign Operator I",
+            steps: [{ title: "Demo", body: "Course data unavailable.", tag: "demo", bearing: 0 }],
+          });
+        });
+    })();
+  </script>
+</body>
+</html>
