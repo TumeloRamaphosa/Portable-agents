@@ -69,3 +69,7 @@ Single-scroll, large type, editorial. Applies to every artefact in this repo.
 ---
 
 *Confidential. Not for distribution.*
+
+## Agent operator onboarding
+
+Open [Agent Operator](mission-control/agents.html) for an offline directory and local task queue. [Connection requirements](docs/AGENT-CONNECTIONS.md) distinguish planned adapters from working connections. No automatic dispatch is enabled.
