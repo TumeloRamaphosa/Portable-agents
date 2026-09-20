@@ -1,10 +1,10 @@
 /**
- * Needle — directional cue for first-person course navigation.
- * On-device NEEDLE agent orients the learner on the sovereign training path.
+ * Needle — UI compass / bearing component for first-person course navigation.
+ * Portable Agents only; not related to external "Needle" phone-agent products.
  *
  * @typedef {Object} NeedleOptions
- * @property {string} [agentLabel] - Display name for the on-device agent
- * @property {boolean} [agentConnected] - Whether NEEDLE agent is linked
+ * @property {string} [agentLabel] - Label shown in the panel (default NEEDLE)
+ * @property {boolean} [agentConnected] - Optional linked-state for future on-device hooks
  */
 
 (function (global) {
@@ -133,7 +133,7 @@
 
   Needle.prototype.setAgentConnected = function (connected) {
     if (!this.readoutAgent) return;
-    this.readoutAgent.textContent = connected ? "Linked · on-device" : "Simulated · offline";
+    this.readoutAgent.textContent = connected ? "Linked" : "UI compass · local";
     this.readoutAgent.style.color = connected ? "var(--live)" : "var(--muted)";
   };
 

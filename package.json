@@ -2,6 +2,6 @@
   "name": "portable-agents-black-cloud",
   "private": true,
   "scripts": {
-    "typecheck": "node --check portable-agents/components/needle.js && node --check portable-agents/components/pov-course.js"
+    "typecheck": "node --check mission-control/course/components/needle.js && node --check mission-control/course/components/pov-course.js"
   }
 }

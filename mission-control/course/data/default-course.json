@@ -41,7 +41,7 @@
       "tag": "navigation",
       "title": "Calibrate NEEDLE navigation",
       "bearing": 188,
-      "body": "NEEDLE is the on-device navigation agent for training and field procedures. It reads course bearing from the path ahead and keeps the operator facing forward through checkpoints instead of panning a left-to-right map."
+      "body": "NEEDLE is the compass UI for this course: it reads bearing from the path ahead and keeps the operator oriented forward through checkpoints instead of panning a left-to-right map."
     },
     {
       "id": "handoff",

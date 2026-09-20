@@ -30,7 +30,7 @@
     var needleMount = this.root.querySelector("[data-needle-mount]");
     if (needleMount && this.NeedleClass) {
       this.needle = new this.NeedleClass(needleMount, { agentLabel: "NEEDLE" });
-      this.needle.setAgentConnected(true);
+      this.needle.setAgentConnected(false);
     }
 
     this._bind();

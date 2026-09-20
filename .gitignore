@@ -1,4 +1,6 @@
 .autopush.log
+.playwright-mcp/
+portable-agents-pov-needle.png
 .DS_Store
 __pycache__/
 *.pyc
