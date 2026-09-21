@@ -9,6 +9,21 @@ For the **native Android** Studbot (Google ADK Kotlin, on-device AI, NEEDLE), se
 - **Launch** Mission Control, the POV course (NEEDLE), and the live-agent demo README
 - **Chat** with a local Studbot guide (keyword routing only; no external APIs)
 
+## Shopify monthly subscription
+
+Subscribers buy **Studbot / Portable Agents** on your Shopify store; unlock with the same email via `studbot/access.js`. Server setup: [`shopify/MERCHANT_SETUP.md`](../shopify/MERCHANT_SETUP.md).
+
+Production `index.html` config:
+
+```javascript
+window.STUDBOT_CONFIG = {
+  requireSubscription: true,
+  verifyUrl: "https://your-app.vercel.app/api/verify-subscription",
+  subscribeUrl: "https://your-store.myshopify.com/products/studbot-monthly",
+  sessionDays: 7
+};
+```
+
 ## Run
 
 ```bash

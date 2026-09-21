@@ -1,6 +1,7 @@
 /**
- * Needle — UI compass / bearing component for first-person course navigation.
- * Portable Agents only; not related to external "Needle" phone-agent products.
+ * Course NEEDLE — compass / bearing UI for POV navigation (visual layer).
+ * Agent brain: Cactus Needle (https://github.com/cactus-compute/needle) via integrations/cactus-needle/.
+ * Termux phone reference: https://github.com/AbuZar-Ansarii/Needle
  *
  * @typedef {Object} NeedleOptions
  * @property {string} [agentLabel] - Label shown in the panel (default NEEDLE)

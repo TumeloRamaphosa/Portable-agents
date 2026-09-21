@@ -1,6 +1,14 @@
 # Studbot (Android) — ADK Kotlin + NEEDLE
 
-Native **Studbot** app for **Portable Agents**, built with **[Google ADK for Kotlin 1.x](https://github.com/google/adk-kotlin)** (feature parity with Python; on-device via **LiteRT-LM** or **ML Kit Gemini Nano**). This is separate from the web `studbot/` shell and unrelated to third-party “Needle” phone-agent products.
+Native **Studbot** app for **Portable Agents**.
+
+| Runtime | Link |
+|---------|------|
+| **Cactus Needle** (tool-calling on device) | [cactus-compute/needle](https://github.com/cactus-compute/needle) · `integrations/cactus-needle/` |
+| **Google ADK Kotlin** (LiteRT-LM / ML Kit) | [google/adk-kotlin](https://github.com/google/adk-kotlin) |
+| **Termux reference** | [AbuZar-Ansarii/Needle](https://github.com/AbuZar-Ansarii/Needle) |
+
+The in-app **NEEDLE** compass matches the POV course UI; `@Tool` names align with Cactus Needle `tools.json` for fine-tuning.
 
 **In this repo today**
 

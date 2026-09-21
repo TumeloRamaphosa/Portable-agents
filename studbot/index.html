@@ -11,6 +11,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/app.css">
+  <script>
+    // Deploy: set your Shopify checkout + verify API (see shopify/MERCHANT_SETUP.md)
+    window.STUDBOT_CONFIG = {
+      requireSubscription: false,
+      verifyUrl: "",
+      subscribeUrl: "",
+      sessionDays: 7
+    };
+  </script>
+  <script src="config.js"></script>
+  <script src="access.js"></script>
 </head>
 <body class="studbot-app">
   <div class="shell">
@@ -62,5 +73,10 @@
     <footer>Studex Group · Black Cloud Portable Agents · Confidential</footer>
   </div>
   <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.StudbotAccess) StudbotAccess.mountGate(document.body);
+    });
+  </script>
 </body>
 </html>
