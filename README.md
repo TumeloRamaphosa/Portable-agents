@@ -30,6 +30,9 @@ building. That constraint is the product.
 ## Quick start
 
 ```bash
+# Studbot entry app (launch + local guide)
+open studbot/index.html
+
 # Mission Control console — no build step, no dependencies
 open mission-control/index.html
 
@@ -45,6 +48,7 @@ open mission-control/course/index.html
 | Path | What's in it |
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
+| `studbot/` | Entry app — launch surfaces + local Studbot chat (no API) |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `mission-control/course/` | Field training — first-person POV navigation and NEEDLE compass UI (separate surface) |
 | `mission-control/live-agent-demo/` | Runnable pulse watcher — autonomous `out/` notes on anomaly |
