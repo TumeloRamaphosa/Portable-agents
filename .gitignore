@@ -1,4 +1,10 @@
 .autopush.log
+.playwright-mcp/
+portable-agents-pov-needle.png
+mission-control/live-agent-demo/out/AUTONOMOUS_NOTE.md
+mission-control/live-agent-demo/out/actions.log
+integrations/cactus-needle/.studbot_course_index
+integrations/cactus-needle/.venv/
 .DS_Store
 __pycache__/
 *.pyc

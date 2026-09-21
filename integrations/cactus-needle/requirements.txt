@@ -1,0 +1,3 @@
+# Install on platforms supported by Cactus Needle engines.
+# https://github.com/cactus-compute/needle
+cactus-needle>=3.0.0
