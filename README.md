@@ -48,7 +48,8 @@ open mission-control/course/index.html
 | Path | What's in it |
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
-| `studbot/` | Entry app — launch surfaces + local Studbot chat (no API) |
+| `studbot/` | Web entry app — launch surfaces + local Studbot chat (no API) |
+| `studbot-android/` | Native Studbot — ADK Kotlin, NEEDLE, POV course, on-device pulse agent |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `mission-control/course/` | Field training — first-person POV navigation and NEEDLE compass UI (separate surface) |
 | `mission-control/live-agent-demo/` | Runnable pulse watcher — autonomous `out/` notes on anomaly |

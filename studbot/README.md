@@ -1,6 +1,8 @@
-# Studbot
+# Studbot (web)
 
-Lightweight **entry app** for Portable Agents (Studex / Black Cloud). No build step, no backend — open in a browser or add to home screen via the web manifest.
+Lightweight **browser entry app** for Portable Agents (Studex / Black Cloud). No build step, no backend — open in a browser or add to home screen via the web manifest.
+
+For the **native Android** Studbot (Google ADK Kotlin, on-device AI, NEEDLE), see [`studbot-android/README.md`](../studbot-android/README.md).
 
 ## What it does
 
