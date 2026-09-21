@@ -59,6 +59,10 @@ adb push your-model.litertlm /sdcard/Android/data/com.studex.studbot/files/studb
 
 `NeedleCompass` + `PortableAgentTools.get_needle_status` mirror the web course NEEDLE panel — bearing toward the next POV checkpoint.
 
+## Shopify (Studex Meat)
+
+Subscribe: [studexmeat.com — Tier 4 Operator](https://www.studexmeat.com/products/tier-4-operator-4-500-month). Copy `local.properties.example` → `local.properties` and set `STUDBOT_VERIFY_URL` when the verify API is deployed (`shopify/STUDEXMEAT.md`).
+
 ## Package
 
 `com.studex.studbot` — Studex Group / Black Cloud Portable Agents.

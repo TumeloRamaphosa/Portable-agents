@@ -1,5 +1,7 @@
 # Studbot monthly subscription (Shopify)
 
+**Studex store:** [www.studexmeat.com](https://www.studexmeat.com) — see [`STUDEXMEAT.md`](STUDEXMEAT.md) for domains and product URLs.
+
 Sell **Portable Agents / Studbot** as a **monthly subscription** on your Shopify store. Subscribers unlock the web Studbot surfaces and the Android app after email verification (no license keys in the repo).
 
 ## 1. Create the subscription product

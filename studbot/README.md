@@ -19,7 +19,7 @@ Production `index.html` config:
 window.STUDBOT_CONFIG = {
   requireSubscription: true,
   verifyUrl: "https://your-app.vercel.app/api/verify-subscription",
-  subscribeUrl: "https://your-store.myshopify.com/products/studbot-monthly",
+  subscribeUrl: "https://www.studexmeat.com/products/tier-4-operator-4-500-month",
   sessionDays: 7
 };
 ```

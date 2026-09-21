@@ -52,4 +52,4 @@ That does not replace `mission-control/index.html` for Rwanda/PwC demos; it augm
 
 ## Shopify subscription
 
-Studbot access can be gated on a **monthly Shopify plan** — see `shopify/MERCHANT_SETUP.md`.
+Store: **[www.studexmeat.com](https://www.studexmeat.com)** (`57228b-3.myshopify.com`). Studbot subscribe + verify: `shopify/STUDEXMEAT.md` and `shopify/MERCHANT_SETUP.md`.

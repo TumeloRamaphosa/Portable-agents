@@ -1,6 +1,7 @@
 .gradle/
 build/
 local.properties
+# Use local.properties.example — studexmeat.com subscribe URL
 .idea/
 *.iml
 captures/

@@ -86,7 +86,7 @@
     overlay.innerHTML =
       '<div style="max-width:420px;width:100%;border:1px solid rgba(201,168,76,.25);padding:28px;background:#111">' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:32px;letter-spacing:.1em;color:#C9A84C;margin-bottom:8px">STUDBOT</div>' +
-      '<p style="font-size:12px;color:#8A8578;line-height:1.6;margin:0 0 20px">Monthly subscription via Shopify unlocks Portable Agents training, NEEDLE course, and Mission Control links.</p>' +
+      '<p style="font-size:12px;color:#8A8578;line-height:1.6;margin:0 0 20px">Monthly subscription at <a href="https://www.studexmeat.com" target="_blank" rel="noopener" style="color:#C9A84C">studexmeat.com</a> unlocks Portable Agents training, NEEDLE course, and Mission Control links.</p>' +
       '<a id="studbot-subscribe-link" href="' +
       subscribeUrl() +
       '" target="_blank" rel="noopener" style="display:block;text-align:center;padding:12px;background:#C9A84C;color:#0A0A0A;font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;margin-bottom:16px">Subscribe on Shopify</a>' +
