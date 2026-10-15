@@ -1,0 +1,75 @@
+NODE: shot_list
+===============
+node_name:      shot_list
+node_version:   0.1.0
+inputs:         script.json
+outputs:        shots.json
+route:          paid | free          (default: free)
+retries:        max_retries = 2, backoff = 10s, 40s
+concurrency:    4
+
+
+PURPOSE
+  Break each section into shots with a duration, a visual prompt, and enough
+  detail that the image node can run without asking questions.
+
+
+RULES
+  - One section gives 2 to 6 shots. Target one shot every 4 to 7 seconds.
+  - Sum of shot durations per section must match the section's narration
+    length within 5%. Narration length comes from est_seconds until voice
+    runs; after voice runs, re-check against timings.json and rebuild if the
+    drift is over 5%.
+  - Visual prompts describe what is on screen, not the narration. No people
+    shown by name. No logos or brand marks unless the brief allows them.
+  - Keep one visual style per video. Put the style in style_ref, not in every
+    prompt.
+  - Every shot gets a fixed seed so reruns are repeatable on the same route.
+
+
+OUTPUT SCHEMA (shots.json)
+  {
+    "style_ref": {
+      "name": "...",
+      "palette": ["#...", "#..."],
+      "lens": "...",
+      "lighting": "..."
+    },
+    "aspect": "16:9",
+    "fps": 24,
+    "shots": [
+      {
+        "shot_id": "s01-01",
+        "section_id": "s01",
+        "duration_s": 5.0,
+        "visual_prompt": "...",
+        "negative_prompt": "text, watermark, logo, distorted hands, extra limbs",
+        "camera": "static | slow push-in | slow pan | handheld",
+        "seed": 123456
+      }
+    ]
+  }
+
+
+CHECKS BEFORE DONE
+  [ ] JSON parses against the schema
+  [ ] every section_id in script.json has at least one shot
+  [ ] durations within 5% of the section estimate
+  [ ] no shot has an empty visual_prompt
+  [ ] shot_ids are unique
+
+
+ROUTE: paid
+  provider:   Claude API (same account as the script node)
+  model:      [set in config]
+  cost guard: max_tokens 4000 per call
+
+
+ROUTE: free
+  provider:   Ollama (same local setup as the script node)
+  model:      [set in config]
+
+
+OPEN-SOURCE OPTIONS
+  - Same as the script node. This node is short, so a smaller local model is
+    usually enough here.

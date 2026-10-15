@@ -1,0 +1,69 @@
+NODE: edit
+==========
+node_name:      edit
+node_version:   0.1.0
+inputs:         clips/*.mp4, audio/*.wav, timings.json, script.json
+outputs:        timeline/ (project or concat list), out/final.mp4, out/captions.srt
+route:          paid | free          (default: free)
+retries:        max_retries = 1 (edit errors are usually config errors)
+concurrency:    1
+
+
+PURPOSE
+  Assemble clips and narration into one video with captions and on-screen
+  text. Produce a timeline file a person can open and tweak, plus a
+  rendered file for the approval gate.
+
+
+STEPS
+  1. Build the timeline in order: section by section, shot by shot.
+  2. Lay narration audio under the clips. Clips are not stretched to fit
+     audio. Shot durations were built to match.
+  3. Add on_screen_text from script.json as lower-third text. Keep the same
+     style across the video.
+  4. Build captions.srt from the narration text and timings.json.
+  5. Render out/final.mp4: H.264, 1920x1080, 24 fps, AAC audio, -14 LUFS.
+  6. Save the timeline next to the render so a person can edit it later.
+
+
+RULES
+  - Add a short fade between sections, not between shots, so cuts stay tight.
+  - No music bed unless the brief names a licensed track. Record the license
+    in receipts/ if a track is used.
+  - Keep a title card and an end card with no branding unless the brief
+    allows it.
+
+
+ROUTE: paid
+  tool:     DaVinci Resolve Studio (paid), driven by its Python scripting API
+            where your install supports it, otherwise a single manual pass.
+  flow:     the runner writes a Resolve project import file, then Resolve
+            renders the timeline to out/final.mp4.
+  note:     the scripting API needs a Studio license. Confirm that before
+            relying on the automated path.
+
+
+ROUTE: free
+  option 1 (automated, simple): FFmpeg only
+    - Concatenate clips, mix audio, burn captions with the subtitles filter.
+    - Good for a first batch. Limited in what you can change by hand.
+
+  option 2 (automated timeline + manual polish): Kdenlive
+    - Kdenlive (GPL-3.0) is a free, open-source editor built on the MLT
+      framework. The runner writes a timeline file, and a person opens it in
+      Kdenlive to polish, then renders.
+    - Rendering can also run headless through MLT's melt command for
+      unattended batches.
+
+  option 3: DaVinci Resolve (free edition)
+    - Free edition, not open source. Fine for personal use. Check the current
+      license terms for commercial use before choosing it for a revenue
+      channel. Its scripting API is limited in the free edition.
+
+
+OUTPUT CHECKS
+  [ ] out/final.mp4 plays and its duration matches the sum of section audio
+  [ ] ffprobe: h264, 1920x1080, 24 fps, AAC
+  [ ] loudness within target (check with ffmpeg loudnorm analysis)
+  [ ] captions.srt parses and its timings span the narration
+  [ ] timeline file saved next to the render

@@ -1,0 +1,69 @@
+NODE: voice
+==========
+node_name:      voice
+node_version:   0.1.0
+inputs:         script.json
+outputs:        audio/<section_id>.wav, timings.json
+route:          paid | free          (default: free)
+retries:        max_retries = 2, backoff = 10s, 40s
+concurrency:    paid = 4, free = 2
+
+
+PURPOSE
+  Read each section's narration in the chosen voice. Record real durations so
+  the shot list and the edit can match them.
+
+
+RULES
+  - One audio file per section. Sample rate 44.1 kHz, mono or stereo, PCM WAV
+    for editing. Export a loudness-normalized copy for the final mix
+    (target -14 LUFS for YouTube playback; check current platform guidance).
+  - timings.json records each section's real duration. If any section drifts
+    more than 5% from est_seconds, mark shot_list as PENDING so it reruns with
+    real durations.
+  - Pronunciation list: a file in brand/pronunciations.txt, applied before TTS.
+    Put Studex and any product names there.
+  - Voice must be a licensed or self-made voice. Keep the voice ID and its
+    license in receipts/.
+
+
+ROUTE: paid
+  provider:   a paid TTS API. Confirm first whether Higgsfield's API covers
+              audio on your plan. If it does not, use a paid TTS such as
+              ElevenLabs. Pick one and record the choice in config.
+  flow:       one request per section, store request ID and characters used.
+  cost guard: budget per job by character count.
+
+
+ROUTE: free
+  provider:   local TTS. Two options, pick one per channel:
+
+  Piper (MIT for the archived upstream; the maintained fork is GPL-3.0)
+    - Fast, runs on CPU, many voices.
+    - Caveat: the original rhasspy/piper repository was reported archived in
+      October 2025. Development moved to a community fork. Check the license
+      of the exact release you install before any commercial use, because the
+      fork is GPL-3.0 and the archived code was MIT.
+    - Command shape: piper --model <voice.onnx> --output_file audio/s01.wav < narration.txt
+
+  Kokoro-82M (Apache 2.0)
+    - Small, good quality, popular for explainer narration.
+    - Check the release notes for the exact version and voices you use.
+    - Use this if you want a permissive license with no GPL question.
+
+  Recommendation for v0.1: start with Kokoro for the clear license, and keep
+  Piper as a second voice option. Confirm both against current release notes
+  first.
+
+
+TIMING
+  After each WAV is written, measure the duration with ffprobe and write it
+  to timings.json:
+    { "section_id": "s01", "file": "audio/s01.wav", "seconds": 42.3 }
+
+
+OUTPUT CHECKS
+  [ ] one WAV per section, none silent or truncated
+  [ ] timings.json has one entry per section
+  [ ] pronunciation list applied (spot-check Studex and product names)
+  [ ] receipt written with voice ID, license and route

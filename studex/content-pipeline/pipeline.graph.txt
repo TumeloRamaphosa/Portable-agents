@@ -1,0 +1,83 @@
+PIPELINE GRAPH: studex-faceless-yt v0.1
+=========================================
+
+NODES (run in this order along each edge)
+
+  [brief]        input only, written by hand or by a form
+  [script]       -> script.json
+  [shot_list]    script.json -> shots.json
+  [image]        shots.json -> images/<shot_id>.png        (one per shot)
+  [motion]       images + shots.json -> clips/<shot_id>.mp4 (one per shot)
+  [voice]        script.json -> audio/<section_id>.wav + timings.json
+  [edit]         clips + audio + script.json -> out/final.mp4, captions.srt, timeline
+  [publish]      final.mp4 + captions.srt + publish_draft.json -> HUMAN GATE -> (upload disabled)
+
+
+EDGES
+
+  brief      -> script
+  script     -> shot_list
+  script     -> voice                 (voice runs in parallel with image/motion)
+  shot_list  -> image
+  image      -> motion
+  shot_list  -> motion                (needs durations)
+  motion     -> edit
+  voice      -> edit
+  edit       -> publish
+
+
+PARALLELISM
+
+  After shot_list is DONE, image and voice can run at the same time.
+  motion for shot N can start as soon as image for shot N is DONE.
+  edit waits for every motion shot and for voice.
+  GPU-bound nodes (image, motion when route=free) run with concurrency 1.
+
+
+JOB STATES (per node, per job)
+
+  PENDING          deps not met yet
+  QUEUED           deps met, waiting for a worker
+  RUNNING          worker holds a lease
+  DONE             output written and checksum recorded
+  FAILED           error recorded; retry_count shows attempts used
+  AWAITING_HUMAN   publish node only, waiting for approve/reject
+  APPROVED         human approved; publish stays dry-run in v0.1
+  REJECTED         human rejected; job stops, artifacts kept
+  SKIPPED          set by the operator, never by the runner
+
+Allowed moves:
+  PENDING -> QUEUED -> RUNNING -> DONE
+  RUNNING -> FAILED -> QUEUED        (only while retry_count < max_retries)
+  FAILED  -> (stays)                 (after max_retries; operator must act)
+  DONE    -> PENDING                 (only if an upstream input hash changed)
+  AWAITING_HUMAN -> APPROVED | REJECTED
+
+
+JOB ARTIFACT LAYOUT
+
+  jobs/<job_id>/
+    brief.json
+    script.json
+    shots.json
+    images/<shot_id>.png
+    clips/<shot_id>.mp4
+    audio/<section_id>.wav
+    timings.json
+    timeline/                       (Kdenlive project or FFmpeg concat list)
+    out/final.mp4
+    out/captions.srt
+    publish_draft.json
+    approval.json                   (written at the human gate only)
+    receipts/                       (provider request IDs, costs, hashes)
+    logs/<node>.log
+
+
+INPUT HASHING
+
+  Each node output is keyed by:
+    sha256( node_name + node_version + node_config + sorted(input_file_hashes) )
+
+  If the key matches an existing DONE record, the node is skipped and the
+  old output is reused. This is how a rerun after a fix only redoes what
+  changed.

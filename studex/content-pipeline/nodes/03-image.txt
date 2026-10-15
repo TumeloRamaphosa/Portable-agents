@@ -1,0 +1,66 @@
+NODE: image
+==========
+node_name:      image
+node_version:   0.1.0
+inputs:         shots.json
+outputs:        images/<shot_id>.png       (one file per shot)
+route:          paid | free          (default: free)
+retries:        max_retries = 3, backoff = 20s, 60s, 120s
+concurrency:    paid = 4, free = 1 (GPU bound)
+
+
+PURPOSE
+  Make one still image per shot, using the visual prompt and the shared style.
+
+
+RULES
+  - Resolution: 1920x1080 (16:9). Generate at the model's native size and
+    upscale only if needed.
+  - Save the seed, model name, provider request ID and cost (if any) to
+    receipts/image-<shot_id>.json.
+  - If a shot fails its checks twice, mark it FAILED and keep the others.
+    Do not let one bad shot block the whole video.
+  - Image checks: file opens, size is correct, no text in the image unless the
+    shot asks for it. The text check is a manual sample, not automated.
+
+
+ROUTE: paid
+  provider:   Higgsfield API (image models)
+  flow:       submit request, store request ID, poll until done, download,
+              save receipt. The API is asynchronous.
+  cost guard: call the estimate endpoint first. If the estimate for the whole
+              job is above budget_usd in config, stop and set FAILED with
+              reason "over budget". Never auto-raise the budget.
+  billing:    prepaid USD balance. Keep a minimum balance alert in config.
+  note:       pricing is unverified in this spec. Read the current pricing
+              page and the estimate response before setting budget_usd.
+
+
+ROUTE: free
+  provider:   ComfyUI (local server, HTTP and WebSocket API)
+  flow:       load a saved workflow JSON, set prompt, negative prompt, seed,
+              size; queue the prompt; wait for the output; copy the file.
+  model:      pick one model per video and keep it fixed. Check the license
+              before any commercial use:
+                - SDXL base: CreativeML Open RAIL++-M. Commercial use allowed
+                  with the license's use restrictions. Check the terms.
+                - FLUX.1 [schnell]: Apache 2.0. Good default for commercial work.
+                - FLUX.1 [dev]: non-commercial license. Do not use for a
+                  revenue channel without a separate license.
+  hardware:   a GPU with enough VRAM for the chosen model. Check the model's
+              own requirements. CPU-only will be very slow.
+
+
+OPEN-SOURCE OPTIONS
+  - ComfyUI (GPL-3.0): popular node-based image and video runner. Matches this
+    pipeline's style.
+  - AUTOMATIC1111 Stable Diffusion WebUI (AGPL-3.0): alternative, has an
+    API, but is less suited to repeatable workflow JSON.
+  - Diffusers (Hugging Face, Apache 2.0): if you want a Python script instead
+    of a GUI-backed server.
+
+
+OUTPUT CHECKS
+  [ ] file exists at images/<shot_id>.png
+  [ ] dimensions 1920x1080
+  [ ] receipt written

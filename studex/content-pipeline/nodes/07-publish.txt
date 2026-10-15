@@ -1,0 +1,72 @@
+NODE: publish  (HUMAN APPROVAL GATE)
+===================================
+node_name:      publish
+node_version:   0.1.0
+inputs:         out/final.mp4, out/captions.srt, publish_draft.json
+outputs:        approval.json, receipts/publish-dryrun.json
+route:          manual (both routes)
+retries:        none. This node never retries.
+concurrency:    1
+
+
+HARD RULES
+  - This node in v0.1 does NOT upload, post, schedule or send anything.
+  - The upload adapter is disabled in config: publish.upload_enabled = false.
+    The runner refuses to load an upload adapter while this is false.
+  - Nothing reaches a platform without a human approval written to
+    approval.json and a separate, explicit change to upload_enabled.
+  - No platform credentials are stored in this pipeline.
+
+
+WHAT THE RUNNER DOES
+  1. Checks every upstream node is DONE.
+  2. Writes publish_draft.json if it is missing, from a template, filled from
+     script.json title_candidates (first one by default).
+  3. Sets the job to AWAITING_HUMAN and prints a review packet:
+       - path to out/final.mp4
+       - path to out/captions.srt
+       - draft title, description, tags
+       - AI-content disclosure field (set it; check the platform's current
+         policy on synthetic or altered media)
+       - cost summary from receipts/
+       - checklist below
+  4. Stops. It does not poll, does not retry, and does not move on by itself.
+
+
+REVIEW CHECKLIST (the human ticks every box)
+  [ ] Facts in the script were checked against the sources in source_notes
+  [ ] No banned claims, no unlicensed music, no logos or people the brief
+      does not allow
+  [ ] Captions match the narration
+  [ ] Thumbnail (if any) is original and matches the title
+  [ ] AI-content disclosure is set
+  [ ] Title and description read like a human wrote them
+  [ ] Cost is within the job budget
+
+
+DECISION
+  The approver runs one command:
+    approve <job_id> --by <name>      -> writes approval.json, state APPROVED
+    reject  <job_id> --by <name> --reason "..."   -> state REJECTED
+
+  approval.json fields:
+    { "job_id": "...", "decision": "approved|rejected", "by": "...",
+      "at": "<ISO 8601 time>", "reason": "...", "checklist_ticked": true }
+
+
+AFTER APPROVAL (v0.1)
+  - State becomes APPROVED.
+  - The runner writes receipts/publish-dryrun.json with what WOULD have been
+    uploaded: file hash, title, description, tags, disclosure, schedule time.
+  - No upload is attempted. The dry-run receipt is the end of the pipeline.
+
+
+FUTURE (not built in v0.1)
+  An upload adapter may be added later. It needs its own spec, its own
+  review, and a separate approval for enabling upload_enabled. Do not add it
+  to this node's code path without that review.
+
+
+FREE vs PAID
+  Same gate on both routes. The gate is human, so there is no free or paid
+  version of it.

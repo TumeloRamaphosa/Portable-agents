@@ -1,0 +1,63 @@
+NODE: motion
+===========
+node_name:      motion
+node_version:   0.1.0
+inputs:         images/<shot_id>.png, shots.json
+outputs:        clips/<shot_id>.mp4        (one file per shot)
+route:          paid | free          (default: free)
+retries:        max_retries = 3, backoff = 20s, 60s, 120s
+concurrency:    paid = 4, free video model = 1, free ken-burns = 4
+
+
+PURPOSE
+  Turn each still into a short moving clip that matches the shot's duration
+  and camera move.
+
+
+RULES
+  - Output length equals shots.json duration_s, plus or minus one frame.
+  - Output fps equals shots.json fps (24).
+  - Output is H.264 MP4, yuv420p, so the edit node can read it.
+  - Keep the camera move from the shot. Do not add a move the shot did not ask
+    for.
+  - Save the same receipts as the image node.
+
+
+ROUTE: paid
+  provider:   Higgsfield API (image-to-video models)
+  flow:       same async pattern as the image node. Estimate first, then submit.
+  cost guard: budget_usd from config; per-job cap; stop and FAILED on overrun.
+  note:       output cost is per second in the secondary sources. Verify the
+              current rate before you set the cap.
+
+
+ROUTE: free
+  There are two free options. Pick one per job.
+
+  free-a: ComfyUI image-to-video model
+    provider:  ComfyUI, with an image-to-video workflow JSON
+    models:    check the license of any video model before commercial use.
+               Open video models exist under permissive licenses, but their
+               quality and speed vary a lot, so test on one shot first.
+    hardware:  a GPU with enough VRAM. Concurrency 1.
+
+  free-b: FFmpeg Ken Burns (no GPU, always works)
+    provider:  FFmpeg (LGPL/GPL build depending on options)
+    flow:      apply a slow zoom or pan with the zoompan filter, using the
+               shot's camera value. Good enough for a faceless explainer, and
+               it is the reliable fallback when the GPU is busy or a video
+               model fails.
+    example:   ffmpeg -loop 1 -i images/s01-01.png -vf "zoompan=z='min(zoom+0.0008,1.15)':d=125:s=1920x1080:fps=24" -t 5.0 -c:v libx264 -pix_fmt yuv420p clips/s01-01.mp4
+               (test the zoom values on one shot before the batch run)
+
+
+FALLBACK RULE
+  If free-a fails twice for a shot, the runner switches that shot to free-b
+  and records the switch in the receipt. The fallback is logged, never silent.
+
+
+OUTPUT CHECKS
+  [ ] file exists at clips/<shot_id>.mp4
+  [ ] duration within one frame of shots.json duration_s
+  [ ] ffprobe reports h264, yuv420p, 24 fps
+  [ ] receipt written with route used (paid, free-a, or free-b)

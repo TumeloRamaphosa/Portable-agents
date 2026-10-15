@@ -1,0 +1,166 @@
+QUEUE-DRIVEN RUNNER: outline v0.1
+==================================
+
+GOAL
+  Pick up jobs from a queue, run each node when its inputs are ready, record
+  every output and receipt, and stop at the human gate. Never upload.
+
+
+STACK (free and open source)
+  Language:    Python 3.11 or newer
+  Queue/state: SQLite (one file: pipeline.db). Standard library, no server.
+               Upgrade path: Redis + RQ (both open source) if you ever run
+               workers on several machines.
+  Media:       FFmpeg and ffprobe
+  Local LLM:   Ollama HTTP API
+  Local image: ComfyUI HTTP and WebSocket API
+  Local TTS:   Kokoro or Piper (both read from a local model file)
+  Editor:      Kdenlive via MLT (melt), or DaVinci Resolve Studio on the paid route
+
+  Paid providers are reached through the same adapter interface as the free
+  ones. The adapter is the only place that knows the provider.
+
+
+TABLES (pipeline.db)
+
+  jobs
+    job_id TEXT PRIMARY KEY
+    brief_path TEXT
+    created_at TEXT
+    budget_usd REAL
+    spent_usd REAL
+    state TEXT                  (draft | running | awaiting_human | approved | rejected | failed)
+
+  node_runs
+    run_id INTEGER PRIMARY KEY
+    job_id TEXT
+    node TEXT                   (script, shot_list, image, motion, voice, edit, publish)
+    shot_id TEXT NULL           (for per-shot nodes)
+    state TEXT                  (pending | queued | running | done | failed | awaiting_human | approved | rejected | skipped)
+    input_hash TEXT
+    output_path TEXT
+    lease_owner TEXT NULL
+    lease_expires_at TEXT NULL
+    retry_count INTEGER
+    max_retries INTEGER
+    last_error TEXT NULL
+    route TEXT                  (paid | free | free-a | free-b)
+    UNIQUE(job_id, node, shot_id)
+
+
+CONFIG (runner/config.toml, one file, read at start)
+
+  [runner]
+  workers_gpu = 1
+  workers_cpu = 4
+  lease_seconds = 900
+  dry_run = true                # no provider calls, writes placeholder outputs
+
+  [budget]
+  default_job_usd = 0           # set per job in brief, 0 means "free route only"
+  stop_at_pct = 90
+
+  [publish]
+  upload_enabled = false        # must stay false in v0.1
+
+  [routes]
+  script = "free"
+  shot_list = "free"
+  image = "free"
+  motion = "free"
+  voice = "free"
+  edit = "free"
+
+  [providers]
+  ollama_url = "http://localhost:11434"
+  comfyui_url = "http://localhost:8188"
+  higgsfield_api_key_env = "HIGGSFIELD_API_KEY"   # read from env, never stored in config
+  claude_api_key_env = "ANTHROPIC_API_KEY"        # read from env, never stored in config
+
+
+MAIN LOOP (plain steps)
+
+  1. Load config. If publish.upload_enabled is true, print a warning and
+     refuse to start unless --allow-upload is passed (and v0.1 has no such
+     flag, so this is a safety check for later).
+  2. Scan jobs in state draft or running.
+  3. For each job, compute which node_runs are ready:
+       a. state is pending and every upstream node is done
+       b. or state is failed, retry_count < max_retries, backoff elapsed
+  4. Mark ready runs as queued. Compute input_hash. If a done run with the same
+     hash exists, mark this run done and reuse its output (skip the work).
+  5. A worker takes a queued run:
+       a. set lease_owner and lease_expires_at, state = running
+       b. resolve the route for that node (paid, free, or a free fallback)
+       c. call the adapter for that node and route
+       d. write outputs and a receipt file
+       e. set state = done, store output_path
+     On error:
+       - set last_error, retry_count += 1
+       - if retry_count < max_retries, set state = queued with backoff
+       - else set state = failed and notify the operator
+  6. Expired leases (lease_expires_at in the past while running) go back to
+     queued, so a crashed worker does not block a job.
+  7. When every upstream of publish is done, set publish to awaiting_human,
+     write the review packet, and stop working on that job.
+  8. Loop. Sleep 5 seconds when the queue is empty.
+
+
+CONCURRENCY
+  - GPU-bound nodes (image with free route, motion with free-a) use the
+    gpu pool, size workers_gpu (default 1).
+  - Everything else uses the cpu pool.
+  - A paid node can run in the cpu pool. Its real limit is the provider's
+    rate limit, handled by the adapter with backoff.
+
+
+BUDGET GUARD (paid route only)
+  - Before a paid call, ask the provider for an estimate where it exists.
+  - Add the estimate to spent_usd. If spent_usd + estimate > budget_usd, mark
+    the run failed with reason "over budget" and stop the job. Never raise a
+    budget from code.
+  - When spent_usd passes stop_at_pct of budget_usd, pause new paid runs and
+    alert the operator.
+
+
+DRY RUN (run this first, every time a node or adapter changes)
+  - Adapters write placeholder outputs: a 1080p black PNG, a silent WAV of
+    the right length, a short test MP4 of the right length.
+  - Every state transition still happens. The only difference is that no
+    provider is called and no money is spent.
+  - Dry run must pass end to end before any paid route is enabled.
+
+
+CLI (names only, v0.1)
+  pipeline new <brief.json>          create a job
+  pipeline run [--dry-run]           start the worker loop
+  pipeline status [job_id]           show node states
+  pipeline retry <job_id> <node>     reset a failed node
+  pipeline review <job_id>           print the review packet
+  pipeline approve <job_id> --by X   human approval
+  pipeline reject <job_id> --by X --reason "..."
+  pipeline budget <job_id>           show spent vs budget
+
+
+LOGGING AND RECEIPTS
+  - logs/<node>.log per run, plain text, timestamped.
+  - receipts/<node>-<shot_id>.json per paid call and per fallback decision:
+    provider, request ID, route, estimate, actual cost, model, seed, hash.
+
+
+TEST PLAN (minimum)
+  1. Dry run, free route, one brief, end to end. Gate reached, no upload.
+  2. Force one image failure. Confirm retry, then fallback or FAILED.
+  3. Kill the worker mid-motion. Confirm the lease expires and the run resumes.
+  4. Change one script section. Confirm only downstream nodes rerun.
+  5. Try to start with upload_enabled = true. Confirm the refusal.
+  6. Paid route, a single shot, with a $1 budget. Confirm the estimate check.
+
+
+OPEN QUESTIONS (answer before building)
+  - Which route is the default for a first real batch?
+  - Is there a GPU on the machine that will run ComfyUI? Which VRAM size?
+  - Target length, language and voice for the first channel. [PLAN]
+  - Is Higgsfield API access already on your account, and does its audio
+    cover narration? [verify]
+  - Which local LLM does Ollama run on this machine? [verify]

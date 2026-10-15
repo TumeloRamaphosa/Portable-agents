@@ -1,0 +1,84 @@
+NODE: script
+=============
+node_name:      script
+node_version:   0.1.0
+inputs:         brief.json
+outputs:        script.json
+route:          paid | free          (default: free)
+retries:        max_retries = 2, backoff = 10s, 40s
+concurrency:    4
+
+
+PURPOSE
+  Turn the brief into a narrated script split into sections. Every section
+  maps to one or more shots later.
+
+
+BRIEF FIELDS READ (brief.json)
+  topic             string, required
+  angle             string, required, one sentence
+  audience          string, required
+  target_minutes    number, default 8   [PLAN]
+  language          string, default en  [PLAN]
+  voice_tone        string, reference to a tone card in brand/tone.txt  [PLAN]
+  banned_claims     list of strings (things the script must not say)
+  sources           list of URLs or notes the script may rely on
+
+
+PROMPT RULES (both routes)
+  - Write for the ear. Short sentences. No stage directions in narration.
+  - Each section: 40 to 120 words of narration, a hook on section 1.
+  - Any sentence with a number, date, price or named claim gets an entry in
+    source_notes that points to a brief source. No source, no claim. The
+    model has to cut the sentence or flag it.
+  - Never invent a quote or a person.
+  - Output must be valid JSON matching the schema below. Retry on invalid JSON.
+
+
+OUTPUT SCHEMA (script.json)
+  {
+    "title_candidates": ["...", "...", "..."],
+    "sections": [
+      {
+        "id": "s01",
+        "role": "hook | context | point | recap | outro",
+        "narration": "...",
+        "on_screen_text": ["...", "..."],
+        "source_notes": [{"claim": "...", "source": "..."}],
+        "est_seconds": 00
+      }
+    ],
+    "total_est_seconds": 0,
+    "word_count": 0
+  }
+
+
+CHECKS BEFORE DONE
+  [ ] JSON parses against the schema
+  [ ] total_est_seconds within 10% of target_minutes * 60
+  [ ] no banned_claims phrase appears in narration (case-insensitive)
+  [ ] every section has id, role and at least one sentence of narration
+  [ ] source_notes count >= number of numeric claims found by a regex pass
+
+
+ROUTE: paid
+  provider:   Claude API
+  model:      [set in config; use the current Claude model ID from your account]
+  cost guard: max_tokens 6000 per call; log token usage to receipts/
+
+
+ROUTE: free
+  provider:   Ollama (local HTTP API, default http://localhost:11434)
+  model:      a local instruct model that fits your RAM, for example a 7B or 8B
+              model from the Ollama library. Pick one and test it on a sample
+              brief before relying on it.
+  json:       use Ollama's JSON output mode, then validate with the schema.
+  note:       smaller local models drift on the JSON schema more often.
+              Expect more retries than on the paid route.
+
+
+OPEN-SOURCE OPTIONS
+  - Ollama (MIT): local model runner, popular, easy to script.
+  - llama.cpp (MIT): if you want to run the model without Ollama.
+  Check each model's own license before any commercial use. Model licenses
+  differ from the runner's license.
