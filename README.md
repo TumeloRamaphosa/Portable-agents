@@ -55,6 +55,8 @@ open mission-control/course/index.html
 | `integrations/cactus-needle/` | Cactus Needle Studbot tools + REPL |
 | `docs/NEEDLE_AND_OPS_STACK.md` | Cactus vs AbuZar vs claude-ops vs course compass |
 | `docs/PSTACK_GROKBOTS_ZTE.md` | pstack plugin, Grokbots, zero-touch engineering factory |
+| `docs/deployments/AUTOMEAT_CLICKCLACK.md` | AutoMeat CEO agent → ClickClack/Paperclip :3100 |
+| `docs/AGENT_COMPANY_SETUP.md` | Paperclip + Hermes company setup |
 | `factory/` | Intake queue, Grokbots registry, pulse log |
 | `mission-control/factory/` | Factory OS dashboard (Grokbots + pstack checklist) |
 | `docs/EDGE_HOSTS.md` | Lab edge hosts (Termux, PS5 Bazzite, dev Linux) — not product roadmap |

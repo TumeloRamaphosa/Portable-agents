@@ -2,14 +2,14 @@
   "version": 1,
   "items": [
     {
-      "id": "ZTE-001",
-      "title": "Install pstack and run first /poteto-mode task",
-      "ownerBot": "GROK-BUILD",
-      "playbookHint": "setup + verify typecheck",
-      "verification": "npm run typecheck exits 0",
-      "policy": [],
+      "id": "ZTE-002",
+      "title": "Deploy AutoMeat agent to ClickClack :3100",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "Hermes on orchestrator host — not cloud agent",
+      "verification": "docs/deployments/AUTOMEAT_CLICKCLACK.md checklist all PASS",
+      "policy": ["production_secret"],
       "status": "queued",
-      "createdAt": "2026-10-31T12:45:00+02:00"
+      "createdAt": "2026-10-31T20:02:00+02:00"
     }
   ]
 }
