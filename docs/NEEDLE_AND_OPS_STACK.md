@@ -20,6 +20,7 @@ Operator
    └─ Phone agent: Cactus Needle tools ← integrations/cactus-needle/
               ↑
    Optional: AbuZar-style Termux host (AbuZar-Ansarii/Needle)
+   Optional lab: PS5 Bazzite USB Linux — see docs/EDGE_HOSTS.md (not a product path)
 ```
 
 ## On-device agent (Cactus)
