@@ -7,6 +7,7 @@ Portable Agents uses **three different “Needle / ops” references**. They wor
 | **Cactus Needle** | [cactus-compute/needle](https://github.com/cactus-compute/needle) | **On-device agent brain** (~8–29 MB). Tool calling + extraction on phone/edge. Powers Studbot agent loops via `cactus-needle` Python or `.cact` on Android. |
 | **AbuZar Needle** | [AbuZar-Ansarii/Needle](https://github.com/AbuZar-Ansarii/Needle) | **Reference Termux assistant** built on Cactus Needle 2 — Flask UI, Telegram, Termux-API (torch, SMS, etc.). Use as a pattern for phone-side agents; we do not fork it into this repo. |
 | **claude-ops** | [Lifecycle-Innovations-Limited/claude-ops](https://github.com/Lifecycle-Innovations-Limited/claude-ops) | **Developer / business ops harness** for Claude Code (briefings, CI, inbox). Optional complement to **Mission Control** for teams running Studex on laptops — install as a plugin, not bundled here. |
+| **pstack + Grokbots** | [cursor/plugins/pstack](https://github.com/cursor/plugins/tree/main/pstack) | **Rigorous Cursor engineering** (`/poteto-mode`). Studex **Grokbots** + ZTE factory: `factory/`, `mission-control/factory/`, [PSTACK_GROKBOTS_ZTE.md](./PSTACK_GROKBOTS_ZTE.md). |
 | **Course NEEDLE panel** | `mission-control/course/` | **POV navigation compass UI** (bearing to next checkpoint). Visual layer only; state is shared with Studbot tools. |
 
 ## Recommended architecture
@@ -54,3 +55,7 @@ That does not replace `mission-control/index.html` for Rwanda/PwC demos; it augm
 ## Shopify subscription
 
 Store: **[www.studexmeat.com](https://www.studexmeat.com)** (`57228b-3.myshopify.com`). Studbot subscribe + verify: `shopify/STUDEXMEAT.md` and `shopify/MERCHANT_SETUP.md`.
+
+## Edge hosts (PS5 Bazzite, Termux, lab Linux)
+
+Experimental **sovereign edge** setups (including [PS5 Bazzite-deck](https://github.com/VivaLaVent/ps5-bazzite-deck)) — **not** Studex product commitments: [EDGE_HOSTS.md](./EDGE_HOSTS.md).

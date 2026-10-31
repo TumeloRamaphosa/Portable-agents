@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "ZTE-001",
+      "title": "Install pstack and run first /poteto-mode task",
+      "ownerBot": "GROK-BUILD",
+      "playbookHint": "setup + verify typecheck",
+      "verification": "npm run typecheck exits 0",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-10-31T12:45:00+02:00"
+    }
+  ]
+}

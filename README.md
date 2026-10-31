@@ -54,6 +54,9 @@ open mission-control/course/index.html
 | `api/` | `verify-subscription` (Shopify Admin API) for Studbot unlock |
 | `integrations/cactus-needle/` | Cactus Needle Studbot tools + REPL |
 | `docs/NEEDLE_AND_OPS_STACK.md` | Cactus vs AbuZar vs claude-ops vs course compass |
+| `docs/PSTACK_GROKBOTS_ZTE.md` | pstack plugin, Grokbots, zero-touch engineering factory |
+| `factory/` | Intake queue, Grokbots registry, pulse log |
+| `mission-control/factory/` | Factory OS dashboard (Grokbots + pstack checklist) |
 | `docs/EDGE_HOSTS.md` | Lab edge hosts (Termux, PS5 Bazzite, dev Linux) — not product roadmap |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `mission-control/course/` | Field training — first-person POV navigation and NEEDLE compass UI (separate surface) |
