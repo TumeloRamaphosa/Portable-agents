@@ -12,7 +12,15 @@
       "createdAt": "2026-10-31T12:45:00+02:00"
     },
     {
-      "id": "ZTE-002",
+      "id": "ZTE-003",
+      "title": "Wire Studex lab mesh (Mac Mini hub, MacBook, MSI)",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_LAB_MESH.md phases 1–3 on physical hosts",
+      "verification": "scripts/lab-mesh-preflight.sh PASS on each joined host",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-01T16:57:00+02:00"
+    }
       "title": "Deploy AutoMeat agent to ClickClack :3100",
       "ownerBot": "GROK-SHIP",
       "playbookHint": "Hermes on orchestrator host — not cloud agent",
