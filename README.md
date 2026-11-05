@@ -59,7 +59,9 @@ open mission-control/course/index.html
 | `docs/HERMES_INTAKE.md` | Commercial project intake — [hermes-intake.vercel.app](https://hermes-intake.vercel.app/) |
 | `docs/STUDEX_LAB_MESH.md` | Mac Mini + MacBook + MSI — Tailscale, Paperclip, Hermes |
 | `docs/lab-mesh.env.example` | Copy to `docs/lab-mesh.env` (local, gitignored) |
-| `factory/` | Intake queue, Grokbots registry, pulse log |
+| `home-console/` | Lounge UI — Samsung/JVC, games, Phonon, Linux-Studex bridge |
+| `integrations/home-hub/` | Home hub API (:3088), TV tools, Phonon script |
+| `docs/STUDEX_HOME_LOUNGE.md` | Home automation + gaming + corporate skills map |
 | `mission-control/factory/` | Factory OS dashboard (Grokbots + pstack checklist) |
 | `docs/EDGE_HOSTS.md` | Lab edge hosts (Termux, PS5 Bazzite, dev Linux) — not product roadmap |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |

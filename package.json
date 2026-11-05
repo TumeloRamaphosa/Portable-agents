@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "typecheck": "node --check mission-control/course/components/needle.js && node --check mission-control/course/components/pov-course.js && node --check studbot/app.js",
-    "factory:status": "node scripts/factory-status.mjs"
+    "factory:status": "node scripts/factory-status.mjs",
+    "home:hub": "node integrations/home-hub/hub_server.mjs"
   }
 }

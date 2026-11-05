@@ -9,5 +9,6 @@ integrations/cactus-needle/.venv/
 __pycache__/
 *.pyc
 .env
+integrations/home-hub/home.env
 docs/lab-mesh.env
 .venv/

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "tv_samsung",
+    "description": "Control Samsung TV: power, volume, mute, home, hdmi1-4, netflix. Requires SAMSUNG_TV_IP on home hub."
+  },
+  {
+    "name": "tv_jvc",
+    "description": "Control JVC TV via HDMI-CEC or IR bridge: power, volume, input_hdmi1."
+  },
+  {
+    "name": "speak_phonon",
+    "description": "Speak text with on-device Phonon TTS through the home hub (offline, English 31m)."
+  },
+  {
+    "name": "launch_game",
+    "description": "Launch a game or big-picture mode: steam_bigpicture, steam_app:<id>, moonlight, or samsung_app:<name>."
+  },
+  {
+    "name": "scene_lounge",
+    "description": "Run a named lounge scene: movie, gaming, off — dims TVs and sets inputs per home.env scenes."
+  }
+]
