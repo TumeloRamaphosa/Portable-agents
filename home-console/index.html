@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studex Home Lounge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--bg:#0A0A0A;--panel:#141414;--text:#F5F1E8;--muted:#8A8578}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;font-size:13px}
+.wrap{max-width:960px;margin:0 auto;padding:24px}
+h1{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--gold);letter-spacing:.12em;margin:0 0 8px}
+.lede{color:var(--muted);margin-bottom:24px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid rgba(201,168,76,.2);padding:16px}
+.card h2{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 12px}
+.btn{display:block;width:100%;margin:6px 0;padding:10px;background:transparent;border:1px solid var(--gold);color:var(--text);cursor:pointer;font-family:inherit;font-size:11px}
+.btn:hover{background:rgba(201,168,76,.12)}
+#log{margin-top:20px;padding:12px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);min-height:80px;font-size:11px;white-space:pre-wrap}
+.cfg{font-size:10px;color:var(--muted);margin-top:16px}
+a{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>HOME LOUNGE</h1>
+  <p class="lede">Samsung + JVC · Apple TV · cameras · gaming · Phonon · Linux-Studex. Hub <code id="hub-url">http://127.0.0.1:3088</code> — configure <code>integrations/home-hub/home.env</code>.</p>
+  <div class="grid">
+    <section class="card">
+      <h2>Samsung TV</h2>
+      <button class="btn" data-tv="samsung" data-action="power">Power</button>
+      <button class="btn" data-tv="samsung" data-action="hdmi1">HDMI 1</button>
+      <button class="btn" data-tv="samsung" data-action="hdmi2">HDMI 2 (PC)</button>
+      <button class="btn" data-tv="samsung" data-action="netflix">Netflix</button>
+      <button class="btn" data-tv="samsung" data-action="volume_up">Vol +</button>
+      <button class="btn" data-tv="samsung" data-action="volume_down">Vol −</button>
+    </section>
+    <section class="card">
+      <h2>JVC TV</h2>
+      <button class="btn" data-tv="jvc" data-action="power">Power (CEC/IR)</button>
+      <button class="btn" data-tv="jvc" data-action="input_hdmi1">Input HDMI</button>
+      <button class="btn" data-tv="jvc" data-action="volume_up">Vol +</button>
+      <button class="btn" data-tv="jvc" data-action="volume_down">Vol −</button>
+    </section>
+    <section class="card">
+      <h2>Apple TV</h2>
+      <button class="btn" data-atv="home">Home</button>
+      <button class="btn" data-atv="menu">Menu</button>
+      <button class="btn" data-atv="play">Play</button>
+      <button class="btn" data-atv="pause">Pause</button>
+      <button class="btn" data-atv="select">Select</button>
+      <button class="btn" data-atv="volume_up">Vol +</button>
+    </section>
+    <section class="card">
+      <h2>Apple device</h2>
+      <button class="btn" data-apple="shortcut">Run Studex Shortcut</button>
+      <button class="btn" data-apple="play_pause">Music play/pause</button>
+      <button class="btn" data-apple="volume_up">Mac volume +</button>
+    </section>
+    <section class="card">
+      <h2>Cameras</h2>
+      <button class="btn" id="cam-refresh">Refresh list</button>
+      <div id="cam-list" class="cfg">No cameras loaded.</div>
+      <img id="cam-preview" alt="" style="max-width:100%;margin-top:8px;display:none;border:1px solid rgba(201,168,76,.2)">
+    </section>
+    <section class="card">
+      <h2>Games</h2>
+      <button class="btn" data-game="steam_bigpicture">Steam Big Picture</button>
+      <button class="btn" data-game="moonlight">Moonlight</button>
+      <button class="btn" data-scene="gaming">Scene: Gaming</button>
+      <button class="btn" data-scene="movie">Scene: Movie</button>
+      <button class="btn" data-scene="off">Scene: All off</button>
+    </section>
+    <section class="card">
+      <h2>Voice &amp; agents</h2>
+      <button class="btn" id="speak">Phonon: welcome home</button>
+      <button class="btn" id="studex">Ping Linux-Studex</button>
+      <p class="cfg"><a href="../docs/STUDEX_HOME_LOUNGE.md">Setup doc</a> · <a href="../mission-control/index.html">Mission Control</a></p>
+    </section>
+  </div>
+  <div id="log">Ready.</div>
+</div>
+<script>
+(function(){
+  var hub = localStorage.getItem('studexHubUrl') || 'http://127.0.0.1:3088';
+  document.getElementById('hub-url').textContent = hub;
+  var log = document.getElementById('log');
+  function say(t){ log.textContent = t; }
+  async function post(path, body){
+    try {
+      var r = await fetch(hub + path, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body||{}) });
+      var j = await r.json();
+      say(JSON.stringify(j, null, 2));
+    } catch(e){ say('Hub error — start: node integrations/home-hub/hub_server.mjs\n' + e); }
+  }
+  document.querySelectorAll('[data-tv]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var tv = b.getAttribute('data-tv');
+      var action = b.getAttribute('data-action');
+      post('/api/tv/' + tv, { action: action });
+    });
+  });
+  document.querySelectorAll('[data-game]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/games/launch', { target: b.getAttribute('data-game') }); });
+  });
+  document.querySelectorAll('[data-scene]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/scene', { name: b.getAttribute('data-scene') }); });
+  });
+  document.querySelectorAll('[data-atv]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/apple-tv', { action: b.getAttribute('data-atv') }); });
+  });
+  document.querySelectorAll('[data-apple]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/apple/device', { action: b.getAttribute('data-apple') }); });
+  });
+  var camList = document.getElementById('cam-list');
+  var camPreview = document.getElementById('cam-preview');
+  async function loadCameras(){
+    try {
+      var r = await fetch(hub + '/api/cameras');
+      var j = await r.json();
+      var cams = j.cameras || [];
+      if (!cams.length) {
+        camList.textContent = j.hint || 'Copy cameras.example.json → cameras.json and set snapshot URLs.';
+        return;
+      }
+      camList.innerHTML = '';
+      cams.forEach(function(c){
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = 'Snapshot: ' + (c.name || c.id);
+        btn.addEventListener('click', function(){
+          camPreview.style.display = 'block';
+          camPreview.src = hub + '/api/cameras/' + encodeURIComponent(c.id) + '/snapshot?t=' + Date.now();
+        });
+        camList.appendChild(btn);
+      });
+    } catch(e){ camList.textContent = String(e); }
+  }
+  document.getElementById('cam-refresh').addEventListener('click', loadCameras);
+  loadCameras();
+  document.getElementById('speak').addEventListener('click', function(){
+    post('/api/speak', { text: 'Welcome home. Studex lounge is online.' });
+  });
+  document.getElementById('studex').addEventListener('click', async function(){
+    try {
+      var r = await fetch(hub + '/api/studex/status');
+      say(await r.text());
+    } catch(e){ say(String(e)); }
+  });
+})();
+</script>
+</body>
+</html>

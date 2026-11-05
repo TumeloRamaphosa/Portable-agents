@@ -1,0 +1,3 @@
+# Copy to local.properties (gitignored) for subscribe + verify URLs
+STUDBOT_SUBSCRIBE_URL=https://www.studexmeat.com/products/tier-4-operator-4-500-month
+STUDBOT_VERIFY_URL=https://your-deploy.vercel.app/api/verify-subscription

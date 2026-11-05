@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "ZTE-001",
+      "title": "Install pstack and run first /poteto-mode task",
+      "ownerBot": "GROK-BUILD",
+      "playbookHint": "setup + verify typecheck",
+      "verification": "npm run typecheck exits 0",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-10-31T12:45:00+02:00"
+    },
+    {
+      "id": "ZTE-002",
+      "title": "Deploy AutoMeat agent to ClickClack :3100",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "Hermes on orchestrator host — not cloud agent",
+      "verification": "docs/deployments/AUTOMEAT_CLICKCLACK.md checklist all PASS",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-10-31T20:02:00+02:00"
+    },
+    {
+      "id": "ZTE-003",
+      "title": "Wire Studex lab mesh (Mac Mini hub, MacBook, MSI)",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_LAB_MESH.md phases 1–3 on physical hosts",
+      "verification": "scripts/lab-mesh-preflight.sh PASS on each joined host",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-01T16:57:00+02:00"
+    }
+  ]
+}

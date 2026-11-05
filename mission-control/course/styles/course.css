@@ -1,0 +1,473 @@
+/* Portable Agents — POV course + Needle (Studex design system) */
+:root {
+  --gold: #c9a84c;
+  --gold-dim: #8a7233;
+  --gold-glow: rgba(201, 168, 76, 0.14);
+  --obsidian: #0a0a0a;
+  --panel: #111111;
+  --panel-2: #161616;
+  --line: rgba(201, 168, 76, 0.18);
+  --line-soft: rgba(255, 255, 255, 0.06);
+  --paper: #f5f1e8;
+  --muted: #8a8578;
+  --dim: #5c594f;
+  --live: #4ade80;
+  --mono: "Space Mono", ui-monospace, monospace;
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --display: "Bebas Neue", Impact, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.pov-course {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--obsidian);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.pov-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+.pov-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.pov-brand {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.pov-brand span {
+  color: var(--paper);
+}
+
+.pov-topbar .spacer {
+  flex: 1;
+}
+
+.pov-kicker {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin: 20px 0 8px;
+}
+
+.pov-title {
+  font-family: var(--display);
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 0.95;
+  margin: 0 0 6px;
+  letter-spacing: 0.04em;
+}
+
+.pov-sub {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: #cfc9b8;
+  font-weight: 300;
+  max-width: 62ch;
+  margin: 0 0 24px;
+}
+
+.pov-layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .pov-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Needle panel ── */
+.needle-panel {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  padding: 16px;
+  position: sticky;
+  top: 72px;
+}
+
+.needle-panel h2 {
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  margin: 0 0 4px;
+  color: var(--paper);
+}
+
+.needle-agent {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 14px;
+}
+
+.needle-agent b {
+  color: var(--gold);
+}
+
+.needle-mount {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 14px;
+}
+
+.needle-readout {
+  display: grid;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.needle-readout .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.needle-readout .row span:first-child {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 9px;
+}
+
+.needle-readout .row span:last-child {
+  color: var(--paper);
+  text-align: right;
+}
+
+/* Needle SVG */
+.needle-compass {
+  width: 180px;
+  height: 180px;
+}
+
+.needle-compass .ring {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.needle-compass .tick-major {
+  stroke: var(--gold-dim);
+  stroke-width: 1;
+}
+
+.needle-compass .tick-minor {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 0.5;
+}
+
+.needle-compass .cardinal {
+  fill: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.needle-compass .needle-shaft {
+  fill: var(--gold);
+  filter: drop-shadow(0 0 6px var(--gold-glow));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: 90px 90px;
+}
+
+.needle-compass .needle-hub {
+  fill: var(--obsidian);
+  stroke: var(--gold);
+  stroke-width: 1.5;
+}
+
+.needle-compass .forward-wedge {
+  fill: rgba(74, 222, 128, 0.15);
+  stroke: var(--live);
+  stroke-width: 0.5;
+  opacity: 0.9;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: 90px 90px;
+}
+
+/* ── POV viewport ── */
+.pov-stage-wrap {
+  background: var(--panel);
+  border: 1px solid var(--line-soft);
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pov-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.pov-hud strong {
+  color: var(--gold);
+}
+
+.pov-viewport {
+  flex: 1;
+  position: relative;
+  perspective: 900px;
+  perspective-origin: 50% 42%;
+  background: radial-gradient(ellipse 80% 55% at 50% 100%, rgba(201, 168, 76, 0.08), transparent 55%),
+    linear-gradient(180deg, #050505 0%, #0a0a0a 40%, #121212 100%);
+  min-height: 380px;
+  overflow: hidden;
+}
+
+.pov-corridor {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pov-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 140%;
+  height: 70%;
+  transform: translateX(-50%) rotateX(72deg);
+  background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 48px,
+      rgba(201, 168, 76, 0.06) 48px,
+      rgba(201, 168, 76, 0.06) 49px
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(201, 168, 76, 0.12));
+  border-top: 1px solid var(--line);
+}
+
+.pov-step-card {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  width: min(92%, 520px);
+  transform: translate(-50%, -50%) translateZ(0);
+  background: rgba(17, 17, 17, 0.94);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  padding: 22px 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.4s, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pov-step-card h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: var(--paper);
+}
+
+.pov-step-card .step-meta {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 14px;
+}
+
+.pov-step-card p {
+  margin: 0;
+  color: #b4af9f;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.pov-waypoint {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: 1px solid var(--gold);
+  opacity: 0.35;
+  transform-style: preserve-3d;
+  transition: opacity 0.3s, transform 0.5s;
+}
+
+.pov-waypoint.is-next {
+  opacity: 1;
+  box-shadow: 0 0 12px var(--gold-glow);
+  animation: waypoint-pulse 2s ease-in-out infinite;
+}
+
+.pov-waypoint.is-current {
+  opacity: 0;
+}
+
+@keyframes waypoint-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.pov-vignette {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 45%, transparent 30%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+.pov-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--line-soft);
+  align-items: center;
+}
+
+.pov-controls button {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--paper);
+  transition: 0.15s;
+}
+
+.pov-controls button:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--gold-dim);
+}
+
+.pov-controls button.primary {
+  background: var(--gold);
+  color: var(--obsidian);
+  border-color: var(--gold);
+  font-weight: 700;
+}
+
+.pov-controls button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pov-hint {
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+
+/* Legacy map (secondary, not primary) */
+.pov-map-toggle {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.pov-map-drawer {
+  display: none;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--line-soft);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.pov-map-drawer.is-open {
+  display: block;
+}
+
+.pov-map-drawer p {
+  margin: 0 0 10px;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+}
+
+.pov-map-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.pov-map-node {
+  flex: 0 0 auto;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 1px solid var(--line-soft);
+  background: var(--panel-2);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.pov-map-node.is-done {
+  border-color: var(--gold-dim);
+  color: var(--gold-dim);
+}
+
+.pov-map-node.is-here {
+  border-color: var(--gold);
+  color: var(--paper);
+  background: rgba(201, 168, 76, 0.12);
+}
+
+.pov-map-connector {
+  flex: 0 0 24px;
+  height: 1px;
+  background: var(--line);
+}

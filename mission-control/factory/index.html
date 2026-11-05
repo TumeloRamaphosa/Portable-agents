@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zero Touch Factory — Grokbots OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#111;--line:rgba(201,168,76,.18);--paper:#F5F1E8;--muted:#8A8578;--live:#4ADE80;--warn:#F2B035;--dead:#E5484D;
+--mono:'Space Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--display:'Bebas Neue',Impact,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px;line-height:1.55}
+a{color:var(--gold)}
+.wrap{max-width:1400px;margin:0 auto;padding:28px}
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:32px;border-bottom:1px solid var(--line);padding-bottom:20px}
+.brand{font-family:var(--display);font-size:24px;letter-spacing:.12em;color:var(--gold)}
+.brand span{color:var(--paper)}
+h1{font-family:var(--display);font-size:clamp(36px,6vw,64px);margin:0 0 8px;letter-spacing:.06em}
+.lede{font-family:var(--serif);font-size:20px;color:#CFC9B8;max-width:70ch;margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);padding:18px 20px}
+.card h2{font-family:var(--display);font-size:18px;letter-spacing:.14em;margin:0 0 12px;color:var(--gold)}
+.cmd{background:#0d0d0d;border:1px solid var(--line);padding:12px 14px;font-size:12px;color:#BDB8A8;margin:8px 0;overflow-x:auto}
+.st{font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.s-live{color:var(--live)} .s-warn{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th,td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+th{color:var(--muted);font-weight:400;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.step{border:1px solid var(--line);padding:8px 12px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.step.on{background:rgba(201,168,76,.12);border-color:var(--gold);color:var(--gold)}
+#queue-empty{color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">GROK<span>BOTS</span></div>
+    <a href="../index.html">← Mission Control</a>
+    <a href="../../docs/PSTACK_GROKBOTS_ZTE.md">Docs</a>
+    <span class="st s-live">● ZTE factory OS</span>
+  </div>
+  <h1>ZERO TOUCH ENGINEERING</h1>
+  <p class="lede">Software engineering factory on <strong>pstack</strong> + Grok delegates. Intake, playbook, verify, ship — with policy gates for NDA, secrets, and spend.</p>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Install pstack (Cursor)</h2>
+      <p class="st">Run in chat — plugin is not bundled in this repo</p>
+      <div class="cmd">/add-plugin pstack</div>
+      <div class="cmd">/setup-pstack</div>
+      <div class="cmd">/poteto-mode &lt;task&gt;; verify npm run typecheck passes</div>
+      <p style="margin-top:12px;font-size:11px;color:var(--muted)">Repo model map: <code>.cursor/rules/pstack-models.mdc</code></p>
+    </section>
+
+    <section class="card">
+      <h2>ZTE pipeline</h2>
+      <div class="pipeline">
+        <span class="step on">Intake</span>
+        <span class="step on">/poteto-mode</span>
+        <span class="step on">Grokbots</span>
+        <span class="step on">Verify</span>
+        <span class="step on">Ship</span>
+      </div>
+      <p style="margin-top:14px;font-size:12px;color:#BDB8A8">Queue file: <code>factory/intake/queue.json</code> · Status: <code>npm run factory:status</code></p>
+    </section>
+
+    <section class="card" style="grid-column:1/-1">
+      <h2>Intake queue</h2>
+      <div id="queue-wrap"><p id="queue-empty">Loading queue…</p></div>
+    </section>
+
+    <section class="card" style="grid-column:1/-1">
+      <h2>Grokbots fleet</h2>
+      <div id="bots-wrap"><p class="st">Loading registry…</p></div>
+    </section>
+  </div>
+</div>
+<script>
+(function(){
+  var q=document.getElementById('queue-wrap');
+  var b=document.getElementById('bots-wrap');
+  fetch('../../factory/intake/queue.json').then(function(r){return r.json();}).then(function(data){
+    var items=(data.items||[]).filter(function(it){return it.status==='queued'||it.status==='active';});
+    if(!items.length){q.innerHTML='<p id="queue-empty">No queued items — add work in factory/intake/queue.json</p>';return;}
+    var html='<table><thead><tr><th>ID</th><th>Title</th><th>Bot</th><th>Verify</th><th>Status</th></tr></thead><tbody>';
+    items.forEach(function(it){
+      html+='<tr><td>'+it.id+'</td><td>'+it.title+'</td><td>'+it.ownerBot+'</td><td>'+(it.verification||'—')+'</td><td class="st s-warn">'+it.status+'</td></tr>';
+    });
+    q.innerHTML=html+'</tbody></table>';
+  }).catch(function(){q.innerHTML='<p id="queue-empty">Serve repo over HTTP to load queue (e.g. python3 -m http.server 8080)</p>';});
+
+  fetch('../../factory/grokbots/registry.json').then(function(r){return r.json();}).then(function(reg){
+    var html='<table><thead><tr><th>ID</th><th>Name</th><th>pstack role</th><th>Owns</th></tr></thead><tbody>';
+    (reg.bots||[]).forEach(function(bot){
+      html+='<tr><td>'+bot.id+'</td><td>'+bot.name+'</td><td>'+bot.modelRole+'</td><td>'+bot.owns+'</td></tr>';
+    });
+    b.innerHTML=html+'</tbody></table>';
+  }).catch(function(){b.innerHTML='<p class="st">Open via local HTTP server to load registry JSON.</p>';});
+})();
+</script>
+</body>
+</html>

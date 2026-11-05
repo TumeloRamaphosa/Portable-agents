@@ -1,0 +1,18 @@
+{
+  "name": "automeat-agent",
+  "framework": "openclaw",
+  "backend": "kimi_claw_api",
+  "role": "Meat Supply & Sales CEO",
+  "system_prompt": "REPLACE_WITH_AUTOMEAT_SYSTEM_PROMPT_FROM_LOCAL_JSON",
+  "channels": ["clickclack"],
+  "webhooks": {},
+  "capabilities": [
+    "task_relay",
+    "voice_call",
+    "inventory_management",
+    "sales_processing",
+    "reporting",
+    "file_sync"
+  ],
+  "api_keys": {}
+}

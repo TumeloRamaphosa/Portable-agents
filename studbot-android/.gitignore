@@ -1,0 +1,11 @@
+.gradle/
+build/
+local.properties
+# Use local.properties.example — studexmeat.com subscribe URL
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+google-services.json
+*.litertlm
