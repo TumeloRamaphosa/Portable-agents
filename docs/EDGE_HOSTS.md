@@ -12,6 +12,7 @@ For agent stack naming (Cactus Needle, AbuZar, claude-ops), see [NEEDLE_AND_OPS_
 | **Android** | `studbot-android/` | ADK Kotlin + NEEDLE UI + pulse agent |
 | **Python (any Linux/macOS dev box)** | `integrations/cactus-needle/`, `mission-control/live-agent-demo/` | Cactus Needle when `pip install cactus-needle` works |
 | **Termux (Android phone)** | [AbuZar-Ansarii/Needle](https://github.com/AbuZar-Ansarii/Needle) (external) | Cactus Needle 2 + Termux API; reference only |
+| **On-device TTS (lab)** | [ON_DEVICE_VOICE.md](./ON_DEVICE_VOICE.md) · [Phonon (HF)](https://huggingface.co/blog/phonon-tts) | Gradium Phonon ~65–75 MB; offline speech; Apache 2.0 EN model |
 
 ## PS5 + Bazzite Deck (community — not a Studex product)
 

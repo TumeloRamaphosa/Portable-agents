@@ -9,6 +9,7 @@ Portable Agents uses **three different “Needle / ops” references**. They wor
 | **claude-ops** | [Lifecycle-Innovations-Limited/claude-ops](https://github.com/Lifecycle-Innovations-Limited/claude-ops) | **Developer / business ops harness** for Claude Code (briefings, CI, inbox). Optional complement to **Mission Control** for teams running Studex on laptops — install as a plugin, not bundled here. |
 | **pstack + Grokbots** | [cursor/plugins/pstack](https://github.com/cursor/plugins/tree/main/pstack) | **Rigorous Cursor engineering** (`/poteto-mode`). Studex **Grokbots** + ZTE factory: `factory/`, `mission-control/factory/`, [PSTACK_GROKBOTS_ZTE.md](./PSTACK_GROKBOTS_ZTE.md). |
 | **Hermes intake (Studex)** | [hermes-intake.vercel.app](https://hermes-intake.vercel.app/) | **Customer project intake** (quotes, Agentic Rise tiers) — not Nous Hermes runtime. See [HERMES_INTAKE.md](./HERMES_INTAKE.md). |
+| **On-device TTS** | [Phonon / HF blog](https://huggingface.co/blog/phonon-tts) | Offline voice for agents/handsets — see [ON_DEVICE_VOICE.md](./ON_DEVICE_VOICE.md). |
 | **Course NEEDLE panel** | `mission-control/course/` | **POV navigation compass UI** (bearing to next checkpoint). Visual layer only; state is shared with Studbot tools. |
 
 ## Recommended architecture
