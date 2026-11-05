@@ -15,25 +15,37 @@ For agent stack naming (Cactus Needle, AbuZar, claude-ops), see [NEEDLE_AND_OPS_
 
 ## PS5 + Bazzite Deck (community — not a Studex product)
 
-[Notebookcheck summary](https://www.notebookcheck.net/PS5-moves-closer-to-becoming-a-Steam-Machine-Alternative-with-Bazzite-deck-port.1438046.0.html) · Project: **[VivaLaVent/ps5-bazzite-deck](https://github.com/VivaLaVent/ps5-bazzite-deck)**
+**Project:** **[VivaLaVent/ps5-bazzite-deck](https://github.com/VivaLaVent/ps5-bazzite-deck)** · loader: **[rmux/ps5-linux](https://github.com/rmux/ps5-linux)**
 
-**What it is:** Bazzite in **Steam Gaming Mode** (Deck-style UI), booted from **USB/SSD** via **[rmux PS5 Linux loader](https://github.com/rmux/ps5-linux)**. Optional KDE desktop. Sony’s PS5 OS stays on internal storage when the drive is unplugged.
+**Press & roundups (Oct 2026)** — lab reading only, not Studex endorsement:
+
+| Source | Link |
+|--------|------|
+| Notebookcheck | [PS5 moves closer to becoming a Steam Machine alternative with Bazzite-deck port](https://www.notebookcheck.net/PS5-moves-closer-to-becoming-a-Steam-Machine-Alternative-with-Bazzite-deck-port.1438046.0.html) (2026-10-30; cites r/PS5_Jailbreak + TechPowerUp) |
+| TechPowerUp | [PS5s become Steam Machines with unofficial Bazzite Linux installer](https://www.techpowerup.com/354305/ps5s-become-steam-machines-with-unofficial-bazzite-linux-installer) |
+| VideoCardz | [PS5 Steam games through Bazzite, optional 40 CU](https://videocardz.com/newz/playstation-5-can-now-run-steam-games-through-bazzite-linux-with-up-to-40-gpu-compute-units) |
+| TechRadar | [Turn your PS5 into a Steam Machine — proceed at your own risk](https://www.techradar.com/gaming/ps5/cant-afford-a-steam-machine-you-can-now-turn-your-ps5-into-one-with-a-new-spin-on-linux-but-i-really-wouldnt-recommend-it) |
+| Geeky Gadgets | Roundup of the same port (share links expire; search “PS5 Bazzite Deck” on [geeky-gadgets.com](https://www.geeky-gadgets.com/)) |
+
+**What it is:** Bazzite in **Steam Gaming Mode** (Deck-style UI), booted from **USB/SSD** via **rmux’s PS5 Linux loader**. Optional **KDE** desktop. Sony’s PS5 OS stays on internal storage when the drive is unplugged. Recent stable track uses **bootc** images (atomic updates + `bootc rollback`) — see [releases](https://github.com/VivaLaVent/ps5-bazzite-deck/releases) (e.g. **v2.5**).
 
 **Why it matters for “edge” thinking:** It is another **local Linux shell** with GPU and offline Steam — useful for **personal** experiments (Proton, local tools), not for Rwanda/PwC **sovereign agent** deployments.
 
 **Hard limits (do not gloss over):**
 
-- Requires **jailbreak** + **firmware** supported by the loader; unsupported firmware = no Linux.
-- **PS5 Pro** is **not** supported by the Bazzite image (as of project docs).
+- Requires **jailbreak** + **firmware** supported by the loader (commonly cited **3.00–13.60**; confirm on [loader releases](https://github.com/rmux/ps5-linux/releases)).
+- **Legal / PSN / warranty / ToS:** your responsibility; press coverage uniformly warns against treating this as a consumer-safe path.
 - **Anti-cheat** titles may still fail on Linux; check [Are We Anti-Cheat Yet](https://areweanticheatyet.com/).
-- Optional **40 CU GPU unlock** (vs Sony’s 36): can **crash or corrupt display** — leave off unless you accept instability.
-- **Not** normal Bazzite updates; follow project **release bundles** on GitHub.
-- **Legal/warranty/ToS:** your responsibility; Studex does not recommend jailbreak as a customer delivery path.
+- Optional **40 CU GPU unlock** (vs Sony’s 36 on base PS5): developer **warns against** — crashes, artifacts, or display issues on some consoles.
+- Follow project **release bundles** on GitHub (split `.7z` or bootc loader), not generic Bazzite desktop updates.
+- **PS5 settings (from project README):** Rest Mode → USB power **Always**; disable **HDMI Device Link** to avoid black screen.
+
+**Community game reports (YMMV, via press/Reddit):** e.g. Palworld, RimWorld, Genshin Impact, Horizon Zero Dawn, XCOM 2; failures reported for some titles (e.g. Marvel Rivals).
 
 **If you experiment anyway (lab only):**
 
-1. Read the project [README](https://github.com/VivaLaVent/ps5-bazzite-deck/blob/main/README.md) and [releases](https://github.com/VivaLaVent/ps5-bazzite-deck/releases) (e.g. v1.4.x split `.7z` image).
-2. Flash **32 GB+ SSD**, use **fast rear USB** on original PS5 (avoid slow front port for boot).
+1. Read the project [README](https://github.com/VivaLaVent/ps5-bazzite-deck/blob/main/README.md) and [releases](https://github.com/VivaLaVent/ps5-bazzite-deck/releases).
+2. Flash **32 GB+** external **SSD**; use **fast rear USB** on original PS5 / Slim (avoid slow front ports for boot).
 3. On KDE or terminal, you could clone **Portable-agents** and run:
    - `mission-control/live-agent-demo/agent.py` (pulse watcher)
    - `integrations/cactus-needle/` if Cactus publishes a **Linux x64** engine for that environment  
