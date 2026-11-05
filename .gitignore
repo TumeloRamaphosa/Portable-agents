@@ -12,3 +12,4 @@ __pycache__/
 integrations/home-hub/home.env
 docs/lab-mesh.env
 .venv/
+.cursor/skills/studex-corporate/
