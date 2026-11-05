@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cam1",
+    "name": "Front / gate",
+    "snapshot_url": "http://192.168.1.70/ISAPI/Streaming/channels/101/picture",
+    "notes": "Hikvision-style path — replace with your NVR/camera HTTP snapshot URL"
+  },
+  {
+    "id": "cam2",
+    "name": "Lounge",
+    "snapshot_url": "http://192.168.1.71/snapshot.jpg",
+    "notes": "Generic IP cam or Home Assistant camera_proxy URL"
+  }
+]
