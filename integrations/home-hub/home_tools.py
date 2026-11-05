@@ -147,6 +147,187 @@ def scene_lounge(name: str) -> str:
     return " | ".join(results)
 
 
+def _cameras_path() -> str:
+    default = os.path.join(os.path.dirname(__file__), "cameras.json")
+    return _env("CAMERAS_JSON", default)
+
+
+def list_cameras() -> str:
+    path = _cameras_path()
+    if not os.path.isfile(path):
+        return json.dumps(
+            {
+                "cameras": [],
+                "hint": f"Copy cameras.example.json to {path} and set snapshot_url per camera",
+            }
+        )
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    return json.dumps({"cameras": data})
+
+
+def camera_snapshot(camera_id: str) -> str:
+    path = _cameras_path()
+    if not os.path.isfile(path):
+        return json.dumps({"error": "cameras.json missing"})
+    with open(path, encoding="utf-8") as f:
+        cams = json.load(f)
+    cam = next((c for c in cams if c.get("id") == camera_id), None)
+    if not cam:
+        return json.dumps({"error": f"unknown camera {camera_id}"})
+    url = cam.get("snapshot_url") or cam.get("url")
+    if not url:
+        return json.dumps({"error": "no snapshot_url on camera"})
+    user = _env("CAMERA_HTTP_USER")
+    password = _env("CAMERA_HTTP_PASSWORD")
+    auth = None
+    if user:
+        import base64
+
+        token = base64.b64encode(f"{user}:{password}".encode()).decode()
+        auth = f"Basic {token}"
+    req = urllib.request.Request(url)
+    if auth:
+        req.add_header("Authorization", auth)
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = resp.read()
+            import base64
+
+            b64 = base64.b64encode(data).decode()
+            return json.dumps(
+                {
+                    "id": camera_id,
+                    "name": cam.get("name"),
+                    "content_type": resp.headers.get("Content-Type", "image/jpeg"),
+                    "image_base64": b64,
+                }
+            )
+    except urllib.error.URLError as e:
+        return json.dumps({"error": str(e), "url": url})
+
+
+def _home_assistant(service: str, entity_id: str, action: str) -> str:
+    base = _env("HOME_ASSISTANT_URL").rstrip("/")
+    token = _env("HOME_ASSISTANT_TOKEN")
+    if not base or not token:
+        return ""
+    domain = service.split(".")[0] if "." in service else service
+    url = f"{base}/api/services/{domain}/{action}"
+    payload = json.dumps({"entity_id": entity_id}).encode()
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.read().decode()[:300]
+    except urllib.error.URLError as e:
+        return f"Home Assistant error: {e}"
+
+
+def apple_tv(action: str) -> str:
+    """Control Apple TV via pyatv CLI (pip install pyatv)."""
+    ha_entity = _env("APPLE_TV_HA_ENTITY")
+    if ha_entity:
+        ha_actions = {
+            "play": "media_play",
+            "pause": "media_pause",
+            "stop": "media_stop",
+            "power": "turn_on",
+            "home": "select_source",
+        }
+        ha_svc = ha_actions.get(action.lower().replace("-", "_"), action)
+        out = _home_assistant("media_player", ha_entity, ha_svc)
+        if out:
+            return f"Home Assistant {ha_entity}: {ha_svc} → {out}"
+
+    host = _env("APPLE_TV_HOST")
+    ident = _env("APPLE_TV_IDENTIFIER")
+    creds = _env("APPLE_TV_CREDENTIALS")
+    if not host and not ident:
+        return "Set APPLE_TV_HOST or APPLE_TV_IDENTIFIER (or HOME_ASSISTANT + APPLE_TV_HA_ENTITY)"
+
+    cmd_map = {
+        "play": "play",
+        "pause": "pause",
+        "stop": "stop",
+        "home": "home",
+        "menu": "menu",
+        "up": "up",
+        "down": "down",
+        "left": "left",
+        "right": "right",
+        "select": "select",
+        "volume_up": "volume_up",
+        "volume_down": "volume_down",
+        "power": "turn_on",
+    }
+    remote_cmd = cmd_map.get(action.lower().replace("-", "_"))
+    if not remote_cmd:
+        return f"Unknown Apple TV action {action!r}. Known: {', '.join(cmd_map)}"
+
+    argv = ["atvremote"]
+    if creds and os.path.isfile(creds):
+        argv.extend(["--credentials", creds])
+    if ident:
+        argv.extend(["--id", ident])
+    elif host:
+        argv.extend(["--address", host])
+    argv.append(remote_cmd)
+
+    try:
+        out = subprocess.run(argv, capture_output=True, text=True, timeout=15, check=False)
+        if out.returncode != 0 and "atvremote" in (out.stderr or ""):
+            return "Install pyatv: pip install pyatv — then atvremote scan && pair"
+        return f"Apple TV {remote_cmd}: {out.stdout.strip() or out.stderr.strip() or 'ok'}"
+    except FileNotFoundError:
+        return "atvremote not found — pip install pyatv on the Mac hub"
+
+
+def apple_device(action: str, shortcut: str = "") -> str:
+    """Mac/iPhone automation via Shortcuts CLI and AppleScript (hub must be macOS)."""
+    if action == "shortcut" or shortcut:
+        name = shortcut or _env("APPLE_SHORTCUT_HOME", "Studex Home")
+        try:
+            out = subprocess.run(
+                ["shortcuts", "run", name],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+            return f"Shortcut {name!r}: {out.stdout.strip() or out.stderr.strip() or 'ok'}"
+        except FileNotFoundError:
+            return "shortcuts CLI not found — run from macOS 12+ or use Home Assistant"
+
+    scripts = {
+        "play_pause": 'tell application "Music" to playpause',
+        "volume_up": "set volume output volume ((output volume of (get volume settings)) + 10)",
+        "volume_down": "set volume output volume ((output volume of (get volume settings)) - 10)",
+        "dnd_on": 'tell application "System Events" to tell (first process whose frontmost is true) to keystroke "d" using {command down, shift down}',
+    }
+    script = scripts.get(action.lower())
+    if not script:
+        return (
+            f"Unknown apple_device action {action!r}. "
+            f"Known: shortcut, play_pause, volume_up, volume_down — or pass shortcut name"
+        )
+    try:
+        out = subprocess.run(
+            ["osascript", "-e", script],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+        return f"Apple device: {action} → {out.stdout.strip() or 'ok'}"
+    except FileNotFoundError:
+        return "osascript requires macOS hub"
+
+
 def dispatch(tool: str, **kwargs: Any) -> str:
     table = {
         "tv_samsung": lambda: tv_samsung(kwargs.get("action", "home")),
@@ -154,6 +335,12 @@ def dispatch(tool: str, **kwargs: Any) -> str:
         "speak_phonon": lambda: speak_phonon(kwargs.get("text", "")),
         "launch_game": lambda: launch_game(kwargs.get("target", "")),
         "scene_lounge": lambda: scene_lounge(kwargs.get("name", "gaming")),
+        "list_cameras": lambda: list_cameras(),
+        "camera_snapshot": lambda: camera_snapshot(kwargs.get("camera_id", "cam1")),
+        "apple_tv": lambda: apple_tv(kwargs.get("action", "home")),
+        "apple_device": lambda: apple_device(
+            kwargs.get("action", "shortcut"), kwargs.get("shortcut", "")
+        ),
     }
     fn = table.get(tool)
     if not fn:

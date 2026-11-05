@@ -24,7 +24,7 @@ a{color:var(--gold)}
 <body>
 <div class="wrap">
   <h1>HOME LOUNGE</h1>
-  <p class="lede">Samsung + JVC · gaming · Phonon voice · Linux-Studex agents. Hub default <code id="hub-url">http://127.0.0.1:3088</code> — set in <code>integrations/home-hub/home.env</code>.</p>
+  <p class="lede">Samsung + JVC · Apple TV · cameras · gaming · Phonon · Linux-Studex. Hub <code id="hub-url">http://127.0.0.1:3088</code> — configure <code>integrations/home-hub/home.env</code>.</p>
   <div class="grid">
     <section class="card">
       <h2>Samsung TV</h2>
@@ -41,6 +41,27 @@ a{color:var(--gold)}
       <button class="btn" data-tv="jvc" data-action="input_hdmi1">Input HDMI</button>
       <button class="btn" data-tv="jvc" data-action="volume_up">Vol +</button>
       <button class="btn" data-tv="jvc" data-action="volume_down">Vol −</button>
+    </section>
+    <section class="card">
+      <h2>Apple TV</h2>
+      <button class="btn" data-atv="home">Home</button>
+      <button class="btn" data-atv="menu">Menu</button>
+      <button class="btn" data-atv="play">Play</button>
+      <button class="btn" data-atv="pause">Pause</button>
+      <button class="btn" data-atv="select">Select</button>
+      <button class="btn" data-atv="volume_up">Vol +</button>
+    </section>
+    <section class="card">
+      <h2>Apple device</h2>
+      <button class="btn" data-apple="shortcut">Run Studex Shortcut</button>
+      <button class="btn" data-apple="play_pause">Music play/pause</button>
+      <button class="btn" data-apple="volume_up">Mac volume +</button>
+    </section>
+    <section class="card">
+      <h2>Cameras</h2>
+      <button class="btn" id="cam-refresh">Refresh list</button>
+      <div id="cam-list" class="cfg">No cameras loaded.</div>
+      <img id="cam-preview" alt="" style="max-width:100%;margin-top:8px;display:none;border:1px solid rgba(201,168,76,.2)">
     </section>
     <section class="card">
       <h2>Games</h2>
@@ -85,6 +106,38 @@ a{color:var(--gold)}
   document.querySelectorAll('[data-scene]').forEach(function(b){
     b.addEventListener('click', function(){ post('/api/scene', { name: b.getAttribute('data-scene') }); });
   });
+  document.querySelectorAll('[data-atv]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/apple-tv', { action: b.getAttribute('data-atv') }); });
+  });
+  document.querySelectorAll('[data-apple]').forEach(function(b){
+    b.addEventListener('click', function(){ post('/api/apple/device', { action: b.getAttribute('data-apple') }); });
+  });
+  var camList = document.getElementById('cam-list');
+  var camPreview = document.getElementById('cam-preview');
+  async function loadCameras(){
+    try {
+      var r = await fetch(hub + '/api/cameras');
+      var j = await r.json();
+      var cams = j.cameras || [];
+      if (!cams.length) {
+        camList.textContent = j.hint || 'Copy cameras.example.json → cameras.json and set snapshot URLs.';
+        return;
+      }
+      camList.innerHTML = '';
+      cams.forEach(function(c){
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.textContent = 'Snapshot: ' + (c.name || c.id);
+        btn.addEventListener('click', function(){
+          camPreview.style.display = 'block';
+          camPreview.src = hub + '/api/cameras/' + encodeURIComponent(c.id) + '/snapshot?t=' + Date.now();
+        });
+        camList.appendChild(btn);
+      });
+    } catch(e){ camList.textContent = String(e); }
+  }
+  document.getElementById('cam-refresh').addEventListener('click', loadCameras);
+  loadCameras();
   document.getElementById('speak').addEventListener('click', function(){
     post('/api/speak', { text: 'Welcome home. Studex lounge is online.' });
   });

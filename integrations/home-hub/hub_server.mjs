@@ -55,7 +55,47 @@ app.get("/api/health", (_req, res) => {
     linuxStudex: LINUX_STUDEX_URL,
     samsung: !!process.env.SAMSUNG_TV_IP,
     phonon: process.env.PHONON_ENABLED === "true",
+    appleTv: !!(process.env.APPLE_TV_HOST || process.env.APPLE_TV_IDENTIFIER || process.env.APPLE_TV_HA_ENTITY),
+    cameras: !!process.env.CAMERAS_JSON,
   });
+});
+
+app.get("/api/cameras", async (_req, res) => {
+  const message = await runPy("list_cameras");
+  try {
+    res.json(JSON.parse(message));
+  } catch {
+    res.json({ cameras: [], raw: message });
+  }
+});
+
+app.get("/api/cameras/:id/snapshot", async (req, res) => {
+  const message = await runPy("camera_snapshot", { camera_id: req.params.id });
+  try {
+    const j = JSON.parse(message);
+    if (j.error) return res.status(502).json(j);
+    if (j.image_base64) {
+      const buf = Buffer.from(j.image_base64, "base64");
+      res.set("Content-Type", j.content_type || "image/jpeg");
+      return res.send(buf);
+    }
+    res.json(j);
+  } catch {
+    res.status(500).json({ error: message });
+  }
+});
+
+app.post("/api/apple-tv", async (req, res) => {
+  const action = req.body?.action || "home";
+  const message = await runPy("apple_tv", { action });
+  res.json({ ok: true, action, message });
+});
+
+app.post("/api/apple/device", async (req, res) => {
+  const action = req.body?.action || "shortcut";
+  const shortcut = req.body?.shortcut || "";
+  const message = await runPy("apple_device", { action, shortcut });
+  res.json({ ok: true, action, message });
 });
 
 app.post("/api/tv/samsung", async (req, res) => {

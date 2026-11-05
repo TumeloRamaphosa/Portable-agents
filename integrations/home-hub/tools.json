@@ -18,5 +18,21 @@
   {
     "name": "scene_lounge",
     "description": "Run a named lounge scene: movie, gaming, off — dims TVs and sets inputs per home.env scenes."
+  },
+  {
+    "name": "apple_tv",
+    "description": "Apple TV remote: play, pause, home, menu, directions, select, volume, power. Uses pyatv or Home Assistant."
+  },
+  {
+    "name": "apple_device",
+    "description": "Apple ecosystem on Mac hub: run Shortcuts by name, Music play/pause, system volume."
+  },
+  {
+    "name": "list_cameras",
+    "description": "List configured IP cameras from cameras.json."
+  },
+  {
+    "name": "camera_snapshot",
+    "description": "Fetch latest JPEG snapshot from a camera id (for lounge app preview)."
   }
 ]

@@ -21,6 +21,8 @@ integrations/home-hub/hub_server.mjs  :3088 (HOME_HUB_PORT)
         ├── Phonon TTS (phonon_speak.py) ── offline voice
         ├── Samsung TV (WebSocket API / SmartThings token)
         ├── JVC TV (HDMI-CEC via cec-client, or IR bridge URL)
+        ├── Apple TV (pyatv / Home Assistant) + Apple Shortcuts on Mac hub
+        ├── IP cameras (HTTP snapshot URLs in cameras.json)
         ├── Game launchers (Steam URI, Moonlight, PS5 Bazzite doc)
         │
         └── Linux-Studex Agent OS  http://localhost:4000
@@ -73,6 +75,43 @@ Optional corporate skills for Cursor:
 Samsung actions implemented in hub: `power`, `volume_up`, `volume_down`, `mute`, `home`, `hdmi1`–`hdmi4`, `netflix` (app launch where supported).
 
 JVC actions: `power`, `volume_up`, `volume_down`, `input_hdmi1` via CEC keys; extend IR bridge for models without CEC.
+
+## Apple TV and Apple devices
+
+Run the **home hub on your Mac Mini** (or any Mac on the LAN) for Shortcuts and AppleScript.
+
+| Control | Method | Env |
+|---------|--------|-----|
+| **Apple TV** | [pyatv](https://github.com/postlund/pyatv) `atvremote` after one-time pair | `APPLE_TV_HOST` or `APPLE_TV_IDENTIFIER`, optional `APPLE_TV_CREDENTIALS` |
+| **Apple TV (alt)** | Home Assistant `media_player` entity | `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_TOKEN`, `APPLE_TV_HA_ENTITY` |
+| **iPhone / Mac scenes** | Shortcuts CLI `shortcuts run "Studex Home"` | `APPLE_SHORTCUT_HOME` |
+| **Mac Music / volume** | AppleScript via hub | `POST /api/apple/device` with `play_pause`, `volume_up`, … |
+
+Hub routes: `POST /api/apple-tv` `{ "action": "home" }` · `POST /api/apple/device` `{ "action": "shortcut" }`.
+
+Pair Apple TV once on the hub machine:
+
+```bash
+pip install pyatv
+atvremote scan
+atvremote --protocol companion --id <UUID> pair
+# save credentials path to APPLE_TV_CREDENTIALS in home.env
+```
+
+> **Laravel Herd 2** ([Laravel News](https://laravel-news.com/laravel-herd-2-0)) is for local Laravel + Cursor MCP on your MacBook. It does **not** replace the Studex home hub for TVs, cameras, or Apple TV — use Herd only if you are also building Laravel apps beside the lounge stack.
+
+## Cameras
+
+1. Copy `integrations/home-hub/cameras.example.json` → `integrations/home-hub/cameras.json` (gitignored).
+2. Set each camera’s `snapshot_url` (Hikvision ISAPI, generic `/snapshot.jpg`, or Home Assistant `camera_proxy` URL).
+3. Optional HTTP auth: `CAMERA_HTTP_USER` / `CAMERA_HTTP_PASSWORD` in `home.env`.
+
+| API | Purpose |
+|-----|---------|
+| `GET /api/cameras` | List configured cameras |
+| `GET /api/cameras/:id/snapshot` | Latest JPEG for lounge UI / agents |
+
+Agent tools: `list_cameras`, `camera_snapshot` in `tools.json`.
 
 ## Gaming
 
