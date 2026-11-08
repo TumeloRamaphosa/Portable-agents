@@ -29,6 +29,8 @@ integrations/home-hub/hub_server.mjs  :3088 (HOME_HUB_PORT)
                 ├── /api/orchestrate
                 ├── /api/mcp/tools
                 └── Hermes / farm / Cashclaw agents
+
+OpenClaw **Lobster** workflows (optional): [OPENCLAW_LOBSTER.md](./OPENCLAW_LOBSTER.md).
 ```
 
 ## Quick start (Mac Mini hub)
