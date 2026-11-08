@@ -64,6 +64,13 @@ a{color:var(--gold)}
       <img id="cam-preview" alt="" style="max-width:100%;margin-top:8px;display:none;border:1px solid rgba(201,168,76,.2)">
     </section>
     <section class="card">
+      <h2>Lossless music</h2>
+      <button class="btn" id="jellyfin-ping">Ping Jellyfin</button>
+      <button class="btn" id="jellyfin-open">Open Jellyfin (web)</button>
+      <button class="btn" data-scene="listening">Scene: Listening</button>
+      <p class="cfg"><a href="../docs/SELF_HOSTED_MUSIC.md">Jellyfin + Jellybox setup</a></p>
+    </section>
+    <section class="card">
       <h2>Games</h2>
       <button class="btn" data-game="steam_bigpicture">Steam Big Picture</button>
       <button class="btn" data-game="moonlight">Moonlight</button>
@@ -138,6 +145,20 @@ a{color:var(--gold)}
   }
   document.getElementById('cam-refresh').addEventListener('click', loadCameras);
   loadCameras();
+  document.getElementById('jellyfin-ping').addEventListener('click', async function(){
+    try {
+      var r = await fetch(hub + '/api/music/status');
+      say(await r.text());
+    } catch(e){ say(String(e)); }
+  });
+  document.getElementById('jellyfin-open').addEventListener('click', async function(){
+    try {
+      var r = await fetch(hub + '/api/music/open', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ target:'jellyfin' }) });
+      var j = await r.json();
+      say(JSON.stringify(j, null, 2));
+      if (j.url && j.url.indexOf('http') === 0) window.open(j.url, '_blank');
+    } catch(e){ say(String(e)); }
+  });
   document.getElementById('speak').addEventListener('click', function(){
     post('/api/speak', { text: 'Welcome home. Studex lounge is online.' });
   });

@@ -57,7 +57,23 @@ app.get("/api/health", (_req, res) => {
     phonon: process.env.PHONON_ENABLED === "true",
     appleTv: !!(process.env.APPLE_TV_HOST || process.env.APPLE_TV_IDENTIFIER || process.env.APPLE_TV_HA_ENTITY),
     cameras: !!process.env.CAMERAS_JSON,
+    jellyfin: !!process.env.JELLYFIN_URL,
   });
+});
+
+app.get("/api/music/status", async (_req, res) => {
+  const message = await runPy("jellyfin_status");
+  try {
+    res.json(JSON.parse(message));
+  } catch {
+    res.json({ ok: false, raw: message });
+  }
+});
+
+app.post("/api/music/open", async (req, res) => {
+  const target = req.body?.target || "jellyfin";
+  const message = await runPy("launch_music", { target });
+  res.json({ ok: true, target, url: message });
 });
 
 app.get("/api/cameras", async (_req, res) => {

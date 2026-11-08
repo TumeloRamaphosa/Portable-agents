@@ -113,6 +113,18 @@ atvremote --protocol companion --id <UUID> pair
 
 Agent tools: `list_cameras`, `camera_snapshot` in `tools.json`.
 
+## Lossless music (Jellyfin + Jellybox)
+
+Self-hosted “Spotify for your rips” — FLAC on **Jellyfin**, portable playback with **Jellybox** (music-first client; lyrics, offline, continuity). Full runbook: **[SELF_HOSTED_MUSIC.md](./SELF_HOSTED_MUSIC.md)** ([XDA overview](https://www.xda-developers.com/i-built-a-self-hosted-spotify-for-my-lossless-cd-rips-and-this-open-source-app-made-it-portable/)).
+
+| Hub | Purpose |
+|-----|---------|
+| `GET /api/music/status` | Jellyfin reachable + version |
+| `POST /api/music/open` | Jellyfin music web URL for the lounge browser |
+| Scene `listening` | Phonon cue + open Jellyfin |
+
+Set `JELLYFIN_URL` in `home.env`. Remote: Jellybox Link plugin or Tailscale — not public port forward.
+
 ## Gaming
 
 | Target | How |
@@ -148,6 +160,7 @@ Copied to `.cursor/skills/studex-corporate/` — not vendored in git (run script
 
 ## Related
 
+- [SELF_HOSTED_MUSIC.md](./SELF_HOSTED_MUSIC.md)
 - [STUDEX_LAB_MESH.md](./STUDEX_LAB_MESH.md)
 - [ON_DEVICE_VOICE.md](./ON_DEVICE_VOICE.md)
 - [Linux-Studex- README](https://github.com/TumeloRamaphosa/Linux-Studex-/blob/main/README.md)

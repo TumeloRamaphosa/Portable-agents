@@ -34,5 +34,13 @@
   {
     "name": "camera_snapshot",
     "description": "Fetch latest JPEG snapshot from a camera id (for lounge app preview)."
+  },
+  {
+    "name": "jellyfin_status",
+    "description": "Ping Jellyfin server (lossless FLAC library) — System/Info/Public."
+  },
+  {
+    "name": "launch_music",
+    "description": "Return Jellyfin web URL or Jellybox connect instructions (jellyfin, jellybox)."
   }
 ]

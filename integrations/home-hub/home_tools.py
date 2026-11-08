@@ -118,6 +118,16 @@ def launch_game(target: str) -> str:
         return f"steam://run/{app_id}"
     if t == "moonlight":
         return "moonlight:// — pair Moonlight client to MSI/NVIDIA host"
+    if t in ("jellyfin", "jellyfin_web", "jellybox"):
+        base = _env("JELLYFIN_WEB_URL") or _env("JELLYFIN_URL")
+        if not base:
+            return "Set JELLYFIN_URL in home.env — see docs/SELF_HOSTED_MUSIC.md"
+        if t == "jellybox":
+            return (
+                f"Open Jellybox and connect to Jellyfin at {base.rstrip('/')}. "
+                "Mobile: install Jellybox; enable Jellybox Link or Tailscale."
+            )
+        return base.rstrip("/") + ("" if "/web/" in base else "/web/index.html#!/music.html")
     if t.startswith("samsung_app:"):
         app = t.split(":", 1)[1]
         return tv_samsung(app) if app in ("netflix",) else f"Use Samsung hub launch_app for {app}"
@@ -128,6 +138,7 @@ def scene_lounge(name: str) -> str:
     scenes = {
         "movie": ["tv_samsung:hdmi1", "tv_jvc:power", "speak:Movie mode"],
         "gaming": ["tv_samsung:hdmi2", "launch:steam_bigpicture"],
+        "listening": ["speak:Listening mode. Open Jellybox or Jellyfin for your FLAC library.", "launch:jellyfin"],
         "off": ["tv_samsung:power", "tv_jvc:power"],
     }
     steps = scenes.get(name.lower())
@@ -145,6 +156,31 @@ def scene_lounge(name: str) -> str:
         elif kind == "launch":
             results.append(launch_game(arg))
     return " | ".join(results)
+
+
+def jellyfin_status() -> str:
+    base = _env("JELLYFIN_URL").rstrip("/")
+    if not base:
+        return json.dumps({"ok": False, "hint": "Set JELLYFIN_URL — docs/SELF_HOSTED_MUSIC.md"})
+    url = f"{base}/System/Info/Public"
+    req = urllib.request.Request(url)
+    try:
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read().decode())
+            return json.dumps(
+                {
+                    "ok": True,
+                    "server_name": data.get("ServerName"),
+                    "version": data.get("Version"),
+                    "web_url": _env("JELLYFIN_WEB_URL") or f"{base}/web/index.html#!/music.html",
+                }
+            )
+    except urllib.error.URLError as e:
+        return json.dumps({"ok": False, "error": str(e), "url": url})
+
+
+def launch_music(target: str = "jellyfin") -> str:
+    return launch_game(target or "jellyfin")
 
 
 def _cameras_path() -> str:
@@ -341,6 +377,8 @@ def dispatch(tool: str, **kwargs: Any) -> str:
         "apple_device": lambda: apple_device(
             kwargs.get("action", "shortcut"), kwargs.get("shortcut", "")
         ),
+        "jellyfin_status": lambda: jellyfin_status(),
+        "launch_music": lambda: launch_music(kwargs.get("target", "jellyfin")),
     }
     fn = table.get(tool)
     if not fn:
