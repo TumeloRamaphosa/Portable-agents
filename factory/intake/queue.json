@@ -30,6 +30,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-01T16:57:00+02:00"
+    },
+    {
+      "id": "ZTE-004",
+      "title": "Five-node deploy: Lenovo + MSI Bazzite + Gitea mirror + Drive archive",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_FIVE_NODE_DEPLOY.md phases 0–6",
+      "verification": "agent-work-archive.sh + gitea-mirror-push.sh on all hosts; Drive folder receives deploy/ stubs",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-09T11:45:00+03:00"
     }
   ]
 }

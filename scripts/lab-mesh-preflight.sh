@@ -32,7 +32,7 @@ else
   fail "Paperclip not healthy at $PAPERCLIP_URL/api/health"
 fi
 
-for host in "$LAB_HOST_MACMIN" "$LAB_HOST_MACBOOK" "$LAB_HOST_MSI"; do
+for host in "$LAB_HOST_MACMIN" "$LAB_HOST_MACBOOK" "$LAB_HOST_MSI" "$LAB_HOST_LENOVO"; do
   [ -z "${host:-}" ] && continue
   if ping -c 1 -W 2 "$host" >/dev/null 2>&1; then
     pass "ping $host"

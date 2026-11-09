@@ -1,6 +1,8 @@
-# Studex lab mesh — MacBook, Mac Mini, MSI
+# Studex lab mesh — MacBook, Mac Mini, MSI, Lenovo
 
-Connect **three physical machines** to the same Studex agent stack (Paperclip/ClickClack `:3100`, Hermes workers, Portable-agents repo, Claude Code). This is the continuation runbook for the MacBook + Mac Mini + MSI plan.
+Connect **physical machines** to the same Studex agent stack (Paperclip/ClickClack `:3100`, Hermes workers, Portable-agents repo, Claude Code). This is the continuation runbook for the MacBook + Mac Mini + MSI plan.
+
+**Five-node deploy (Lenovo + Bazzite + Gitea + Google Drive):** see **[STUDEX_FIVE_NODE_DEPLOY.md](./STUDEX_FIVE_NODE_DEPLOY.md)**.
 
 > **Secrets:** Tailscale auth keys, API keys, and `studex-api-keys/.env.complete` stay on each host only. This repo stays public-safe.
 

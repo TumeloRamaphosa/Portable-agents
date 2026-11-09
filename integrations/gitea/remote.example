@@ -1,0 +1,9 @@
+# Copy to ~/.studex/gitea.remote (never commit real tokens)
+
+GITEA_REMOTE_NAME=gitea
+# Tailnet URL — create empty repo in Gitea UI first, then paste clone URL:
+GITEA_URL=http://macmini:3000/studex/Portable-agents.git
+
+# Optional HTTP basic (prefer SSH deploy keys on the hub):
+# GITEA_USER=tumelo
+# GITEA_TOKEN=ghp_style_token_from_gitea_settings
