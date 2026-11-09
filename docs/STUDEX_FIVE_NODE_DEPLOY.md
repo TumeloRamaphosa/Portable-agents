@@ -128,6 +128,15 @@ scripts/agent-fleet-check.sh hermes "$PAPERCLIP_URL"
 - Hermes + `tailscale serve 8642` same as Linux; use **distrobox** if you need packages not in the base image.
 - GPU: Ollama for lab inference only — Hermes still uses MiniMax unless you point Hermes at local Ollama explicitly.
 
+### Buzz agents on MSI ([BUZZ_MSI_AGENTS.md](./BUZZ_MSI_AGENTS.md))
+
+1. Install **Buzz desktop** (Windows unsigned exe or Linux `.deb` / AppImage).
+2. Relay → Mac Mini tailnet `http://macmini:3000` or team relay.
+3. Create agent **Studex-MSI** (Goose/Pi on Windows; Claude on Bazzite).
+4. Workdir = `Portable-agents` clone; run `./scripts/msi-buzz-preflight.sh`.
+
+Optional headless bot: `openclaw plugins install @openclaw/buzz` on the 24/7 gateway host.
+
 ---
 
 ## Phase 4 — Local Gitea

@@ -40,6 +40,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-09T11:45:00+03:00"
+    },
+    {
+      "id": "ZTE-005",
+      "title": "Buzz (buzz.xyz) agents on MSI",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/BUZZ_MSI_AGENTS.md — desktop agent Studex-MSI + relay to Mac Mini",
+      "verification": "scripts/msi-buzz-preflight.sh PASS on MSI; agent workdir = Portable-agents",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-11-09T15:55:00+01:00"
     }
   ]
 }
