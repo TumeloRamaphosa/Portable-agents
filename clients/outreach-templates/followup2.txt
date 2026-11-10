@@ -1,0 +1,9 @@
+# TEMPLATE: follow-up 2 (send day 8-10 after the cold email was actually sent)
+# Same RULES as cold.txt: no prices, no SLAs, no funding/government/data-centre or on-hold-partner claims, no client names or stats.
+Subject: Re: $company_short: agents for $sector_short, with you approving every step
+
+Hi $company team,
+
+This is my last note on this. If AI agents for $sector_short aren't a priority right now, no problem at all.
+
+If it becomes relevant later, just reply and I'll send the one-page outline.

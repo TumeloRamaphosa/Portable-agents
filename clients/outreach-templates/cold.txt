@@ -1,0 +1,23 @@
+# TEMPLATE: cold email (day 0)
+# RULES (do not edit them out; pipeline.py lints every rendered email against them):
+#  - No prices, rates, discounts or currency amounts.
+#  - No SLAs, uptime, response-time or result guarantees.
+#  - No claims about StudEx funding, government backing, data centres, or on-hold partner lanes.
+#  - No client names, logos, case studies or statistics about StudEx.
+#  - One specific, sourced fact about the recipient only ($hook), plus their sector and suggested agents.
+#  - Sender identity block and the POPIA opt-out line are appended automatically from footer.txt.
+# Lines starting with '#' are stripped. First non-comment line beginning 'Subject:' is the subject.
+Subject: $company_short: agents for $sector_short, with you approving every step
+
+Hi $company team,
+
+I saw $hook. That kind of growth usually means more of the same questions, reports and admin landing on the same few people.
+
+StudEx sets up StudBot: a small team of AI agents that share one business memory that you own. Each agent has one narrow job, and nothing gets published, sent or spent without a human saying yes.
+
+For $company, I would start with:
+$agent_lines
+
+$config_line
+
+If it's useful, I can send a one-page outline of how this would map to your team. Would that be worth a look?

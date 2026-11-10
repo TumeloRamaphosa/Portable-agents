@@ -46,6 +46,10 @@ open mission-control/index.html
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |
 | `scripts/` | Automation, including the 30-minute auto-push |
+| `operating-system/` | Grok Bot OS / Agent OS notes, Stud-Bot tier sheet (draft), Voice Desk plan, Hermes intake code, Red-DOT plan |
+| `voice-desk/` | Runnable mock of the Voice Desk: Dark Factory page, local bridge, OpenClaw voice-call example config |
+| `dark-factory-knowledge/` | Sanitized Dark Factory knowledge summaries for agents |
+| `clients/` | Generic client offers, call playbooks and outreach templates (no client data) |
 
 ---
 

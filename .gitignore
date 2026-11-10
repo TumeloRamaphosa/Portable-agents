@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 .env
 .venv/
+
+# Voice Desk local outputs (PRDs, leads, transcripts) never go in the repo
+voice-desk/dark-factory/_intake/
+.env*
+*.env

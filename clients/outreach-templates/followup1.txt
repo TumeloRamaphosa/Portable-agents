@@ -1,0 +1,11 @@
+# TEMPLATE: follow-up 1 (send day 3-4 after the cold email was actually sent)
+# Same RULES as cold.txt: no prices, no SLAs, no funding/government/data-centre or on-hold-partner claims, no client names or stats.
+Subject: Re: $company_short: agents for $sector_short, with you approving every step
+
+Hi $company team,
+
+A quick follow-up on my note about $hook.
+
+The short version: each agent drafts and you approve. The $first_agent would prepare its work in a queue for your team to approve or reject, and the shared memory stays yours.
+
+Is there someone on your side who looks after $owner_area that I should speak to instead?
