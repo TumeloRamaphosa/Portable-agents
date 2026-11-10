@@ -32,6 +32,15 @@ building. That constraint is the product.
 ```bash
 # Mission Control console — no build step, no dependencies
 open mission-control/index.html
+
+# Work tracker — every company, every agent
+open work-tracker/index.html
+
+# Agents report work from the command line
+python3 scripts/track.py list --status blocked
+python3 scripts/track.py set BC-10 done --agent SCHALK --note "NDA signed"
+python3 scripts/track.py add SA "Ship client onboarding flow" --owner VERA
+python3 scripts/track.py log RALF OS "Gateway whoami endpoint live"
 ```
 
 ---
@@ -42,10 +51,11 @@ open mission-control/index.html
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
+| `work-tracker/` | Work tracker across every Studex company and agent. `index.html` reads `data.js` |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |
-| `scripts/` | Automation, including the 30-minute auto-push |
+| `scripts/` | Automation: the 30-minute auto-push, and `track.py` for agents to report work |
 
 ---
 

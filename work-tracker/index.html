@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studex Group — Work Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C; --gold-dim:#8A7233; --gold-glow:rgba(201,168,76,.14);
+  --obsidian:#0A0A0A; --panel:#111111; --panel-2:#161616;
+  --line:rgba(201,168,76,.18); --line-soft:rgba(255,255,255,.07);
+  --paper:#F5F1E8; --muted:#A39D8E; --dim:#77736A;
+  --live:#4ADE80; --warn:#F2B035; --dead:#E5484D; --cool:#5B8DEF;
+  --mono:'Space Mono',ui-monospace,Menlo,monospace;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --display:'Bebas Neue',Impact,'Arial Narrow',sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px;line-height:1.55;
+  background-image:radial-gradient(ellipse 900px 500px at 15% -5%,rgba(201,168,76,.07),transparent 60%);
+  background-attachment:fixed}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:var(--mono);cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 90px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1180px;margin:0 auto;padding:0 18px;display:flex;align-items:center;gap:14px;min-height:54px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-size:23px;letter-spacing:.14em;color:var(--gold);line-height:1;white-space:nowrap}
+.brand span{color:var(--paper)}
+.spacer{flex:1}
+.tick{font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.toplink{font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+
+header.hero{padding:34px 0 8px}
+.kicker{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px}
+h1{font-family:var(--display);font-size:clamp(42px,9vw,84px);line-height:.92;letter-spacing:.02em;margin:0 0 14px;font-weight:400}
+h1 em{font-style:normal;color:var(--gold)}
+.lede{font-family:var(--serif);font-size:clamp(17px,2.4vw,21px);line-height:1.45;color:#CFC9B8;max-width:66ch;font-weight:300;margin:0}
+
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin:26px 0 0}
+.stat{background:var(--panel);padding:14px 14px 12px;border:0;text-align:left;color:inherit}
+button.stat:hover{background:var(--panel-2)}
+.stat .n{font-family:var(--display);font-size:34px;line-height:1;letter-spacing:.02em;color:var(--paper)}
+.stat .l{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.stat[data-k="done"] .n{color:var(--live)}
+.stat[data-k="doing"] .n{color:var(--cool)}
+.stat[data-k="blocked"] .n{color:var(--dead)}
+.stat[data-k="stale"] .n{color:var(--warn)}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}.stat:first-child{grid-column:1/-1}}
+
+.controls{position:sticky;top:54px;z-index:40;background:rgba(10,10,10,.96);padding:12px 0;margin-top:22px;border-bottom:1px solid var(--line-soft)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row + .row{margin-top:8px}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{background:transparent;border:0;border-right:1px solid var(--line);color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#0A0A0A;font-weight:700}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;flex:1;min-width:0}
+.chips::-webkit-scrollbar{display:none}
+.chip{background:transparent;border:1px solid var(--line-soft);color:var(--muted);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 10px;border-radius:2px;white-space:nowrap}
+.chip[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);background:var(--gold-glow)}
+input[type=search]{background:var(--panel);border:1px solid var(--line-soft);color:var(--paper);font-family:var(--mono);font-size:12px;padding:9px 10px;border-radius:2px;width:170px;max-width:100%}
+input[type=search]::placeholder{color:var(--dim)}
+
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+h2{font-family:var(--display);font-size:27px;letter-spacing:.1em;margin:0;font-weight:400}
+.note{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.rule{height:1px;background:linear-gradient(90deg,var(--gold),transparent 65%);margin-bottom:18px}
+
+.v{background:var(--panel);border:1px solid var(--line-soft);margin-bottom:14px}
+.v-head{display:flex;align-items:center;gap:14px;padding:14px 16px;width:100%;background:transparent;border:0;color:inherit;text-align:left}
+.v-head:hover{background:var(--panel-2)}
+.v-title{flex:1;min-width:0}
+.v-name{font-family:var(--display);font-size:22px;letter-spacing:.09em;line-height:1.1}
+.v-tag{font-family:var(--serif);font-size:15px;color:var(--muted);line-height:1.3}
+.v-count{font-size:11px;color:var(--muted);white-space:nowrap;text-align:right}
+.v-count b{color:var(--paper);font-size:15px}
+.caret{color:var(--gold-dim);transition:transform .15s}
+.v[data-open="false"] .caret{transform:rotate(-90deg)}
+.v[data-open="false"] .v-body{display:none}
+.bar{display:flex;height:3px;background:var(--line-soft)}
+.bar i{display:block;height:100%}
+.bar .done{background:var(--live)}.bar .doing{background:var(--cool)}.bar .blocked{background:var(--dead)}
+.group{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);padding:14px 16px 6px}
+.t{display:flex;gap:12px;align-items:flex-start;padding:10px 16px;border-top:1px solid var(--line-soft)}
+.pill{flex:none;width:76px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;border-radius:2px;border:1px solid var(--dim);background:transparent;color:var(--muted);text-align:center}
+.pill[data-s="done"]{border-color:var(--live);color:var(--live)}
+.pill[data-s="doing"]{border-color:var(--cool);color:var(--cool)}
+.pill[data-s="blocked"]{border-color:var(--dead);color:var(--dead);background:rgba(229,72,77,.08)}
+.t-main{flex:1;min-width:0}
+.t-title{color:var(--paper);overflow-wrap:anywhere}
+.t[data-s="done"] .t-title{color:var(--muted)}
+.t-note{font-family:var(--serif);font-size:15px;color:#CFC9B8;line-height:1.35;margin-top:2px}
+.t-meta{font-size:10px;letter-spacing:.06em;color:var(--dim);margin-top:3px}
+.t-meta .owner{color:var(--gold-dim)}
+.flag{color:var(--warn)}
+.edited{color:var(--cool)}
+.empty{padding:22px 16px;color:var(--dim);font-family:var(--serif);font-size:16px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line-soft);border-left:2px solid var(--gold-dim);padding:14px 16px}
+.card h3{font-family:var(--display);font-size:20px;letter-spacing:.08em;margin:0 0 2px;font-weight:400}
+.card .src{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.card p{font-family:var(--serif);font-size:15.5px;line-height:1.4;color:#CFC9B8;margin:8px 0 0}
+.card p b{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim);font-weight:400;display:block;margin-bottom:1px}
+.card[data-st="needs-input"]{border-left-color:var(--warn)}
+.tagx{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line);color:var(--gold);padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle}
+.card[data-st="needs-input"] .tagx{border-color:var(--warn);color:var(--warn)}
+
+.loglist{background:var(--panel);border:1px solid var(--line-soft)}
+.lg{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:10px 16px;border-top:1px solid var(--line-soft)}
+.lg:first-child{border-top:0}
+.lg .d{font-size:10.5px;color:var(--dim)}
+.lg .who{font-size:10px;letter-spacing:.1em;color:var(--gold-dim);text-transform:uppercase}
+.lg .x{font-family:var(--serif);font-size:15.5px;line-height:1.35;color:#CFC9B8}
+.lg .x strong{color:var(--paper);font-weight:600}
+
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#15130c;border-top:1px solid var(--gold);padding:10px 18px;display:none}
+.savebar.on{display:block}
+.savebar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.savebar .msg{flex:1;min-width:160px;font-size:11px;color:var(--paper)}
+.btn{background:var(--gold);color:#0A0A0A;border:1px solid var(--gold);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:9px 12px;border-radius:2px}
+.btn.ghost{background:transparent;color:var(--gold)}
+footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line-soft);font-size:11px;color:var(--dim);line-height:1.7}
+footer code{color:var(--muted)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-in">
+  <div class="brand">STUDEX <span>WORK</span></div>
+  <div class="tick" id="updated"></div>
+  <div class="spacer"></div>
+  <a class="toplink" href="../mission-control/index.html">Mission Control →</a>
+</div></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="kicker">Studex Group · every company, every agent</div>
+    <h1>WHO IS DOING <em>WHAT</em></h1>
+    <p class="lede">One list of the work across every Studex company and the agents that own it. Tap a status to change it. Anything not confirmed in the last <span id="staleDays"></span> days is flagged, so nothing here pretends to be fresher than it is.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="controls">
+    <div class="row">
+      <div class="seg" role="group" aria-label="Group by">
+        <button data-view="company" aria-pressed="true">By company</button>
+        <button data-view="agent" aria-pressed="false">By agent</button>
+      </div>
+      <input type="search" id="q" placeholder="Search work…" aria-label="Search work">
+    </div>
+    <div class="row"><div class="chips" id="statusChips" role="group" aria-label="Filter by status"></div></div>
+  </div>
+
+  <section id="work"><div id="list"></div></section>
+
+  <section>
+    <div class="sec-head"><h2>WORK LOG</h2><span class="note">What agents reported, newest first</span></div>
+    <div class="rule"></div>
+    <div class="loglist" id="log"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>TOOL STACK</h2><span class="note">Open-source pieces under evaluation</span></div>
+    <div class="rule"></div>
+    <div class="cards" id="stack"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>INTEL INBOX</h2><span class="note">Links dropped in, and what to do with each</span></div>
+    <div class="rule"></div>
+    <div class="cards" id="intel"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>DECISIONS</h2></div>
+    <div class="rule"></div>
+    <div class="loglist" id="decisions"></div>
+  </section>
+
+  <footer>
+    Data lives in <code>work-tracker/data.js</code>. Agents report with <code>python3 scripts/track.py set BC-10 done --agent SCHALK</code>, and the 30-minute auto-push carries it to GitHub.
+    Status changes made on this page are kept in this browser until you export them.
+  </footer>
+</div>
+
+<div class="savebar" id="savebar"><div class="savebar-in">
+  <div class="msg" id="saveMsg"></div>
+  <button class="btn" id="exportBtn">Export data.js</button>
+  <button class="btn ghost" id="resetBtn">Discard</button>
+</div></div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  var D = window.STUDEX_WORK;
+  if(!D){ document.getElementById('list').textContent = 'data.js did not load. Keep it next to this page.'; return; }
+
+  var KEY = 'studex-work-overrides-v1';
+  var ORDER = ['todo','doing','blocked','done'];
+  var LABEL = {todo:'To do', doing:'Doing', blocked:'Blocked', done:'Done', stale:'Confirm'};
+  var ov = {};
+  try { ov = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e) { ov = {}; }
+  var state = { view:'company', status:'all', q:'', closed:{} };
+  var now = new Date();
+  var staleDays = D.staleAfterDays || 30;
+
+  function el(tag, attrs){
+    var n = document.createElement(tag);
+    if(attrs) for(var k in attrs){
+      if(k === 'text') n.textContent = attrs[k];
+      else if(k === 'on') for(var ev in attrs.on) n.addEventListener(ev, attrs.on[ev]);
+      else if(attrs[k] != null) n.setAttribute(k, attrs[k]);
+    }
+    for(var i=2;i<arguments.length;i++){ var c = arguments[i]; if(c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }
+    return n;
+  }
+  function saveOv(){ try { localStorage.setItem(KEY, JSON.stringify(ov)); } catch(e) {} }
+  function st(t){ return ov[t.id] || t.status; }
+  function isStale(t){
+    if(ov[t.id] || st(t) === 'done' || !t.asOf) return false;
+    return (now - new Date(t.asOf + 'T00:00:00')) / 864e5 > staleDays;
+  }
+  function all(){
+    var out = [];
+    D.verticals.forEach(function(v){ v.tasks.forEach(function(t){ out.push({v:v, t:t}); }); });
+    return out;
+  }
+  function match(x){
+    var s = st(x.t);
+    if(state.status === 'stale'){ if(!isStale(x.t)) return false; }
+    else if(state.status !== 'all' && s !== state.status) return false;
+    if(state.q){
+      var hay = (x.t.id+' '+x.t.title+' '+(x.t.owner||'')+' '+(x.t.note||'')+' '+(x.t.group||'')+' '+x.v.name).toLowerCase();
+      if(hay.indexOf(state.q) < 0) return false;
+    }
+    return true;
+  }
+  function fmt(d){
+    var p = (d||'').split('-'); if(p.length < 3) return d || '';
+    return (+p[2]) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1] + ' ' + p[0];
+  }
+
+  function renderStats(){
+    var items = all(), c = {all:items.length, done:0, doing:0, blocked:0, stale:0};
+    items.forEach(function(x){ var s = st(x.t); if(c[s] != null) c[s]++; if(isStale(x.t)) c.stale++; });
+    var box = document.getElementById('stats'); box.textContent = '';
+    [['all','Work items'],['done','Done'],['doing','In progress'],['blocked','Blocked'],['stale','Need confirming']].forEach(function(k){
+      box.appendChild(el('button', {class:'stat', 'data-k':k[0], 'aria-label':k[1]+': '+c[k[0]], on:{click:function(){ state.status = k[0]; render(); document.getElementById('work').scrollIntoView({behavior:'smooth', block:'start'}); }}},
+        el('div', {class:'n', text:String(c[k[0]])}), el('div', {class:'l', text:k[1]})));
+    });
+  }
+  function renderChips(){
+    var box = document.getElementById('statusChips'); box.textContent = '';
+    [['all','All'],['todo','To do'],['doing','Doing'],['blocked','Blocked'],['done','Done'],['stale','Need confirming']].forEach(function(k){
+      box.appendChild(el('button', {class:'chip', 'aria-pressed':String(state.status === k[0]), text:k[1], on:{click:function(){ state.status = k[0]; render(); }}}));
+    });
+  }
+  function taskRow(x, showCompany){
+    var t = x.t, s = st(t);
+    var meta = el('div', {class:'t-meta'});
+    meta.appendChild(document.createTextNode(t.id));
+    if(showCompany) meta.appendChild(document.createTextNode(' · ' + x.v.name));
+    if(!showCompany && t.owner) { meta.appendChild(document.createTextNode(' · ')); meta.appendChild(el('span', {class:'owner', text:t.owner})); }
+    if(t.due) meta.appendChild(document.createTextNode(' · due ' + fmt(t.due)));
+    if(ov[t.id]) { meta.appendChild(document.createTextNode(' · ')); meta.appendChild(el('span', {class:'edited', text:'changed here, not exported'})); }
+    else if(t.asOf) meta.appendChild(document.createTextNode(' · as of ' + fmt(t.asOf)));
+    if(isStale(t)) { meta.appendChild(document.createTextNode(' · ')); meta.appendChild(el('span', {class:'flag', text:'needs confirming'})); }
+    return el('div', {class:'t', 'data-s':s},
+      el('button', {class:'pill', 'data-s':s, 'aria-label':'Status '+LABEL[s]+'. Tap to change.', text:LABEL[s], on:{click:function(){
+        var next = ORDER[(ORDER.indexOf(s)+1) % ORDER.length];
+        if(next === t.status) delete ov[t.id]; else ov[t.id] = next;
+        saveOv(); render();
+      }}}),
+      el('div', {class:'t-main'},
+        el('div', {class:'t-title', text:t.title}),
+        t.note ? el('div', {class:'t-note', text:t.note}) : null,
+        meta));
+  }
+  function block(key, name, tag, items, byGroup, showCompany){
+    var c = {done:0, doing:0, blocked:0};
+    items.forEach(function(x){ var s = st(x.t); if(c[s] != null) c[s]++; });
+    var open = !state.closed[key];
+    var body = el('div', {class:'v-body'});
+    var bar = el('div', {class:'bar'});
+    ['done','doing','blocked'].forEach(function(k){ if(c[k]) { var i = el('i', {class:k}); i.style.width = (c[k]/items.length*100)+'%'; bar.appendChild(i); } });
+    body.appendChild(bar);
+    var last = null;
+    items.forEach(function(x){
+      var g = byGroup ? (x.t.group || '') : '';
+      if(g && g !== last) body.appendChild(el('div', {class:'group', text:g}));
+      last = g;
+      body.appendChild(taskRow(x, showCompany));
+    });
+    var count = el('div', {class:'v-count'}); count.appendChild(el('b', {text:String(c.done)})); count.appendChild(document.createTextNode(' / ' + items.length + ' done'));
+    return el('div', {class:'v', 'data-open':String(open)},
+      el('button', {class:'v-head', 'aria-expanded':String(open), on:{click:function(){ state.closed[key] = open; render(); }}},
+        el('div', {class:'v-title'}, el('div', {class:'v-name', text:name}), tag ? el('div', {class:'v-tag', text:tag}) : null),
+        count, el('span', {class:'caret', 'aria-hidden':'true', text:'▾'})),
+      body);
+  }
+  function renderList(){
+    var box = document.getElementById('list'); box.textContent = '';
+    var items = all().filter(match), n = 0;
+    if(state.view === 'company'){
+      D.verticals.forEach(function(v){
+        var mine = items.filter(function(x){ return x.v === v; });
+        if(!mine.length) return; n++;
+        box.appendChild(block('c:'+v.id, v.name, v.tagline, mine, true, false));
+      });
+    } else {
+      var by = {}, names = [];
+      items.forEach(function(x){ var o = x.t.owner || 'Unassigned'; if(!by[o]) { by[o] = []; names.push(o); } by[o].push(x); });
+      names.sort(function(a,b){ if(a === 'Unassigned') return 1; if(b === 'Unassigned') return -1; return by[b].length - by[a].length || a.localeCompare(b); });
+      names.forEach(function(o){ n++;
+        var cos = {}; by[o].forEach(function(x){ cos[x.v.name] = 1; });
+        box.appendChild(block('a:'+o, o, o === 'Unassigned' ? 'No agent owns these yet' : Object.keys(cos).join(' · '), by[o], false, true));
+      });
+    }
+    if(!n) box.appendChild(el('div', {class:'v'}, el('div', {class:'empty', text:'Nothing matches. Clear the search or pick another status.'})));
+  }
+  function vname(id){ for(var i=0;i<D.verticals.length;i++) if(D.verticals[i].id === id) return D.verticals[i].name; return id || ''; }
+  function renderLog(){
+    var box = document.getElementById('log'); box.textContent = '';
+    var L = D.log || [];
+    if(!L.length) { box.appendChild(el('div', {class:'empty', text:'No agent reports yet. They appear here when an agent runs scripts/track.py.'})); return; }
+    L.slice(0, 40).forEach(function(e){
+      box.appendChild(el('div', {class:'lg'},
+        el('div', null, el('div', {class:'d', text:fmt(e.date)}), el('div', {class:'who', text:e.agent || '—'})),
+        el('div', {class:'x'}, el('strong', {text:vname(e.vertical) + (e.task ? ' · ' + e.task : '')}), el('br'), e.text)));
+    });
+  }
+  function renderCards(){
+    var s = document.getElementById('stack'); s.textContent = '';
+    (D.stack || []).forEach(function(k){
+      var h = el('h3', null, el('a', {href:k.url, target:'_blank', rel:'noopener', text:k.name}), el('span', {class:'tagx', text:k.status}));
+      var what = el('p'); what.appendChild(el('b', {text:'What it is'})); what.appendChild(document.createTextNode(k.what));
+      var fit = el('p'); fit.appendChild(el('b', {text:'Where it fits' + (k.task ? ' · ' + k.task : '')})); fit.appendChild(document.createTextNode(k.fit));
+      s.appendChild(el('div', {class:'card'}, h, el('div', {class:'src', text:k.licence}), what, fit));
+    });
+    var i = document.getElementById('intel'); i.textContent = '';
+    (D.intel || []).forEach(function(k){
+      var h = el('h3', null, el('a', {href:k.url, target:'_blank', rel:'noopener', text:k.title}), el('span', {class:'tagx', text:k.status === 'needs-input' ? 'needs you' : k.status}));
+      var a = el('p'); a.appendChild(el('b', {text:'Next step'})); a.appendChild(document.createTextNode(k.action));
+      i.appendChild(el('div', {class:'card', 'data-st':k.status}, h, el('div', {class:'src', text:k.source + ' · added ' + fmt(k.added)}), a));
+    });
+    var d = document.getElementById('decisions'); d.textContent = '';
+    (D.decisions || []).forEach(function(k){
+      d.appendChild(el('div', {class:'lg'}, el('div', {class:'d', text:fmt(k.date)}), el('div', {class:'x'}, el('strong', {text:k.decision}), el('br'), k.why)));
+    });
+  }
+  function renderSave(){
+    var n = Object.keys(ov).length;
+    document.getElementById('savebar').classList.toggle('on', n > 0);
+    document.getElementById('saveMsg').textContent = n + (n === 1 ? ' change' : ' changes') + ' saved in this browser only.';
+  }
+  function render(){
+    renderStats(); renderChips(); renderList(); renderSave();
+    Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === state.view)); });
+  }
+  function today(){ var d = new Date(); return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2); }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.seg button'), function(b){
+    b.addEventListener('click', function(){ state.view = b.getAttribute('data-view'); render(); });
+  });
+  document.getElementById('q').addEventListener('input', function(e){ state.q = e.target.value.trim().toLowerCase(); renderList(); });
+  document.getElementById('resetBtn').addEventListener('click', function(){ ov = {}; saveOv(); render(); });
+  document.getElementById('exportBtn').addEventListener('click', function(){
+    var copy = JSON.parse(JSON.stringify(D)), day = today();
+    copy.log = copy.log || [];
+    copy.verticals.forEach(function(v){ v.tasks.forEach(function(t){
+      if(ov[t.id] && ov[t.id] !== t.status){
+        copy.log.unshift({date:day, agent:'NALEDI-CEO', vertical:v.id, text:t.title + ': ' + t.status + ' → ' + ov[t.id], task:t.id});
+        t.status = ov[t.id]; t.asOf = day;
+      }
+    }); });
+    copy.updated = day;
+    var blob = new Blob(['window.STUDEX_WORK = ' + JSON.stringify(copy, null, 2) + ';\n'], {type:'text/javascript'});
+    var a = el('a', {href:URL.createObjectURL(blob), download:'data.js'});
+    document.body.appendChild(a); a.click(); a.remove();
+    document.getElementById('saveMsg').textContent = 'Downloaded. Replace work-tracker/data.js in the repo with it, then discard.';
+  });
+
+  document.getElementById('updated').textContent = 'Updated ' + fmt(D.updated);
+  document.getElementById('staleDays').textContent = staleDays;
+  renderLog(); renderCards(); render();
+})();
+</script>
+</body>
+</html>

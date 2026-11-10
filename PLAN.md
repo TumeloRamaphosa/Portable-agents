@@ -50,6 +50,7 @@ Do not invert this. The failure mode is buying the physical layer first.
 - [x] Mission Control console — single-scroll, role-switched, Studex design system
 - [x] Auto-push cron every 30 min
 - [ ] Deploy console to a public URL (Vercel)
+- [x] Work tracker across all verticals — `work-tracker/`, agents report via `scripts/track.py`
 
 ### PHASE 1 — PWC ANCHOR  ⏳ CRITICAL PATH · WEDNESDAY
 - [ ] **Get AB's NDA executed** — blocks everything else. Do not release PRD first.
