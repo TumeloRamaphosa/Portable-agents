@@ -41,6 +41,7 @@ open mission-control/index.html
 | Path | What's in it |
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
+| `agents/schpielberg/` | **SCHPIELBERG** — content & film director pack: memory, scripts, plans, dry-run pipeline runner, skills ([start](agents/schpielberg/README.md)) |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
