@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "rwanda-coffee",
+  "status": "planned",
+  "country": "Rwanda",
+  "sectors": ["coffee-distribution"],
+  "coordinator": "hermes-rwanda",
+  "owner": "Tumelo Ramaphosa",
+  "deployment_writer": "integration-lead",
+  "shared_repository": "TumeloRamaphosa/Portable-agents",
+  "execution_repository": "studex-rwanda",
+  "git_host_target": "Hub VM",
+  "agents": [
+    {"id": "hermes-rwanda", "scope": "Coordinate bounded internal Rwanda coffee work"},
+    {"id": "coffee-operations", "scope": "Prepare internal coffee operations records"},
+    {"id": "distribution", "scope": "Prepare internal distribution planning evidence"},
+    {"id": "software-engineering", "scope": "Maintain approved internal software changes"},
+    {"id": "security-compliance", "scope": "Review compliance and counterparty risks"},
+    {"id": "qa-evidence", "scope": "Independently review execution evidence"}
+  ],
+  "human_approval_required": [
+    "external_outreach",
+    "pricing_commitment",
+    "production_deployment",
+    "publication",
+    "purchase",
+    "shipping_commitment"
+  ],
+  "allowed_tools": ["git", "hermes", "openclaw", "gitea", "huly"],
+  "evidence_status": "not-verified"
+}
