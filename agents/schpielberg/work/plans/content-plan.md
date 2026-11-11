@@ -5,6 +5,13 @@ Prepared 11 Oct 2026 (SAST) by Schpielberg (content & film desk). DRAFT. Nothing
 v1 is kept at `plan-v1.md`. Source of truth: Tumelo's Obsidian notes (`vault/MY Story`, `vault/Claude Content`). They override web findings.
 Citations use the form `[MY Story/STORY-AND-DIRECTION]` or `[CC/110-studbot-first-posts]` (CC = Claude Content).
 
+## Command Centre & stack (read with this plan)
+- **Operator hub:** [Studex Command Centre](https://app.notion.com/p/Studex-Command-Centre-3f53ef07399281548222f765b9cac2f9) — 09:00 / 17:00 briefs, Agent Dashboard, Factory Board. Sentinel owns build order in Notion.
+- **Portable git (rules + this file):** [Portable-agents](https://github.com/TumeloRamaphosa/Portable-agents) — `docs/COMMAND-CENTRE.md`, `operating-system/agent-os-design.md`, `dark-factory-knowledge/content-blue-team.md`.
+- **Runtime (do not contradict in scripts):** [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-) — fleet dashboard and OpenClaw; any Naledi/FeedHive automation stays **draft-only** until the approval chain below says yes.
+- **Coffee vertical evidence:** Notion Coffee Command logs (e.g. [10 Oct 2026](https://app.notion.com/p/Coffee-Command-10-October-2026-3f53ef073992818e9bd5cf9817ad2ccf)) — KPIs and gates override channel drafts when they conflict.
+- **Sibling agent pack:** `agents/schpielberg/COLLABORATE.md` and `memory/standing-rules.md` — same rules as §0 here.
+
 ## 0. Ground rules (from the notes, these come first)
 - **Story:** a farmer looking past the fence goes on to build Studex, learning blockchain, cloud and data science along the way. Technology in service of being human. [MY Story/STORY-AND-DIRECTION]
 - **Narrator:** the robot **Studbot**. It talks *about* the founder and never claims it was the farmer. [MY Story/STORY-AND-DIRECTION]

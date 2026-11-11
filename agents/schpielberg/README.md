@@ -8,6 +8,7 @@ Studex's **SCHPIELBERG** desk: scripts, films, faceless video, posters, and draf
 
 | Doc | Purpose |
 |-----|---------|
+| [`../../docs/COMMAND-CENTRE.md`](../../docs/COMMAND-CENTRE.md) | Notion + Portable-agents + Linux-Studex- alignment |
 | [`INDEX.md`](INDEX.md) | Full catalogue of scripts, plans, art, wiki, runner |
 | [`COLLABORATE.md`](COLLABORATE.md) | How to request content, approvals, escalations |
 | [`memory/standing-rules.md`](memory/standing-rules.md) | Standing rules (read before any draft) |

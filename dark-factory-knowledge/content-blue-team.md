@@ -1,5 +1,8 @@
 # Content Lead - Blue Team — cleaned knowledge summary
 
+**Canonical content plan in git:** `agents/schpielberg/work/plans/content-plan.md` + `agents/schpielberg/memory/standing-rules.md`.
+**Stack page:** `docs/COMMAND-CENTRE.md`. **Notion:** Studex Command Centre (Agent Dashboard).
+
 Sources: Obsidian `Content Lead - Blue Team/` (read 2026-11-09).
 
 ## Operating model

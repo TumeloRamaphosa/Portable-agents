@@ -33,3 +33,9 @@ Agents reach models through one gateway, so no agent holds its own keys. Keys go
 
 ## Honest status language
 `unknown` · `offline` · `blocked` · `needs approval` · `proposed` · `accepted`. Missing report ≠ success.
+
+## Repo & Command Centre alignment
+- **Portable layer (this repo):** `operating-system/`, `voice-desk/`, `dark-factory-knowledge/`, `clients/`, `agents/schpielberg/` — see `docs/COMMAND-CENTRE.md`.
+- **Runtime layer:** [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-) — UTM fleet, `dashboard.html`, gateway ports 3000–3013.
+- **Operator layer:** Notion Studex Command Centre — canonical rhythm and Agent Dashboard; not auto-synced to git.
+- **Content:** Schpielberg pack owns `agents/schpielberg/work/plans/content-plan.md`; blue-team summary in `dark-factory-knowledge/content-blue-team.md`.

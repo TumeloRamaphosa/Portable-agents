@@ -13,7 +13,11 @@ behind it. Everything here is **draft** unless marked approved by Agent Chief Lo
 | `hermes-intake/` | Code for the Hermes intake form + voice-intake endpoint (hermes-intake.vercel.app) |
 
 Related: `../voice-desk/` (runnable mock), `../dark-factory-knowledge/` (agent knowledge),
-`../clients/` (offers, templates, playbooks).
+`../clients/` (offers, templates, playbooks), `../agents/schpielberg/` (content plan & film library).
+
+**Command Centre (all desks):** read `../docs/COMMAND-CENTRE.md` first. Notion hub:
+[Studex Command Centre](https://app.notion.com/p/Studex-Command-Centre-3f53ef07399281548222f765b9cac2f9).
+Runtime VMs and OpenClaw live in [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-).
 
 ## Standing rules (apply to every file in this repo)
 - Nothing is merged, deployed, spent, sent externally or used for a real call without Agent Chief Lord's approval.

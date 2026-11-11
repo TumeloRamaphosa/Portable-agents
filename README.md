@@ -40,6 +40,7 @@ open mission-control/index.html
 
 | Path | What's in it |
 |------|--------------|
+| `docs/COMMAND-CENTRE.md` | **Start here for alignment** — Notion Command Centre ↔ this repo ↔ [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-) |
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
 | `agents/schpielberg/` | **SCHPIELBERG** — content & film director pack: memory, scripts, plans, dry-run pipeline runner, skills ([start](agents/schpielberg/README.md)) |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
