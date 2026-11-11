@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <title>StudEx OS</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0c0c0d;
+      --ink: #f4f0e6;
+      --muted: #b7b1a6;
+      --gold: #c9a84c;
+      --gold-ink: #1a1408;
+      --line: rgba(201, 168, 76, 0.28);
+      --line-strong: rgba(201, 168, 76, 0.5);
+      --panel: #161618;
+      --panel-2: #101012;
+      --danger: #e0a090;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      --radius: 14px;
+      --ui: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+      --mono: "Space Mono", "SF Mono", ui-monospace, monospace;
+      --serif: "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--ui);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    button:active { transform: scale(0.98); }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    a { color: var(--gold); }
+    h1, h2, p { margin: 0; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .os {
+      height: 100dvh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      background:
+        radial-gradient(900px 420px at 8% -10%, rgba(201, 168, 76, 0.16), transparent 62%),
+        var(--bg);
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 52px;
+      padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+      background: var(--panel-2);
+      border-bottom: 1px solid var(--line);
+      z-index: 5;
+    }
+    .brand {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      font-family: var(--serif);
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: var(--gold);
+    }
+    .menu-app {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .menu-spacer { flex: 1; }
+    .menu-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .pill, .text-btn, .gold-btn, .dock-btn, .lane-btn, .chip {
+      border-radius: 999px;
+    }
+    .pill {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      padding: 6px 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .pill.live { background: var(--gold); color: var(--gold-ink); border-color: var(--gold); }
+    .clock {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .about {
+      position: absolute;
+      top: calc(52px + env(safe-area-inset-top));
+      left: 12px;
+      width: min(420px, calc(100vw - 24px));
+      padding: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 6;
+    }
+    .about p { color: var(--muted); margin-top: 8px; }
+    .about .gold-btn { margin-top: 14px; }
+
+    .stage {
+      min-height: 0;
+      padding: 22px 22px 12px;
+    }
+    .window, .launcher {
+      width: min(1080px, 100%);
+      height: 100%;
+      margin: 0 auto;
+    }
+    .window {
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow);
+      overflow: hidden;
+    }
+    .window-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 52px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #141416;
+    }
+    .window-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .window-bar .menu-spacer { flex: 1; }
+    .text-btn, .gold-btn, .lane-btn, .chip {
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--gold);
+      min-height: 36px;
+      padding: 0 14px;
+    }
+    .gold-btn {
+      background: var(--gold);
+      color: var(--gold-ink);
+      border-color: var(--gold);
+      font-weight: 650;
+    }
+    .gold-btn:disabled, .text-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .window-body {
+      min-height: 0;
+      overflow: auto;
+      padding: 18px 18px 28px;
+      overscroll-behavior: contain;
+    }
+
+    .lede { max-width: 62ch; color: var(--muted); }
+    .lede strong { color: var(--ink); font-weight: 600; }
+    .stack { display: grid; gap: 18px; }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    h2 {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 2px 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.16);
+    }
+    .row:last-child { border-bottom: 0; }
+    .row p, .quiet { color: var(--muted); }
+    .name { font-weight: 650; }
+    .mono { font-family: var(--mono); font-size: 13px; overflow-wrap: anywhere; }
+    .mono a { overflow-wrap: anywhere; }
+    .state { font-family: var(--mono); font-size: 12px; color: var(--gold); }
+    .state.bad { color: var(--danger); }
+    .state.quiet { color: var(--muted); }
+    .links { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+    .links a { font-family: var(--mono); font-size: 13px; }
+
+    .banner {
+      padding: 12px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: #1c1a16;
+    }
+    .banner p { margin-top: 6px; color: var(--muted); }
+    .banner code, .about code, .hint code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .lanes { display: flex; gap: 8px; flex-wrap: wrap; }
+    .lane-btn[aria-pressed="true"], .chip[aria-pressed="true"] {
+      background: var(--gold);
+      color: var(--gold-ink);
+      border-color: var(--gold);
+    }
+    .field { display: grid; gap: 6px; }
+    .field span { color: var(--muted); font-size: 14px; }
+    select, input[type="search"], textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      background: #101012;
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-height: 44px;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    select:focus, input:focus, textarea:focus { border-color: var(--gold); }
+    .reply {
+      white-space: pre-wrap;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      min-height: 1.4em;
+    }
+    .hint { color: var(--muted); font-size: 14px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filters input { max-width: 280px; }
+
+    .launcher {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 180px));
+      gap: 18px;
+      align-content: center;
+      justify-content: center;
+    }
+    .tile {
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      background: rgba(22, 22, 24, 0.92);
+      color: var(--ink);
+      border-radius: 16px;
+      min-height: 120px;
+      display: grid;
+      align-content: end;
+      justify-items: start;
+      padding: 14px;
+      text-align: left;
+    }
+    .mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--gold);
+      color: var(--gold-ink);
+      font-family: var(--mono);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .dock {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+    }
+    .dock-inner {
+      display: flex;
+      gap: 4px;
+      padding: 6px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .dock-btn {
+      appearance: none;
+      width: 76px;
+      min-height: 58px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 4px;
+      border-radius: 12px;
+    }
+    .dock-btn[aria-current="page"] {
+      color: var(--gold-ink);
+      background: var(--gold);
+    }
+    .dock-btn .mark {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: inherit;
+      font-size: 12px;
+      border: 1px solid currentColor;
+    }
+    .dock-btn[aria-current="page"] .mark {
+      background: var(--gold-ink);
+      color: var(--gold);
+      border-color: var(--gold-ink);
+    }
+    .dock-btn span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; white-space: nowrap; }
+
+    @media (max-width: 760px) {
+      .menu-app, .pill.route, .clock-zone { display: none; }
+      .stage { padding: 0; }
+      .window {
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .close-btn { display: none; }
+      .split { grid-template-columns: 1fr; gap: 22px; }
+      .window-body { padding: 16px 16px 24px; }
+      .dock { padding-left: 0; padding-right: 0; }
+      .dock-inner {
+        width: 100%;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+        justify-content: space-between;
+      }
+      .dock-btn { width: auto; flex: 1; }
+      .hint-keys { display: none; }
+      .filters input { max-width: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .os, .menu, .window, .dock-inner, .tile { background: #101012; }
+    }
+  </style>
+</head>
+<body>
+  <div class="os">
+    <header class="menu">
+      <button class="brand" id="brand" type="button" aria-expanded="false" aria-controls="about">StudEx</button>
+      <div class="menu-app" id="menu-app">Companies</div>
+      <div class="menu-spacer"></div>
+      <div class="menu-meta">
+        <span class="pill" id="source-pill">Capture</span>
+        <span class="pill route" id="route-pill">Offline</span>
+        <time class="clock" id="clock">--:-- <span class="clock-zone">SAST</span></time>
+      </div>
+    </header>
+    <main class="stage" id="stage"></main>
+    <nav class="dock" aria-label="Apps">
+      <div class="dock-inner" id="dock"></div>
+    </nav>
+  </div>
+
+  <script>
+    const BRIDGE = "http://127.0.0.1:8794";
+    const APPS = [
+      ["roof", "Companies", "C"],
+      ["fleet", "Fleet", "F"],
+      ["tools", "Tools", "T"],
+      ["models", "Models", "M"],
+      ["console", "Console", "S"]
+    ];
+    const ONLINE = [
+      ["grok-fast", "xAI", "Fast cloud route"],
+      ["grok-reason", "xAI", "Reasoning route"],
+      ["plan-sonnet", "OpenRouter", "Claude Sonnet"],
+      ["plan-opus", "OpenRouter", "Claude Opus"],
+      ["plan-gpt5", "OpenRouter", "GPT-5.4"],
+      ["hermes-405b", "OpenRouter", "Hermes 405B"]
+    ];
+    const LOCAL_SEATS = [
+      ["Hermes", "Orchestrator", 8787],
+      ["OpenClaw", "Gateway", 18789],
+      ["Arcade", "Command deck", 3000],
+      ["n8n", "Workflows", 5678],
+      ["Ollama", "Offline weights", 11434],
+      ["LiteLLM", "Online router", 4000],
+      ["DenchClaw", "Web desk", 3100],
+      ["Grokbot OS", "Local floor", 8789],
+      ["Factory page", "Local factory", 8792]
+    ];
+    const NAMED_SEATS = [
+      ["RALF", "Scheduler"],
+      ["Charlie", "Voice"],
+      ["Eddie", "Ad engine"],
+      ["Herdr", "Rooms"]
+    ];
+    const LEGACY = [
+      ["Herdr desk", "herdr-command-center.html"],
+      ["Bare metal", "local-bare-metal-dashboard.html"],
+      ["Invest", "investment-company-dashboard.html"],
+      ["Models house", "models-house-dashboard.html"]
+    ];
+    const CAPTURE = {
+      time: "2026-10-01T17:24:00+02:00",
+      internet: null,
+      ports: {
+        "11434": true, "8787": true, "18789": true, "5678": true, "3000": true,
+        "4000": false, "3100": false, "1234": false, "8789": false
+      },
+      ollama: {
+        ok: true,
+        version: "0.34.1",
+        models: [
+          { name: "llama3.2:1b", size: 1320000000, params: "1.2B" },
+          { name: "qwen2.5:14b", size: 8990000000, params: "14.8B" }
+        ]
+      },
+      tailscale: {
+        ok: true,
+        backend: "Running",
+        version: "1.102.2",
+        client: "1.102.4",
+        peers: [
+          { name: "macbook-pro-5", os: "macOS", ip: "100.95.66.29", online: true, self: true, seen: "On the mesh" },
+          { name: "projects-mac-mini", os: "macOS", ip: "100.112.109.40", online: true, self: false, seen: "On the mesh" },
+          { name: "studex-grokbot-os", os: "linux", ip: "100.76.121.16", online: false, self: false, seen: "Last seen 4 days ago" },
+          { name: "sapien", os: "windows", ip: "100.77.156.77", online: false, self: false, seen: "Last seen 11 days ago" },
+          { name: "orgo-desktop-1", os: "linux", ip: "100.90.182.113", online: false, self: false, seen: "Last seen 19 days ago" },
+          { name: "superagent-command-center", os: "linux", ip: "100.96.194.88", online: false, self: false, seen: "Last seen 19 days ago" },
+          { name: "tumelos-z-fold6", os: "android", ip: "100.86.176.86", online: false, self: false, seen: "Last seen 20 days ago" },
+          { name: "ipad-pro-12-9-gen-5", os: "iOS", ip: "100.110.171.77", online: false, self: false, seen: "Last seen 21 days ago" },
+          { name: "lyra-agent", os: "linux", ip: "100.119.30.74", online: false, self: false, seen: "Last seen 27 days ago" },
+          { name: "cloud-pc-eddxx0kt", os: "linux", ip: "100.109.98.72", online: false, self: false, seen: "Last seen 39 days ago" },
+          { name: "razor-blade", os: "windows", ip: "100.115.114.4", online: false, self: false, seen: "Last seen 40 days ago" },
+          { name: "robusca-sandbox", os: "linux", ip: "100.67.168.127", online: false, self: false, seen: "Last seen 42 days ago" },
+          { name: "maxhermes-n75kw", os: "linux", ip: "100.101.200.59", online: false, self: false, seen: "Last seen 43 days ago" },
+          { name: "orgo-desktop", os: "linux", ip: "100.74.71.60", online: false, self: false, seen: "Last seen 55 days ago" },
+          { name: "maxclaw-vpm4p", os: "linux", ip: "100.121.69.92", online: false, self: false, seen: "Last seen 62 days ago" },
+          { name: "4d893226ce3e18", os: "linux", ip: "100.117.59.83", online: false, self: false, seen: "Last seen 65 days ago" },
+          { name: "naledi-cmo", os: "linux", ip: "100.91.156.104", online: false, self: false, seen: "Last seen 65 days ago" },
+          { name: "msi", os: "windows", ip: "100.124.221.122", online: false, self: false, seen: "Last seen 68 days ago" },
+          { name: "orgo-desktop-vm", os: "linux", ip: "100.70.213.116", online: false, self: false, seen: "Last seen 69 days ago" },
+          { name: "dark-factory", os: "linux", ip: "100.93.37.55", online: false, self: false, seen: "Last seen 74 days ago" },
+          { name: "dark-factory-vm", os: "linux", ip: "100.122.193.50", online: false, self: false, seen: "Last seen 85 days ago" }
+        ]
+      }
+    };
+
+    const state = {
+      app: "roof",
+      company: null,
+      open: true,
+      about: false,
+      bridge: "checking",
+      live: null,
+      lane: localStorage.getItem("studex-os-lane") === "online" ? "online" : "offline",
+      model: localStorage.getItem("studex-os-model") || "llama3.2:1b",
+      mesh: "all",
+      query: "",
+      log: ["Opened StudEx OS. Checking the desk bridge."],
+      asking: false,
+      answer: "",
+      askError: "",
+      draft: "",
+      copied: ""
+    };
+
+    function el(tag, attrs, children) {
+      const node = document.createElement(tag);
+      Object.entries(attrs || {}).forEach(function (entry) {
+        const key = entry[0];
+        const value = entry[1];
+        if (key === "class") node.className = value;
+        else if (key === "text") node.textContent = value;
+        else if (key.startsWith("on") && typeof value === "function") node.addEventListener(key.slice(2).toLowerCase(), value);
+        else if (value != null && value !== false) node.setAttribute(key, value === true ? "" : String(value));
+      });
+      (children || []).forEach(function (child) {
+        node.append(child instanceof Node ? child : document.createTextNode(String(child)));
+      });
+      return node;
+    }
+
+    function data() {
+      return state.live || CAPTURE;
+    }
+
+    function seenText(peer) {
+      if (peer.seen) return peer.seen;
+      if (peer.online) return "On the mesh";
+      const iso = peer.lastSeen || "";
+      const stamp = Date.parse(iso);
+      if (!iso || iso.indexOf("0001") === 0 || Number.isNaN(stamp)) return "Last seen unknown";
+      const days = Math.floor((Date.now() - stamp) / 86400000);
+      if (days <= 0) return "Last seen today";
+      if (days === 1) return "Last seen yesterday";
+      return "Last seen " + days + " days ago";
+    }
+
+    function peers() {
+      return ((data().tailscale || {}).peers || []).slice().sort(function (a, b) {
+        return (b.self - a.self) || (b.online - a.online) || a.name.localeCompare(b.name);
+      });
+    }
+
+    function selfPeer() {
+      return peers().find(function (peer) { return peer.self; }) || peers()[0] || null;
+    }
+
+    function onlineCount() {
+      return peers().filter(function (peer) { return peer.online; }).length;
+    }
+
+    function portUp(port) {
+      const ports = data().ports || {};
+      return Boolean(ports[String(port)]);
+    }
+
+    function listeningSeats() {
+      return LOCAL_SEATS.filter(function (seat) { return portUp(seat[2]); });
+    }
+
+    function silentSeats() {
+      return LOCAL_SEATS.filter(function (seat) { return !portUp(seat[2]); });
+    }
+
+    function offlineModels() {
+      return ((data().ollama || {}).models || []).filter(function (model) { return model.name; });
+    }
+
+    function gb(size) {
+      if (!size) return "";
+      return (size / 1e9).toFixed(2) + " GB";
+    }
+
+    function routeLabel() {
+      if (state.lane === "online") return "Online · " + (state.model || "unset");
+      return "Offline · " + (state.model || "unset");
+    }
+
+    function log(line) {
+      state.log.unshift(line);
+      state.log = state.log.slice(0, 12);
+    }
+
+    function rememberRoute() {
+      const choices = state.lane === "online"
+        ? ONLINE.map(function (item) { return item[0]; })
+        : offlineModels().map(function (model) { return model.name; });
+      if (choices.length && choices.indexOf(state.model) === -1) state.model = choices[0];
+      localStorage.setItem("studex-os-lane", state.lane);
+      localStorage.setItem("studex-os-model", state.model);
+    }
+
+    const COMPANIES = [
+      {
+        id: "studex-meat",
+        name: "Studex Meat",
+        status: "Pilot",
+        registry: "Listed in the fleet registry.",
+        summary: "The meat shop and its content floor. Work files, agents, and the repo stay in this room.",
+        files: [
+          ["Shop code", "/Users/tumeloramaphosa/studex-auto-meat"],
+          ["Content hub", "/Users/tumeloramaphosa/Desktop/studex-content-hub"],
+          ["Fleet record", "/Users/tumeloramaphosa/Desktop/Founder/Fleet Command /studex-os/businesses/studex-meat"]
+        ],
+        drive: [
+          ["Studex Meat", "https://drive.google.com/drive/folders/1IgG8DF5QBghpaxOUcSZBo5eUKLxl5w0X"]
+        ],
+        repos: [["studex-auto-meat", "https://github.com/TumeloRamaphosa/studex-auto-meat"]],
+        agents: ["Lead registered as hermes-meat", "OpenClaw is the floor", "Naledi is the CMO seat", "CashClaw belongs on the Auto - Meat computer"],
+        machines: ["Orgo seat: Auto - Meat", "Tailscale name: naledi-cmo", "Shop: https://studexmeat.com"],
+        herdr: "The Herdr goal for this company is Meat. This Mac's Herdr host list is shared. It does not add a separate Meat machine.",
+        gates: "Refunds, price changes, and paid ad spend wait for a person."
+      },
+      {
+        id: "global-markets",
+        name: "Global Markets",
+        status: "Onboarding",
+        registry: "Listed in the fleet registry.",
+        summary: "The markets desk. Its repos and the Orgo computer stay separate from Meat.",
+        files: [
+          ["Markets repo", "/Users/tumeloramaphosa/studex-global-markets"],
+          ["Second checkout", "/Users/tumeloramaphosa/Stud-Ex-Global-Markets- "]
+        ],
+        drive: [
+          ["Global Markets", "https://drive.google.com/drive/folders/1xfsCCLWjWm8gfD5hHhnX_Entaac9ci0y"]
+        ],
+        repos: [
+          ["studex-global-markets", "https://github.com/TumeloRamaphosa/studex-global-markets"],
+          ["Stud-Ex-Global-Markets-", "https://github.com/TumeloRamaphosa/Stud-Ex-Global-Markets-"]
+        ],
+        agents: ["Lead registered as hermes-markets", "OpenClaw is the floor"],
+        machines: ["Orgo seat: Global Markets"],
+        herdr: "The Herdr goal for this company is Global Markets. No separate Herdr host is named for it.",
+        gates: "Contracts, pricing, client communication, payments, and KYC wait for a person."
+      },
+      {
+        id: "stud-bot",
+        name: "Stud-Bot",
+        status: "Launching",
+        registry: "Listed in the fleet registry.",
+        summary: "Customer AI. The registry names a local seat and a production VM. The business folder is not on this Mac.",
+        files: [],
+        repos: [],
+        agents: ["Lead registered as hermes-coordinator", "Floor registered as openclaw-studbot", "A registry comment names qwen2.5:14b"],
+        machines: ["Registry local seat: mac-mini-m1", "Production VM: studex-nexus-hub, 34.35.82.49", "Live mesh also has projects-mac-mini. This page does not treat that name as the registry seat."],
+        herdr: "studex-nexus-hub is an enabled Herdr machine on this Mac.",
+        gates: "Medical claims, pricing changes, legal statements, large orders, and complaints wait for a person."
+      },
+      {
+        id: "coffee",
+        name: "Studex Coffee",
+        status: "Folder only",
+        registry: "Not a business entry in the fleet registry yet.",
+        summary: "Barista code on this Mac. It stays in its own folder until the registry gives it a seat.",
+        files: [["Barista", "/Users/tumeloramaphosa/studex-barista"]],
+        repos: [["Cafe-Noir", "https://github.com/StudEX/Cafe-Noir"]],
+        agents: ["No lead agent is registered."],
+        machines: ["No Orgo or GCP seat is assigned."],
+        herdr: "No Herdr goal is recorded for Coffee.",
+        gates: "None recorded."
+      },
+      {
+        id: "nest-vm",
+        name: "NestVM",
+        status: "Onboarding",
+        registry: "Listed in the fleet registry.",
+        summary: "Platform ops. Work files for this company are not on this Mac.",
+        files: [],
+        repos: [],
+        agents: ["Lead registered as hermes-nestvm", "OpenClaw is the floor"],
+        machines: ["No machine label is in the registry entry."],
+        herdr: "No Herdr host is assigned.",
+        gates: "Client billing and VM deletion wait for a person."
+      },
+      {
+        id: "factory",
+        name: "Software factory",
+        status: "Floor",
+        registry: "A build floor, not a customer company.",
+        summary: "The factory has its own folder, its own GCP VM, and its own Herdr machine.",
+        files: [["Factory checkout", "/Users/tumeloramaphosa/Projects/studex-factory"]],
+        drive: [
+          ["Software Factory", "https://drive.google.com/drive/folders/17dttaaf9fXAp3bynDaPf2xXw-0Pvukl8"]
+        ],
+        repos: [],
+        agents: ["OpenRig seats are coordinated from studex-command", "Grokbot OS is the local floor on port 8789 when that port answers"],
+        machines: ["GCP: studex-factory, Iowa", "Public worker: https://studex-factory.tumelor001.workers.dev", "Local page: 127.0.0.1:8792 when that port answers"],
+        herdr: "Herdr machine studex-factory is enabled on this Mac.",
+        gates: "Do not add another VM for a buyer. The five GCP machines are the work machines."
+      },
+      {
+        id: "group",
+        name: "StudEx Group",
+        status: "Roof",
+        registry: "The join contract lives in Fleet Command. It is not a customer company.",
+        summary: "This room holds the registry, Our-OS, the shared Drive folders, and the rule that each other company keeps its own files. Marketing is the Drive folder only.",
+        files: [
+          ["Fleet Command", "/Users/tumeloramaphosa/Desktop/Founder/Fleet Command /studex-os"],
+          ["Our-OS", "/Users/tumeloramaphosa/Our-OS"],
+          ["Local studex-os", "/Users/tumeloramaphosa/studex-os"]
+        ],
+        drive: [
+          ["Studex Agent Bus", "https://drive.google.com/drive/folders/1TFDjIVv5UWx-VHCLg-6mj4i6UImIkkWe"],
+          ["Notion Command Center", "https://drive.google.com/drive/folders/1Fp-jYTqv9a90R07Tp_t55vZXjpynaBHT"],
+          ["Agent Registry", "https://drive.google.com/drive/folders/1a7jcTmgaNs66aoedht-lI1u4vNQPwaNu"],
+          ["Obsidian Studex Brain", "https://drive.google.com/drive/folders/1vzzTYCpo0hSwHkIF293msDgKtUy6RdlK"],
+          ["Base 44 Operating System", "https://drive.google.com/drive/folders/1djabbphWNXSVaNhbx_V4h81FREWMHfOZ"],
+          ["Studex-Operations", "https://drive.google.com/drive/folders/11M3sCRCkOMUxQbJa9bvHcqaKU3a-6YMa"],
+          ["Studex Data Room", "https://drive.google.com/drive/folders/1UI-sJTu2zJdxB2brMGPzj3jPsC7UkfHk"],
+          ["Coding Agents", "https://drive.google.com/drive/folders/1tkB2zFIfll6DxcuOG9FQw1s1bDE1WOp-"],
+          ["Studex Skills", "https://drive.google.com/drive/folders/1JaQfnTHtSP58R9V9CZNa9c0fMAbyN6A7"],
+          ["Hermes Notes", "https://drive.google.com/drive/folders/1UMpeygpC7gDmZIUtYjK1PPwnQ40p-6bo"],
+          ["Obsidian Vault", "https://drive.google.com/drive/folders/1PzRisVPg7HTvlqtQZ-YwpLIMS20D6eoE"],
+          ["Marketing", "https://drive.google.com/drive/folders/1_0JERjf8uq-Nr0_B72ta3K_W7jrqtbHU"]
+        ],
+        repos: [
+          ["Our-OS", "https://github.com/TumeloRamaphosa/Our-OS"],
+          ["agents-dr.fixit", "https://github.com/StudEX/agents-dr.fixit"],
+          ["Linux-Studex-", "https://github.com/TumeloRamaphosa/Linux-Studex-"]
+        ],
+        agents: ["Companies join by the studex-os join script", "OpenRig is not installed on this Mac"],
+        machines: ["Site: https://www.studex-group.com", "OpenRig host: GCP studex-command", "This Mac on Tailscale: macbook-pro-5"],
+        herdr: "The Herdr goal for this room is Fleet Command. Herdr keeps rooms. Daily reports stay in the Fleet Command repo.",
+        gates: "Publish waits for Tumelo or Katlego. Do not move money, sign, or change IAM from this page."
+      },
+      {
+        id: "clients",
+        name: "Clients",
+        status: "Drive",
+        registry: "This is the live clients folder (IGH, Raws, Straegy, Bohlale, PwC, UAE, Bitfury). It is not a customer company.",
+        summary: "The live clients folder on Drive. This room does not open or list client files.",
+        files: [],
+        drive: [
+          ["Clients", "https://drive.google.com/drive/folders/1_8ab1VK3qdSv-8EnMlbmhaARr3XfRcoA"]
+        ],
+        repos: [],
+        agents: ["No lead agent is registered."],
+        machines: ["No machine is assigned."],
+        herdr: "No Herdr goal is recorded.",
+        gates: "Do not open or list client files from this page."
+      },
+      {
+        id: "kigali-summit-2026",
+        name: "Kigali Summit 2026",
+        status: "Drive",
+        registry: "A Drive folder. It is not a customer company.",
+        summary: "One Drive folder for Kigali Summit 2026. This page does not list an agenda.",
+        files: [],
+        drive: [
+          ["Kigali Summit 2026", "https://drive.google.com/drive/folders/1eQW9WPgyQwY_TqJvkZvquF8yOrbgobTK"]
+        ],
+        repos: [],
+        agents: ["No lead agent is registered."],
+        machines: ["No machine is assigned."],
+        herdr: "No Herdr goal is recorded.",
+        gates: "None recorded."
+      },
+      {
+        id: "dark-factory",
+        name: "Dark Factory",
+        status: "Drive",
+        registry: "A Drive folder. It is not a customer company.",
+        summary: "One Drive folder for Dark Factory. The Orgo computer of that name stays off. This page does not start it.",
+        files: [],
+        drive: [
+          ["Dark Factory", "https://drive.google.com/drive/folders/1Yr1dfanbjzJoFBcy6H1LPUI0hz8ueNKU"]
+        ],
+        repos: [],
+        agents: ["No lead agent is registered."],
+        machines: ["The Orgo computer of that name stays off."],
+        herdr: "No Herdr goal is recorded.",
+        gates: "Do not start the Dark Factory Orgo computer."
+      }
+    ];
+
+    const HERDR_HOSTS = [
+      ["studx-dev", "This Mac, OrbStack", "Local Linux. Not a GCP VM. Arcade, Hermes, Ollama, and n8n publish onto localhost from here."],
+      ["studex-command", "GCP, Iowa", "OpenRig lives on this VM. The OpenRig CLI is not on this Mac."],
+      ["studex-factory", "GCP, Iowa", "Factory VM. Herdr machine is enabled."],
+      ["studex-nexus-hub", "GCP, Johannesburg", "n8n VM. Stud-Bot production address 34.35.82.49."],
+      ["arcade-agents", "GCP, Johannesburg", "Arcade VM. The Arcade page on localhost:3000 is the OrbStack publish, not proof this VM is open."],
+      ["studex-agent", "GCP, Iowa", "Enabled in Herdr. Kept empty."]
+    ];
+
+    const ORGO_SEATS = [
+      ["Auto - Meat", "Recorded running", "2 CPU, 8 GB. CashClaw seat for Studex Meat."],
+      ["Global Markets", "Recorded running", "2 CPU, 16 GB. Markets desk."],
+      ["Super Agents Command", "Recorded running", "2 CPU, 8 GB. Herdr server. SSH from this Mac is off until Orgo SSH is enabled."],
+      ["Neledi - CMO", "Recorded running", "1 CPU, 4 GB. Naledi seat."],
+      ["Solo - Prenure", "Recorded running", "2 CPU, 8 GB. Spare. No company is assigned."],
+      ["Frozen computers", "Leave off", "NTechLab, Rwanda, Ryde, and SGM stay frozen. Starting them adds RAM past the plan."],
+      ["Dark Factory Orgo", "Leave off", "The Orgo computer of that name stays off. Do not start it from this page."]
+    ];
+
+    function companyById(id) {
+      return COMPANIES.find(function (company) { return company.id === id; }) || null;
+    }
+
+    function go(app) {
+      state.app = app;
+      state.company = null;
+      state.open = true;
+      state.about = false;
+      paint(true);
+    }
+
+    function openCompany(id) {
+      state.app = "roof";
+      state.company = id;
+      state.open = true;
+      state.about = false;
+      paint(true);
+    }
+
+    function shortPath(path) {
+      return path.replace("/Users/tumeloramaphosa", "~");
+    }
+
+    function pathLink(path) {
+      return el("a", { href: "file://" + encodeURI(path) }, [shortPath(path)]);
+    }
+
+    function row(title, detail, status, tone, extra) {
+      const klass = tone === true || tone === "bad" ? "state bad" : (tone === "quiet" ? "state quiet" : "state");
+      const main = el("div", {}, [el("div", { class: "name", text: title })]);
+      if (detail) main.append(el("p", { class: "mono", text: detail }));
+      const side = el("div", {}, [el("div", { class: klass, text: status })]);
+      if (extra) side.append(extra);
+      return el("div", { class: "row" }, [main, side]);
+    }
+
+    function openLink(port) {
+      return el("a", { href: "http://127.0.0.1:" + port + "/", target: "_blank", rel: "noopener" }, ["Open"]);
+    }
+
+    function renderRoof(body) {
+      if (state.company) {
+        renderRoom(body, companyById(state.company));
+        return;
+      }
+      const live = state.bridge === "up";
+      body.append(el("p", { class: "lede", text: (live ? "Live from this Mac. " : "Showing the capture from 1 Oct 2026, 17:24 SAST. ") + onlineCount() + " Tailscale machines are on the mesh. Open one company to see only its files, agents, and repos." }));
+      COMPANIES.forEach(function (company) {
+        body.append(row(
+          company.name,
+          company.status + ". " + company.registry,
+          "Open",
+          "",
+          el("button", { class: "text-btn", type: "button", style: "margin-top:6px", onClick: function () { openCompany(company.id); } }, ["Enter"])
+        ));
+      });
+      body.append(el("p", { class: "quiet", text: "Studex Wildlife is a channel owner in the registry. It is not a full business record, so it does not have a room." }));
+    }
+
+    function renderRoom(body, company) {
+      if (!company) {
+        state.company = null;
+        renderRoof(body);
+        return;
+      }
+      body.append(el("p", { class: "lede", text: company.summary }));
+      body.append(el("p", { class: "hint", text: company.status + ". " + company.registry }));
+
+      const files = el("section", {}, [el("h2", { text: "Work files" })]);
+      if (!company.files.length) {
+        files.append(el("p", { class: "quiet", text: company.status === "Drive"
+          ? "No local work folder. This page does not open the Drive contents."
+          : "No work folder for this company is on this Mac." }));
+      }
+      company.files.forEach(function (item) {
+        const line = el("div", { class: "row" }, [
+          el("div", {}, [el("div", { class: "name", text: item[0] }), el("p", { class: "mono" }, [pathLink(item[1])])]),
+          el("div", { class: "state", text: "This room" })
+        ]);
+        files.append(line);
+      });
+      body.append(files);
+
+      const driveItems = company.drive || [];
+      if (driveItems.length) {
+        const drive = el("section", {}, [el("h2", { text: "Drive" })]);
+        driveItems.forEach(function (item) {
+          drive.append(el("div", { class: "row" }, [
+            el("div", {}, [
+              el("div", { class: "name", text: item[0] }),
+              el("p", { class: "mono" }, [el("a", { href: item[1], target: "_blank", rel: "noopener" }, [item[1]])])
+            ]),
+            el("div", { class: "state", text: "Drive" })
+          ]));
+        });
+        body.append(drive);
+      }
+
+      const repos = el("section", {}, [el("h2", { text: "Repos" })]);
+      if (!company.repos.length) repos.append(el("p", { class: "quiet", text: "No git remote is recorded for this room." }));
+      company.repos.forEach(function (item) {
+        repos.append(el("div", { class: "row" }, [
+          el("div", {}, [el("div", { class: "name", text: item[0] }), el("p", { class: "mono" }, [el("a", { href: item[1], target: "_blank", rel: "noopener" }, [item[1].replace("https://github.com/", "")])])]),
+          el("div", { class: "state", text: "GitHub" })
+        ]));
+      });
+      body.append(repos);
+
+      const agents = el("section", {}, [el("h2", { text: "Agents" })]);
+      company.agents.forEach(function (line) {
+        agents.append(el("p", { class: "quiet", text: line }));
+      });
+      body.append(agents);
+
+      const machines = el("section", {}, [el("h2", { text: "Machines" })]);
+      company.machines.forEach(function (line) {
+        machines.append(el("p", { class: "quiet", text: line }));
+      });
+      body.append(machines);
+
+      body.append(el("section", {}, [el("h2", { text: "Herdr" }), el("p", { class: "quiet", text: company.herdr })]));
+      body.append(el("section", {}, [el("h2", { text: "Human gates" }), el("p", { class: "quiet", text: company.gates })]));
+      body.append(el("button", { class: "text-btn", type: "button", onClick: function () { go("fleet"); } }, ["Shared fleet"]));
+    }
+
+    function renderFleet(body) {
+      body.append(el("p", { class: "lede", text: "Shared machines. A company room does not own this list. Herdr hosts were read on this Mac. Orgo seats are the last recorded list, not a live Orgo call." }));
+      const herdr = el("section", {}, [el("h2", { text: "Herdr hosts" })]);
+      HERDR_HOSTS.forEach(function (host) {
+        herdr.append(row(host[0], host[1] + ". " + host[2], "Enabled", ""));
+      });
+      body.append(herdr);
+
+      const orgo = el("section", {}, [el("h2", { text: "Orgo computers" })]);
+      ORGO_SEATS.forEach(function (seat) {
+        const bad = seat[1].indexOf("off") !== -1 || seat[1].indexOf("Error") === 0;
+        orgo.append(row(seat[0], seat[2], seat[1], bad ? "bad" : ""));
+      });
+      body.append(orgo);
+
+      body.append(el("section", {}, [
+        el("h2", { text: "OpenRig" }),
+        el("p", { class: "quiet", text: "OpenRig coordinates Claude Code and Codex seats. Its daemon is on GCP studex-command. The openrig command is not on this Mac's PATH. It does not replace Hermes, OpenClaw, or Herdr." })
+      ]));
+      body.append(el("section", {}, [
+        el("h2", { text: "Mesh seats" }),
+        el("p", { class: "quiet", text: "OpenMaus answers on this Mac at 127.0.0.1:8799. maus.studex-group.com now points there and the public health check returned 200. No Tailscale host is named openmaus or buzz. studex-grokbot-os is on the mesh and was last seen 4 days ago. Buzz is the local Buzz.app, not a tailnet machine. hermes.studex-group.com still points at port 8085, and that port is closed." })
+      ]));
+      body.append(el("h2", { text: "Tailnet" }));
+      renderTailnet(body);
+    }
+
+    function renderTools(body) {
+      body.append(el("p", { class: "lede", text: "Tools on this Mac. Skills are files. A listening port is the only proof a tool is answering." }));
+      const factoryUp = portUp(8792);
+      body.append(el("section", {}, [
+        el("h2", { text: "Software factory" }),
+        el("p", { class: "quiet" }, ["Checkout ", pathLink("/Users/tumeloramaphosa/Projects/studex-factory")]),
+        el("p", { class: "quiet" }, [el("a", { href: "https://studex-factory.tumelor001.workers.dev", target: "_blank", rel: "noopener" }, ["studex-factory.tumelor001.workers.dev"])]),
+        el("p", { class: factoryUp ? "state" : "state quiet", text: factoryUp ? "Local factory page is listening on 8792." : "Nothing answered on 127.0.0.1:8792." })
+      ]));
+      body.append(el("section", {}, [
+        el("h2", { text: "Herdr and OpenRig" }),
+        el("p", { class: "quiet", text: "Herdr 0.9.1 is installed at /opt/homebrew/bin/herdr. Reattach with herdr. OpenRig is on studex-command, not on this Mac." }),
+        el("p", { class: "quiet", text: "Orgo CLI is installed. This page does not start, stop, or resize an Orgo computer." })
+      ]));
+      const subscriptions = el("section", {}, [el("h2", { text: "Subscription seats" })]);
+      subscriptions.append(el("p", { class: "quiet", text: "Company not assigned yet. ClawX already has a MiniMax account at the vendor URL. OpenClaw's selected model is still ollama-cloud. Hermes already has a proxy field for http://127.0.0.1:4000/v1. This page does not hold keys." }));
+      subscriptions.append(row("minimax", "Route name minimax. Provider MiniMax. Called through LiteLLM.", "Unassigned", "quiet"));
+      subscriptions.append(row("kimi-claw", "Route name kimi-claw. Provider KimiClaw. Called through LiteLLM.", "Unassigned", "quiet"));
+      subscriptions.append(el("p", { class: "quiet", text: "The current LiteLLM name kimi is a different Ollama cloud tag and is not this seat." }));
+      body.append(subscriptions);
+      body.append(el("section", {}, [
+        el("h2", { text: "Agent skills" }),
+        el("p", { class: "quiet", text: "Counted on 1 Oct 2026: 221 skill files under ~/.agents/skills and 232 under ~/.claude/skills, including nested copies. The factory loop uses GSD, Herdr, CashClaw, Hermes, and OpenClaw. Skills do not run by themselves." })
+      ]));
+      const live = el("section", {}, [el("h2", { text: "Listening on this Mac" })]);
+      listeningSeats().forEach(function (seat) {
+        live.append(row(seat[0], "127.0.0.1:" + seat[2], "Listening", "", openLink(seat[2])));
+      });
+      if (!listeningSeats().length) live.append(el("p", { class: "quiet", text: "None of the checked ports answered." }));
+      silentSeats().forEach(function (seat) {
+        live.append(row(seat[0], "127.0.0.1:" + seat[2], "Silent", "bad"));
+      });
+      body.append(live);
+      body.append(el("button", { class: "text-btn", type: "button", onClick: function () { go("models"); } }, ["Model routes"]));
+    }
+
+    function renderDesk(body) {
+      const me = selfPeer();
+      const source = state.bridge === "up" ? "Live from this Mac." : "Showing the capture from 1 Oct 2026, 17:24 SAST.";
+      body.append(el("p", { class: "lede" }, [
+        source + " ",
+        el("strong", { text: me ? me.name : "This Mac" }),
+        me ? " is " + me.ip + "." : "."
+      ]));
+
+      if (state.bridge === "down") {
+        body.append(el("div", { class: "banner" }, [
+          el("strong", { text: "Desk bridge is not answering." }),
+          el("p", {}, [
+            "Tailscale and local models refresh through ",
+            el("code", { text: "python3 ~/Desktop/studex-os-bridge.py" }),
+            ". Then press Refresh."
+          ]),
+          el("button", { class: "gold-btn", type: "button", onClick: refresh, style: "margin-top:10px" }, ["Refresh"])
+        ]));
+      }
+
+      const listen = el("section", {}, [el("h2", { text: "Listening" })]);
+      const seats = listeningSeats();
+      if (!seats.length) listen.append(el("p", { class: "quiet", text: "None of the checked ports answered." }));
+      seats.forEach(function (seat) {
+        listen.append(row(seat[0], seat[1] + "  127.0.0.1:" + seat[2], "Listening", false, openLink(seat[2])));
+      });
+      body.append(listen);
+
+      const split = el("div", { class: "split" });
+      const weights = el("section", {}, [el("h2", { text: "Offline house" })]);
+      const models = offlineModels();
+      if (!models.length) weights.append(el("p", { class: "quiet", text: "Ollama did not report a weight." }));
+      models.forEach(function (model) {
+        const bits = [model.params, gb(model.size)].filter(Boolean).join("  ");
+        weights.append(row(model.name, bits, "Installed", false));
+      });
+      const oll = data().ollama || {};
+      weights.append(el("p", { class: "quiet", text: "Ollama " + (oll.version || "unknown") + " on 127.0.0.1:11434." }));
+
+      const mesh = el("section", {}, [el("h2", { text: "On the mesh" })]);
+      const up = peers().filter(function (peer) { return peer.online; });
+      if (!up.length) mesh.append(el("p", { class: "quiet", text: "No machine is on the mesh in this reading." }));
+      up.forEach(function (peer) {
+        mesh.append(row(peer.name, peer.os + "  " + peer.ip, peer.self ? "This Mac" : "On the mesh", false));
+      });
+      const ts = data().tailscale || {};
+      mesh.append(el("p", { class: "quiet", text: (ts.backend || "Tailscale") + ". " + onlineCount() + " on the mesh, " + (peers().length - onlineCount()) + " away." }));
+      split.append(weights, mesh);
+      body.append(split);
+
+      body.append(el("div", { class: "links" }, [
+        el("button", { class: "text-btn", type: "button", onClick: function () { go("agents"); } }, ["All agents"]),
+        el("button", { class: "text-btn", type: "button", onClick: function () { go("models"); } }, ["Routes"]),
+        el("button", { class: "text-btn", type: "button", onClick: function () { go("tailnet"); } }, ["Full tailnet"]),
+        el("button", { class: "text-btn", type: "button", onClick: function () { go("console"); } }, ["Console"])
+      ]));
+    }
+
+    function renderAgents(body) {
+      body.append(el("p", { class: "lede", text: "A seat is listening only when its port answered. Named seats stay on the desk even when no process is bound." }));
+      const groups = [
+        ["Listening", listeningSeats(), true],
+        ["Silent", silentSeats(), false]
+      ];
+      groups.forEach(function (group) {
+        const section = el("section", {}, [el("h2", { text: group[0] })]);
+        if (!group[1].length) section.append(el("p", { class: "quiet", text: "None." }));
+        group[1].forEach(function (seat) {
+          section.append(row(
+            seat[0],
+            seat[1] + "  127.0.0.1:" + seat[2],
+            group[2] ? "Listening" : "Silent",
+            !group[2],
+            group[2] ? openLink(seat[2]) : null
+          ));
+        });
+        body.append(section);
+      });
+
+      const naledi = peers().find(function (peer) { return peer.name === "naledi-cmo"; });
+      const named = el("section", {}, [el("h2", { text: "Named seats" })]);
+      if (naledi) {
+        named.append(row("Naledi", "CMO  " + naledi.ip, naledi.online ? "On the mesh" : seenText(naledi), !naledi.online));
+      } else {
+        named.append(row("Naledi", "CMO", "No tailnet record in this reading", true));
+      }
+      NAMED_SEATS.forEach(function (seat) {
+        named.append(row(seat[0], seat[1], "No listener in this probe", "quiet"));
+      });
+      body.append(named);
+
+      const older = el("section", {}, [el("h2", { text: "Older desks" })]);
+      const links = el("div", { class: "links" });
+      LEGACY.forEach(function (item) {
+        links.append(el("a", { href: item[1] }, [item[0]]));
+      });
+      older.append(links);
+      body.append(older);
+    }
+
+    function renderModels(body) {
+      const routerUp = portUp(4000);
+      body.append(el("p", { class: "lede", text: routerUp
+        ? "LiteLLM is answering on port 4000. This page still does not send prompts to cloud models."
+        : "Offline weights run on this Mac. Online routes are named in LiteLLM. Port 4000 did not answer, and this page does not hold provider keys." }));
+
+      const lanes = el("div", { class: "lanes", role: "group", "aria-label": "Route lane" });
+      [["offline", "Offline house"], ["online", "Online routes"]].forEach(function (item) {
+        lanes.append(el("button", {
+          class: "lane-btn",
+          type: "button",
+          "aria-pressed": state.lane === item[0] ? "true" : "false",
+          onClick: function () {
+            state.lane = item[0];
+            rememberRoute();
+            paint(true);
+          }
+        }, [item[1]]));
+      });
+      body.append(lanes);
+
+      const picker = el("label", { class: "field" }, [el("span", { text: "Active route" })]);
+      const select = el("select", {
+        id: "route-select",
+        onChange: function (event) {
+          state.model = event.target.value;
+          rememberRoute();
+          paintChrome();
+        }
+      });
+      if (state.lane === "offline") {
+        offlineModels().forEach(function (model) {
+          const option = el("option", { value: model.name, text: model.name });
+          if (model.name === state.model) option.selected = true;
+          select.append(option);
+        });
+        if (!offlineModels().length) select.append(el("option", { text: "No local weight", value: "" }));
+      } else {
+        ONLINE.forEach(function (item) {
+          const option = el("option", { value: item[0], text: item[0] + "  " + item[1] });
+          if (item[0] === state.model) option.selected = true;
+          select.append(option);
+        });
+      }
+      picker.append(select);
+      body.append(picker);
+
+      if (state.lane === "offline") {
+        const list = el("section", {}, [el("h2", { text: "Installed on this Mac" })]);
+        offlineModels().forEach(function (model) {
+          list.append(row(model.name, [model.params, gb(model.size)].filter(Boolean).join("  "), model.name === state.model ? "Active" : "Installed", false));
+        });
+        list.append(el("p", { class: "quiet", text: "The router also names code-fast (qwen2.5-coder:7b), LM Studio weights on port 1234, and two Ollama cloud tags. Those were not installed or not listening." }));
+        body.append(list);
+        if (state.model === "qwen2.5:14b") {
+          body.append(el("p", { class: "hint", text: "qwen2.5:14b is about 9 GB. The first reply can take a while." }));
+        }
+      } else {
+        const list = el("section", {}, [el("h2", { text: "Configured online routes" })]);
+        ONLINE.forEach(function (item) {
+          list.append(row(item[0], item[1] + "  " + item[2], routerUp ? "Router up" : "Router silent", !routerUp));
+        });
+        body.append(list);
+      }
+      body.append(el("button", { class: "text-btn", type: "button", onClick: function () { go("console"); } }, ["Open console"]));
+    }
+
+    function renderTailnet(body) {
+      const ts = data().tailscale || {};
+      body.append(el("p", { class: "lede", text: ts.ok
+        ? "Tailscale backend " + (ts.backend || "Running") + ". Client " + (ts.client || "unknown") + ", server " + (ts.version || "unknown") + "."
+        : "Tailscale did not answer on this reading." }));
+      const clientVersion = String(ts.client || "").split("-")[0];
+      const serverVersion = String(ts.version || "").split("-")[0];
+      if (clientVersion && serverVersion && clientVersion !== serverVersion) {
+        body.append(el("p", { class: "hint", text: "Client and server versions differ. The mesh is still up when the backend is Running." }));
+      }
+
+      const filters = el("div", { class: "filters" });
+      [["all", "All"], ["online", "On mesh"]].forEach(function (item) {
+        filters.append(el("button", {
+          class: "chip",
+          type: "button",
+          "aria-pressed": state.mesh === item[0] ? "true" : "false",
+          onClick: function () {
+            state.mesh = item[0];
+            paint(true);
+          }
+        }, [item[1]]));
+      });
+      const search = el("input", {
+        type: "search",
+        placeholder: "Search name or address",
+        value: state.query,
+        "aria-label": "Search machines",
+        onInput: function (event) {
+          state.query = event.target.value;
+          paintList();
+        }
+      });
+      filters.append(search);
+      body.append(filters);
+      body.append(el("div", { id: "peer-list" }));
+      paintList();
+    }
+
+    function paintList() {
+      const host = document.getElementById("peer-list");
+      if (!host) return;
+      const needle = state.query.trim().toLowerCase();
+      const list = peers().filter(function (peer) {
+        if (state.mesh === "online" && !peer.online) return false;
+        if (!needle) return true;
+        return (peer.name + " " + peer.ip + " " + peer.os).toLowerCase().indexOf(needle) !== -1;
+      });
+      host.replaceChildren();
+      if (!list.length) {
+        host.append(el("p", { class: "quiet", text: "No machine matches." }));
+        return;
+      }
+      list.forEach(function (peer) {
+        const line = el("div", { class: "row" });
+        const copy = el("div", {}, [
+          el("div", { class: "name", text: peer.name + (peer.self ? "  (this Mac)" : "") }),
+          el("p", { class: "mono", text: (peer.os || "unknown") + "  " + (peer.ip || "no address") })
+        ]);
+        const side = el("div", {}, [
+          el("div", { class: peer.online ? "state" : "state bad", text: seenText(peer) })
+        ]);
+        if (peer.ip) {
+          side.append(el("button", {
+            class: "text-btn",
+            type: "button",
+            style: "margin-top:6px",
+            onClick: function () { copyIp(peer.ip); }
+          }, [state.copied === peer.ip ? "Copied" : "Copy"]));
+        }
+        line.append(copy, side);
+        host.append(line);
+      });
+    }
+
+    function copyIp(ip) {
+      const done = function () {
+        state.copied = ip;
+        paintList();
+        setTimeout(function () {
+          if (state.copied === ip) {
+            state.copied = "";
+            paintList();
+          }
+        }, 1200);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ip).then(done).catch(function () {
+          window.prompt("Copy this address", ip);
+        });
+      } else {
+        window.prompt("Copy this address", ip);
+      }
+    }
+
+    function renderConsole(body) {
+      body.append(el("p", { class: "lede", text: "The console runs a weight that is already on this Mac. Online routes are not sent from the browser." }));
+      const logBox = el("section", {}, [el("h2", { text: "Desk log" })]);
+      state.log.forEach(function (line) {
+        logBox.append(el("p", { class: "mono quiet", text: line }));
+      });
+      body.append(logBox);
+
+      if (state.lane === "online") {
+        body.append(el("div", { class: "banner" }, [
+          el("strong", { text: "Active route is online: " + state.model }),
+          el("p", { text: portUp(4000)
+            ? "LiteLLM is up on port 4000. Ask it from the machine that holds the keys. This page will not forward the prompt."
+            : "LiteLLM on port 4000 did not answer. This page will not forward the prompt." })
+        ]));
+        return;
+      }
+
+      const form = el("form", { class: "stack", onSubmit: ask });
+      const picker = el("label", { class: "field" }, [el("span", { text: "Local weight" })]);
+      const select = el("select", { name: "model" });
+      offlineModels().forEach(function (model) {
+        const option = el("option", { value: model.name, text: model.name });
+        if (model.name === state.model) option.selected = true;
+        select.append(option);
+      });
+      picker.append(select);
+      const area = el("textarea", {
+        name: "prompt",
+        required: "true",
+        maxlength: "2000",
+        onInput: function (event) { state.draft = event.target.value; }
+      });
+      area.value = state.draft;
+      const prompt = el("label", { class: "field" }, [
+        el("span", { text: "Prompt" }),
+        area
+      ]);
+      form.append(picker, prompt, el("button", {
+        class: "gold-btn",
+        type: "submit",
+        disabled: state.bridge !== "up" || state.asking || !offlineModels().length
+      }, [state.asking ? "Running on this Mac" : "Run on this Mac"]));
+      if (state.bridge !== "up") {
+        form.append(el("p", { class: "hint", text: "Start the desk bridge before a local run." }));
+      }
+      form.append(el("p", { class: "hint hint-keys", text: "Ctrl or Command and Enter runs it." }));
+      const reply = el("div", { class: "reply", id: "reply", "aria-live": "polite" });
+      if (state.askError) reply.append(el("p", { class: "state bad", text: state.askError }));
+      else if (state.answer) reply.textContent = state.answer;
+      else reply.append(el("p", { class: "quiet", text: "The reply lands here." }));
+      form.append(reply);
+      area.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+          event.preventDefault();
+          if (typeof form.requestSubmit === "function") form.requestSubmit();
+        }
+      });
+      body.append(form);
+    }
+
+    function ask(event) {
+      event.preventDefault();
+      if (state.bridge !== "up" || state.asking) return;
+      const form = event.currentTarget;
+      const model = form.model.value;
+      const prompt = form.prompt.value.trim();
+      if (!prompt) return;
+      state.model = model;
+      state.draft = prompt;
+      rememberRoute();
+      state.asking = true;
+      state.answer = "";
+      state.askError = "";
+      paint(true);
+      fetch(BRIDGE + "/v1/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: model, prompt: prompt })
+      }).then(function (response) {
+        return response.json().then(function (body) {
+          if (!response.ok || !body.ok) throw new Error(body.error || "The local model did not answer.");
+          const seconds = body.total_ms ? "  " + (body.total_ms / 1000).toFixed(1) + "s" : "";
+          state.answer = body.text || "(empty reply)";
+          state.draft = "";
+          log(model + " answered." + seconds);
+        });
+      }).catch(function (error) {
+        state.askError = error.message || "The local model did not answer.";
+        log(state.askError);
+      }).finally(function () {
+        state.asking = false;
+        paint(true);
+      });
+    }
+
+    function renderAbout() {
+      const existing = document.getElementById("about");
+      if (!state.about) {
+        if (existing) existing.remove();
+        document.getElementById("brand").setAttribute("aria-expanded", "false");
+        return;
+      }
+      if (existing) existing.remove();
+      const panel = el("div", { class: "about", id: "about", role: "dialog", "aria-label": "About this desk" }, [
+        el("h2", { text: "About this desk" }),
+        el("p", { text: "StudEx OS is the roof for the companies. Each company opens as its own room, with its own files, agents, and repos. Drive folders are links only. This page does not open their contents. Herdr, OpenRig, Orgo, and the GCP VMs stay on the shared fleet. Offline weights run on Ollama. Online routes stay named in LiteLLM. Tailscale is read from the local client. Keys are not in this page." }),
+        el("p", {}, [el("code", { text: "python3 ~/Desktop/studex-os-bridge.py" })]),
+        el("button", { class: "gold-btn", type: "button", onClick: function () { state.about = false; refresh(); } }, ["Refresh"])
+      ]);
+      document.querySelector(".os").append(panel);
+      document.getElementById("brand").setAttribute("aria-expanded", "true");
+    }
+
+    function paintChrome() {
+      const currentCompany = state.company ? companyById(state.company) : null;
+      document.getElementById("menu-app").textContent = currentCompany ? currentCompany.name : APPS.find(function (app) { return app[0] === state.app; })[1];
+      const pill = document.getElementById("source-pill");
+      pill.textContent = state.bridge === "up" ? "Live" : (state.bridge === "checking" ? "Checking" : "Capture");
+      pill.classList.toggle("live", state.bridge === "up");
+      document.getElementById("route-pill").textContent = routeLabel();
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      const zone = now.toLocaleTimeString("en-GB", { timeZoneName: "short" }).split(" ").pop();
+      const clock = document.getElementById("clock");
+      clock.replaceChildren(document.createTextNode(time + " "), el("span", { class: "clock-zone", text: zone }));
+      const dock = document.getElementById("dock");
+      dock.replaceChildren();
+      APPS.forEach(function (app) {
+        dock.append(el("button", {
+          class: "dock-btn",
+          type: "button",
+          "aria-current": state.app === app[0] && state.open ? "page" : null,
+          onClick: function () { go(app[0]); }
+        }, [el("span", { class: "mark", text: app[2] }), el("span", { text: app[1] })]));
+      });
+      renderAbout();
+    }
+
+    function paint(force) {
+      const typing = document.activeElement && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+      paintChrome();
+      if (typing && !force) return;
+      const stage = document.getElementById("stage");
+      const scroller = document.querySelector(".window-body");
+      const top = scroller ? scroller.scrollTop : 0;
+      stage.replaceChildren();
+      if (!state.open) {
+        const launcher = el("div", { class: "launcher" });
+        APPS.forEach(function (app) {
+          launcher.append(el("button", { class: "tile", type: "button", onClick: function () { go(app[0]); } }, [
+            el("span", { class: "mark", text: app[2] }),
+            el("strong", { text: app[1] })
+          ]));
+        });
+        stage.append(launcher);
+        return;
+      }
+      const titles = { roof: "Companies", fleet: "Fleet", tools: "Tools", models: "Models", console: "Console" };
+      const current = state.company ? companyById(state.company) : null;
+      const title = current ? current.name : (titles[state.app] || "StudEx OS");
+      const win = el("section", { class: "window", "aria-label": title });
+      const bar = el("div", { class: "window-bar" }, [
+        el("h1", { class: "window-title", text: title })
+      ]);
+      if (current) {
+        bar.append(el("button", {
+          class: "text-btn",
+          type: "button",
+          onClick: function () { state.company = null; paint(true); }
+        }, ["All companies"]));
+      }
+      bar.append(el("div", { class: "menu-spacer" }));
+      bar.append(el("button", { class: "text-btn close-btn", type: "button", onClick: function () { state.open = false; state.company = null; paint(true); } }, ["Close"]));
+      const body = el("div", { class: "window-body stack" });
+      if (state.app === "roof") renderRoof(body);
+      else if (state.app === "fleet") renderFleet(body);
+      else if (state.app === "tools") renderTools(body);
+      else if (state.app === "models") renderModels(body);
+      else renderConsole(body);
+      win.append(bar, body);
+      stage.append(win);
+      const next = document.querySelector(".window-body");
+      if (next) next.scrollTop = top;
+    }
+
+    function refresh() {
+      const controller = new AbortController();
+      const timer = setTimeout(function () { controller.abort(); }, 5000);
+      fetch(BRIDGE + "/v1/desk", { cache: "no-store", signal: controller.signal })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Bridge answered " + response.status);
+          return response.json();
+        })
+        .then(function (payload) {
+          const was = state.bridge;
+          state.live = payload;
+          state.bridge = "up";
+          rememberRoute();
+          if (was !== "up") log("Desk bridge is live.");
+        })
+        .catch(function () {
+          const was = state.bridge;
+          state.live = null;
+          state.bridge = "down";
+          if (was !== "down") log("Desk bridge did not answer. Showing the 1 Oct 2026 capture.");
+        })
+        .finally(function () {
+          clearTimeout(timer);
+          paint(false);
+        });
+    }
+
+    document.getElementById("brand").addEventListener("click", function () {
+      state.about = !state.about;
+      renderAbout();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        if (state.about) {
+          state.about = false;
+          renderAbout();
+          return;
+        }
+        if (state.company) {
+          state.company = null;
+          paint(true);
+        }
+      }
+      if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
+      const index = Number(event.key) - 1;
+      if (index >= 0 && index < APPS.length) go(APPS[index][0]);
+    });
+    document.addEventListener("click", function (event) {
+      if (!state.about) return;
+      const about = document.getElementById("about");
+      if (about && !about.contains(event.target) && event.target.id !== "brand") {
+        state.about = false;
+        renderAbout();
+      }
+    });
+
+    rememberRoute();
+    paint(true);
+    refresh();
+    setInterval(function () {
+      const now = new Date();
+      const time = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      const zone = now.toLocaleTimeString("en-GB", { timeZoneName: "short" }).split(" ").pop();
+      const clock = document.getElementById("clock");
+      if (clock) clock.replaceChildren(document.createTextNode(time + " "), el("span", { class: "clock-zone", text: zone }));
+    }, 1000);
+    setInterval(refresh, 20000);
+  </script>
+</body>
+</html>

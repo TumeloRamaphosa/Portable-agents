@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="./colors_and_type.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#140F0A;}
+*{box-sizing:border-box;}
+a{color:#F5A623;text-decoration:underline;}
+a:hover{color:#FFC861;}
+button{font-family:inherit;}
+@keyframes snH{0%{left:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes snV{0%{top:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+@keyframes snPulse{0%,100%{box-shadow:0 0 0 0 rgba(155,227,106,0.7)}50%{box-shadow:0 0 0 5px rgba(155,227,106,0)}}
+@keyframes snBlink{50%{opacity:0}}
+@keyframes snScan{0%{transform:translateY(-140px)}100%{transform:translateY(110vh)}}
+@keyframes snEq{0%,100%{transform:scaleY(0.3)}50%{transform:scaleY(1)}}
+</style>
+</helmet>
+
+<sc-if value="{{ isHost }}" hint-placeholder-val="{{ false }}">
+  <section style="padding:48px;display:flex;flex-direction:column;gap:32px;font-family:'JetBrains Mono',monospace;color:#F5A623;min-height:100vh;background:#140F0A;">
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:720px;">
+      <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Turn 2 · Amber terminal</div>
+      <h1 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:22px;line-height:1.1;margin:0;">The Station</h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:#C08A45;text-wrap:pretty;">Rooms are capability-scoped teams, each running on its own virtual machine. Hallways are authorised handoff lanes between them. Every tool a room holds is a real grant. Same app, two widths.</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;">
+      <div id="1a" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F5A623;color:#0D0A07;padding:3px 8px;border-radius:0;">1a</span><span style="font-size:14px;color:#C08A45;">Desktop · 1280</span></div>
+        <iframe src="{{ frameSrc }}" title="Desktop" style="width:1280px;height:820px;border:1px solid #5C3D14;background:#0D0A07;box-shadow:0 24px 60px rgba(245,166,35,0.12);"></iframe>
+      </div>
+      <div id="1b" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F5A623;color:#0D0A07;padding:3px 8px;border-radius:0;">1b</span><span style="font-size:14px;color:#C08A45;">Mobile · 390</span></div>
+        <div style="padding:10px;background:#F5A623;border-radius:44px;box-shadow:0 24px 60px rgba(245,166,35,0.12);">
+          <iframe src="{{ frameSrc }}" title="Mobile" style="width:390px;height:844px;border:0;border-radius:34px;background:#0D0A07;display:block;"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isFrame }}" hint-placeholder-val="{{ false }}">
+<div style="height:100vh;display:flex;flex-direction:column;background:#0D0A07;color:#F5A623;font-family:'JetBrains Mono',monospace;font-size:15px;overflow:hidden;position:relative;">
+  {{ scan }}
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:{{ headerPad }};border-bottom:1px solid #F5A623;background:#0D0A07;color:#F5A623;flex-shrink:0;">
+    <div style="display:flex;align-items:baseline;gap:10px;min-width:0;">
+      <span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:700;font-size:11px;letter-spacing:-0.01em;">StudEx OS</span>
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#8A6533;">Agents Nest Cloud</span></sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#FFC861;">{{ clock }} · {{ spendToday }} MRR</span></sc-if>
+      <button onClick="{{ toggleSound }}" style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:0;border:1px solid #5C3D14;background:transparent;color:#F5A623;font-size:13px;cursor:pointer;">{{ eq }}<span>{{ soundLabel }}</span></button>
+      <button onClick="{{ toggleNight }}" style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:0;border:1px solid #5C3D14;background:{{ nightBg }};color:{{ nightFg }};font-size:13px;cursor:pointer;">
+        <span style="width:8px;height:8px;border-radius:0;background:{{ nightDot }};"></span>Night Shift {{ nightLabel }}
+      </button>
+    </div>
+  </header>
+
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:{{ shellCols }};">
+
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="border-right:1px solid #5C3D14;padding:20px 12px;display:flex;flex-direction:column;gap:2px;background:#140F0A;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <button onClick="{{ t.go }}" style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;border:0;border-radius:2px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:500;cursor:pointer;text-align:left;">
+            <span>{{ t.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.7;">{{ t.badge }}</span>
+          </button>
+        </sc-for>
+        <div style="margin-top:auto;padding:12px;border-top:1px solid #5C3D14;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Signed in</span>
+          <span style="font-size:14px;font-weight:500;">Tumelo</span>
+        </div>
+      </nav>
+    </sc-if>
+
+    <main style="min-width:0;overflow:auto;padding:{{ mainPad }};display:flex;flex-direction:column;gap:20px;">
+
+      <sc-if value="{{ onStation }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Floor plan</span>
+          <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Four rooms, five agents, {{ workingCount }} at work</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ planCols }};grid-template-rows:auto {{ hallRow }} auto;grid-template-areas:'a h1 b' 'v1 c v2' 'd h2 e';">
+          <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+            <button onClick="{{ r.pick }}" style="grid-area:{{ r.area }};text-align:left;cursor:pointer;background:#110D09;border:{{ r.border }};border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:10px;min-width:0;color:#F5A623;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+                <span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ roomTitle }};line-height:1.2;">{{ r.name }}</span>
+                <span style="width:8px;height:8px;margin-top:6px;border-radius:0;background:{{ r.vmDot }};flex-shrink:0;"></span>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C08A45;">{{ r.vm }}</span>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <sc-for list="{{ r.crew }}" as="c" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                    {{ c.dotEl }}
+                    <span style="font-size:13px;font-weight:500;">{{ c.name }}</span>
+                    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;color:#C08A45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;">{{ c.short }}</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                <sc-for list="{{ r.grantsShown }}" as="g" hint-placeholder-count="2">
+                  <span style="font-size:11px;padding:2px 8px;border-radius:0;background:#140F0A;border:1px solid #5C3D14;color:#E8B66A;">{{ g }}</span>
+                </sc-for>
+              </div>
+            </button>
+          </sc-for>
+          <sc-for list="{{ hHalls }}" as="h" hint-placeholder-count="2">
+            <div style="grid-area:{{ h.area }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0 4px;">
+              <div style="position:relative;width:100%;height:8px;display:flex;align-items:center;"><div style="width:100%;border-top:1px dashed #F5A623;"></div>{{ h.packet }}</div>
+              <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#C08A45;text-align:center;line-height:1.3;">{{ h.label }}</span></sc-if>
+              <span style="font-size:12px;color:#F5A623;">{{ h.arrow }}</span>
+            </div>
+          </sc-for>
+          <sc-for list="{{ vHalls }}" as="v" hint-placeholder-count="2">
+            <div style="grid-area:{{ v.area }};display:flex;align-items:center;justify-content:center;gap:8px;">
+              <div style="position:relative;height:100%;width:8px;display:flex;justify-content:center;"><div style="height:100%;border-left:1px dashed #F5A623;"></div>{{ v.packet }}</div>
+              <span style="font-size:12px;color:#F5A623;">{{ v.arrow }}</span>
+              <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#C08A45;">{{ v.label }}</span></sc-if>
+            </div>
+          </sc-for>
+          <div style="grid-area:c;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;background:#F5A623;color:#0D0A07;padding:4px 8px;border-radius:0;text-align:center;">{{ bridgeLabel }}</span>
+          </div>
+        </div>
+
+        <section style="background:#0D0A07;border:1px solid #5C3D14;display:flex;flex-direction:column;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #5C3D14;">
+            <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#FFC861;">● Live feed</span>
+            <span style="font-size:11px;color:#8A6533;">{{ logCount }} events today</span>
+          </div>
+          <div style="display:flex;flex-direction:column;padding:6px 0;">
+            <sc-for list="{{ log }}" as="l" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:{{ logCols }};gap:10px;padding:5px 14px;font-size:12px;line-height:1.45;opacity:{{ l.op }};">
+                <span style="color:#8A6533;">{{ l.t }}</span>
+                <span style="color:#FFC861;font-weight:700;">{{ l.a }}</span>
+                <span style="color:#E8B66A;min-width:0;grid-column:{{ logTextCol }};">{{ l.x }}</span>
+              </div>
+            </sc-for>
+            <div style="padding:5px 14px;font-size:12px;color:#F5A623;">&gt; {{ cursor }}</div>
+          </div>
+        </section>
+
+        <section style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Selected room</span>
+              <span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:13px;">{{ sel.name }}</span>
+              <span style="font-size:14px;color:#C08A45;line-height:1.5;text-wrap:pretty;">{{ sel.purpose }}</span>
+            </div>
+            <button style="height:40px;padding:0 16px;border:0;border-radius:0;background:#F5A623;color:#0D0A07;font-size:14px;font-weight:500;cursor:pointer;">Summon Specialist</button>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ detailCols }};gap:16px;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Crew</span>
+              <sc-for list="{{ sel.crew }}" as="c" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid #5C3D14;">
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:0;background:{{ c.dot }};"></span><span style="font-weight:600;font-size:14px;">{{ c.name }}</span><span style="font-size:12px;color:#C08A45;">{{ c.role }}</span></div>
+                  <span style="font-size:13px;color:#E8B66A;line-height:1.45;">{{ c.task }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Grants</span>
+              <sc-for list="{{ sel.grants }}" as="g" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid #5C3D14;font-size:13px;"><span style="font-weight:500;">{{ g.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#C08A45;">{{ g.scope }}</span></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Machine</span>
+              <div style="display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid #5C3D14;font-size:13px;">
+                <span style="font-family:'JetBrains Mono',monospace;">{{ sel.vm }}</span>
+                <span style="color:#C08A45;">{{ sel.spec }}</span>
+                <span style="color:#C08A45;">{{ sel.rate }} · {{ sel.vmState }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ onBriefs }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Task briefs</span>
+          <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Your crew asks before it guesses</h2>
+        </div>
+        <sc-for list="{{ briefs }}" as="b" hint-placeholder-count="3">
+          <div style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#C08A45;"><span><strong style="color:#F5A623;">{{ b.agent }}</strong> · {{ b.room }}</span><span style="font-family:'JetBrains Mono',monospace;">{{ b.via }}</span></div>
+            <span style="font-size:16px;line-height:1.5;text-wrap:pretty;">{{ b.q }}</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ b.opts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.pick }}" style="min-height:40px;padding:8px 14px;border-radius:0;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:500;cursor:pointer;text-align:left;">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ onOutbox }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Outbox</span>
+          <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Finished work, as real files</h2>
+        </div>
+        <div style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;">
+          <sc-for list="{{ outbox }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid #5C3D14;">
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                <span style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;">{{ f.name }}</span>
+                <span style="font-size:12px;color:#C08A45;">{{ f.agent }} · {{ f.when }} · {{ f.size }}</span>
+              </div>
+              <button style="height:36px;padding:0 14px;border:1px solid #5C3D14;border-radius:0;background:transparent;font-size:13px;cursor:pointer;flex-shrink:0;" style-hover="border-color:#F5A623;">Open</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onMachines }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Machines</span>
+            <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">One VM per client · $499/mo</h2>
+          </div>
+          <button style="height:40px;padding:0 16px;border:0;border-radius:0;background:#F5A623;color:#0D0A07;font-size:14px;font-weight:500;cursor:pointer;">Onboard New Client</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+          <sc-for list="{{ machines }}" as="m" hint-placeholder-count="4">
+            <div style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;">{{ m.id }}</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#E8B66A;"><span style="width:8px;height:8px;border-radius:0;background:{{ m.dot }};"></span>{{ m.state }}</span>
+              </div>
+              <span style="font-size:14px;font-weight:500;">{{ m.room }}</span>
+              <span style="font-size:13px;color:#C08A45;">{{ m.spec }} · {{ m.region }}</span>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#C08A45;"><span>CPU {{ m.cpu }}</span><span>{{ m.rate }}</span></div>
+              <div style="height:4px;background:#140F0A;"><div style="height:4px;width:{{ m.cpu }};background:#F5A623;transition:width 1.2s ease;"></div></div>
+              <div style="display:flex;gap:8px;">
+                <button onClick="{{ m.toggle }}" style="flex:1;height:36px;border:1px solid #5C3D14;border-radius:0;background:transparent;font-size:13px;cursor:pointer;">{{ m.action }}</button>
+                <button style="flex:1;height:36px;border:1px solid #5C3D14;border-radius:0;background:transparent;font-size:13px;cursor:pointer;">Snapshot</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onLedger }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Ledger</span>
+          <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Revenue, shown as-is</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ detailCols }};gap:12px;">
+          <div style="background:#0D0A07;border:1px solid #F5A623;color:#F5A623;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#8A6533;">Monthly recurring</span><span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-size:17px;font-weight:600;">{{ spendToday }}</span><span style="font-size:12px;color:#FFC861;">3 VM clients × $499</span></div>
+          <div style="background:#110D09;border:1px solid #5C3D14;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">12-month target</span><span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-size:17px;font-weight:600;">{{ modelSpend }}</span><span style="font-size:12px;color:#C08A45;">22 deals + 4 retainers</span></div>
+          <div style="background:#110D09;border:1px solid #5C3D14;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Break-even</span><span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-size:17px;font-weight:600;">{{ vmSpend }}</span><span style="font-size:12px;color:#C08A45;">~R75K/month costs covered</span></div>
+        </div>
+        <div style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;">
+          <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid #5C3D14;">
+              <div style="display:flex;flex-direction:column;gap:6px;min-width:0;">
+                <span style="font-size:14px;font-weight:500;">{{ l.name }} <span style="font-weight:400;color:#C08A45;font-size:12px;">· {{ l.room }}</span></span>
+                <div style="height:4px;background:#140F0A;"><div style="height:4px;width:{{ l.pct }};background:#F5A623;"></div></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;">{{ l.amt }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#110D09;border:1px solid #5C3D14;border-radius:2px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+          <span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:11px;">Night Shift leash</span>
+          <span style="font-size:13px;color:#C08A45;line-height:1.5;">While you're away, agents may only act inside these limits. Every away-action is logged here for review.</span>
+          <sc-for list="{{ leash }}" as="x" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #5C3D14;font-size:13px;"><span>{{ x.k }}</span><span style="font-family:'JetBrains Mono',monospace;color:#E8B66A;">{{ x.v }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onProjects }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Projects</span>
+            <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.4;margin:0;">Products this station runs</h2>
+          </div>
+          <button style="height:40px;padding:0 16px;border:0;border-radius:0;background:#F5A623;color:#0D0A07;font-size:14px;font-weight:500;cursor:pointer;">New Project</button>
+        </div>
+        <div style="background:#110D09;border:1px solid #F5A623;display:flex;flex-direction:column;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:{{ roomPad }};flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:6px;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="width:8px;height:8px;background:#9BE36A;"></span><span style="font-size:12px;color:#9BE36A;">Live</span><span style="font-size:12px;color:#C08A45;">· agents.studex.global</span></div>
+              <span style="font-family:'Press Start 2P',monospace;text-transform:uppercase;font-size:13px;line-height:1.4;">Agents Nest Cloud</span>
+              <span style="font-size:13px;color:#C08A45;line-height:1.5;text-wrap:pretty;">Global Markets OS for clients: boardroom, client VMs, deal pipeline, revenue, partners, research, skills and actions.</span>
+            </div>
+            <a href="products/agents-nest-cloud/index.html" target="_blank" style="height:40px;padding:0 16px;border:1px solid #F5A623;color:#F5A623;font-size:14px;display:flex;align-items:center;text-decoration:none;">Open Site ↗</a>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));border-top:1px solid #5C3D14;">
+            <sc-for list="{{ projStats }}" as="p" hint-placeholder-count="4">
+              <div style="padding:12px 16px;border-right:1px solid #5C3D14;display:flex;flex-direction:column;gap:4px;"><span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A6533;">{{ p.l }}</span><span style="font-size:16px;font-weight:700;">{{ p.v }}</span></div>
+            </sc-for>
+          </div>
+          <div style="padding:12px 16px;border-top:1px solid #5C3D14;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8A6533;">Backend integrations</span>
+            <sc-for list="{{ projInts }}" as="i" hint-placeholder-count="6">
+              <span style="font-size:11px;padding:2px 8px;background:#140F0A;border:1px solid #5C3D14;color:#E8B66A;">{{ i }}</span>
+            </sc-for>
+          </div>
+          <iframe src="products/agents-nest-cloud/index.html" title="Agents Nest Cloud" style="width:100%;height:{{ previewH }};border:0;border-top:1px solid #5C3D14;background:#0a0a0f;display:block;"></iframe>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Station stack</span>
+          <span style="font-size:13px;color:#C08A45;">Open-source tools wired into the OS.</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+          <sc-for list="{{ stack }}" as="k" hint-placeholder-count="4">
+            <div style="background:#110D09;border:1px solid #5C3D14;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;"><span style="font-size:14px;font-weight:700;">{{ k.name }}</span><span style="font-size:11px;color:#8A6533;">{{ k.repo }}</span></div>
+              <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#FFC861;">{{ k.role }}</span>
+              <span style="font-size:13px;color:#C08A45;line-height:1.5;">{{ k.what }}</span>
+              <code style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px;background:#0D0A07;border:1px solid #5C3D14;color:#E8B66A;overflow-x:auto;white-space:nowrap;">{{ k.cmd }}</code>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onVault }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#C08A45;">Vault · 2nd Brain</span>
+          <h2 style="font-family:'Press Start 2P',monospace;text-transform:uppercase;letter-spacing:0.02em;font-weight:600;font-size:{{ h2Size }};line-height:1.4;margin:0;">Shared memory for every room</h2>
+        </div>
+        <input placeholder="Search notes…" style="height:40px;padding:0 12px;background:#110D09;border:1px solid #5C3D14;color:#F5A623;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <sc-for list="{{ folders }}" as="d" hint-placeholder-count="6">
+            <button onClick="{{ d.pick }}" style="height:32px;padding:0 12px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.fg }};font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;">{{ d.label }} · {{ d.n }}</button>
+          </sc-for>
+        </div>
+        <div style="background:#110D09;border:1px solid #5C3D14;padding:8px;">
+          <svg viewBox="0 0 600 420" style="width:100%;height:auto;display:block;">
+            <sc-for list="{{ gEdges }}" as="e" hint-placeholder-count="0">
+              <line x1="{{ e.x1 }}" y1="{{ e.y1 }}" x2="{{ e.x2 }}" y2="{{ e.y2 }}" stroke="{{ e.c }}" stroke-width="1" stroke-dasharray="{{ e.dash }}"></line>
+            </sc-for>
+            <sc-for list="{{ gNodes }}" as="g" hint-placeholder-count="0">
+              <g onClick="{{ g.pick }}" style="cursor:pointer;">
+                <circle cx="{{ g.x }}" cy="{{ g.y }}" r="{{ g.r }}" fill="{{ g.fill }}" stroke="#F5A623" stroke-width="1"></circle>
+                <text x="{{ g.x }}" y="{{ g.ty }}" text-anchor="middle" fill="{{ g.tc }}" font-family="JetBrains Mono, monospace" font-size="{{ g.fs }}">{{ g.label }}</text>
+              </g>
+            </sc-for>
+          </svg>
+        </div>
+        <div style="background:#110D09;border:1px solid #5C3D14;">
+          <sc-for list="{{ notes }}" as="n" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid #5C3D14;">
+              <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+                <span style="font-size:14px;font-weight:500;color:#F5A623;">{{ n.title }}</span>
+                <span style="font-size:12px;color:#C08A45;">{{ n.folder }}/ · {{ n.when }}</span>
+              </div>
+              <span style="font-size:11px;padding:3px 8px;border:1px solid #5C3D14;color:#E8B66A;flex-shrink:0;">{{ n.use }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid #5C3D14;background:#140F0A;padding-bottom:16px;flex-shrink:0;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+        <button onClick="{{ t.go }}" style="height:56px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ t.mfg }};">
+          <span style="width:20px;height:2px;background:{{ t.bar }};"></span>
+          <span style="font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">{{ t.mlabel }}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ZAR&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;ZAR&quot;,&quot;tsType&quot;:&quot;'ZAR'|'USD'&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;station&quot;,&quot;briefs&quot;,&quot;outbox&quot;,&quot;machines&quot;,&quot;ledger&quot;],&quot;default&quot;:&quot;station&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { w: window.innerWidth, tab: this.props.startTab ?? 'station', room: 'markets', night: false, answers: {}, vmOff: {}, sound: false, now: Date.now(), cpu: {}, log: [], logN: 47, ev: 0 };
+  EVENTS = [
+    ['Agent-Research', 'Scanned 13 platforms · 4 new Africa AI signals'],
+    ['Agent-Markets', 'Moved Cassava AI deal to Qualified ($50K)'],
+    ['Agent-Ops', 'Health check on nest-ops · 8/8 VMs green'],
+    ['Agent-Comms', 'Drafted NVIDIA Africa follow-up · waiting for sender'],
+    ['Agent-Strategy', 'Re-ran break-even model · Month 4 holds'],
+    ['Adam Smasher', 'Assigned NTechLab pilot prep to Markets Room'],
+    ['Agent-Research', 'REA traced a competitor onboarding flow · evidence saved'],
+    ['Agent-Ops', 'herdr alert sent to your phone · Comms needs input'],
+    ['Agent-Markets', 'Handed won-deal notice to Ops · provision client VM'],
+    ['Agent-Comms', 'Tencent Cloud pitch updated with Orange MEA angle'],
+  ];
+  ts(d) { return new Date(d).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    if (!new URLSearchParams(location.search).has('frame')) return;
+    const t0 = Date.now();
+    this.setState({ log: this.EVENTS.slice(0, 4).map((e, i) => ({ a: e[0], x: e[1], d: t0 - (4 - i) * 37000 })).reverse(), ev: 4 });
+    let k = 0;
+    this.iv = setInterval(() => { k++;
+      const up = { now: Date.now() };
+      if (k % 2 === 0) { const c = {}; ['pharmasyntez', 'art-engineer', 'ntechlab'].forEach(id => { c[id] = Math.round(25 + Math.random() * 60); }); up.cpu = c; }
+      if (k % 4 === 0) { const e = this.EVENTS[this.state.ev % this.EVENTS.length];
+        up.log = [{ a: e[0], x: e[1], d: Date.now() }, ...this.state.log].slice(0, 6); up.ev = this.state.ev + 1; up.logN = this.state.logN + 1; this.blip(); }
+      this.setState(up); }, 1000);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); clearInterval(this.iv); this.stopMusic(); }
+  tone(f, t, len, type, vol) { const a = this.ac, o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + len); o.connect(g); g.connect(this.master); o.start(t); o.stop(t + len + 0.05); }
+  startMusic() { if (!this.ac) { this.ac = new (window.AudioContext || window.webkitAudioContext)(); this.master = this.ac.createGain(); this.master.gain.value = 0.35; this.master.connect(this.ac.destination); }
+    this.ac.resume(); const scale = [220, 261.63, 293.66, 329.63, 392, 440, 523.25], bass = [110, 87.31, 98, 82.41]; let step = 0, next = this.ac.currentTime + 0.05;
+    this.mv = setInterval(() => { while (next < this.ac.currentTime + 0.3) { const bar = Math.floor(step / 16) % 4;
+      if (step % 2 === 0) this.tone(scale[(step * 3 + bar * 2) % scale.length] * (step % 8 === 0 ? 2 : 1), next, 0.18, 'square', 0.035);
+      if (step % 8 === 0) this.tone(bass[bar], next, 1.1, 'triangle', 0.12);
+      if (step % 4 === 2) this.tone(1800, next, 0.03, 'square', 0.01);
+      step++; next += 0.125; } }, 100); }
+  stopMusic() { clearInterval(this.mv); }
+  blip() { if (!this.state.sound || !this.ac) return; const t = this.ac.currentTime; this.tone(880, t, 0.08, 'square', 0.05); this.tone(1320, t + 0.08, 0.1, 'square', 0.04); }
+  money(n) { return '$' + n.toLocaleString('en-US'); }
+  renderVals() {
+    const q = new URLSearchParams(location.search), isFrame = q.has('frame'), isHost = !isFrame;
+    const s = this.state, mobile = s.w < 760, desktop = !mobile;
+    const C = { working: '#9BE36A', waiting: '#FF6B1A', idle: '#8A6533' };
+    const rooms0 = [
+      { id: 'research', area: 'a', name: 'Research Room', vm: 'nest-research', spec: 'Agent-Reach engine', purpose: 'Deep research on pharma markets, tech companies and African opportunities across 13 platforms.',
+        crew: [{ name: 'Agent-Research', role: 'Research', st: 'working', task: '526-line Client Intelligence Brief complete · $1M revenue mapped' }],
+        grants: [{ name: 'REA', scope: 'reverse-engineer MCP' }, { name: 'Agent-Reach', scope: '4/13 platforms' }, { name: 'GitHub', scope: 'gh CLI' }, { name: 'Exa MCP', scope: 'web search' }, { name: 'Jina Reader', scope: 'web pages' }] },
+      { id: 'markets', area: 'b', name: 'Markets Room', vm: 'nest-markets', spec: 'Pipeline + strategy', purpose: 'Africa deal pipeline across pharma, data centers and AI vision in SA, Nigeria, Kenya, Ghana and Ethiopia. 10-year planning and revenue forecasting.',
+        crew: [{ name: 'Agent-Markets', role: 'Markets', st: 'working', task: '20 deals tracked across 5 countries · R85M+ pipeline' }, { name: 'Agent-Strategy', role: 'Strategy', st: 'working', task: 'Planning Phase 2 · break-even Month 4' }],
+        grants: [{ name: 'Deal pipeline', scope: 'read/write' }, { name: 'Revenue model', scope: 'read/write' }] },
+      { id: 'comms', area: 'd', name: 'Comms Room', vm: 'nest-comms', spec: 'Outreach', purpose: 'Email and LinkedIn outreach to DeepSeek, Tencent Cloud, NVIDIA Africa, ByteDance and Kami. Pitch decks and partnership proposals.',
+        crew: [{ name: 'Agent-Comms', role: 'Communications', st: 'waiting', task: '10 messages drafted · waiting for your sender email' }],
+        grants: [{ name: 'Email', scope: 'drafts only' }, { name: 'LinkedIn', scope: 'DMs drafted' }] },
+      { id: 'ops', area: 'e', name: 'Ops Room', vm: 'nest-ops', spec: 'Infrastructure', purpose: 'VM provisioning, Discord bot, GitHub operations, Daytona workspaces and CI/CD for all agents and client VMs.',
+        crew: [{ name: 'Agent-Ops', role: 'Operations', st: 'working', task: '8 VMs managed · 24/7 uptime · 3 live apps' }],
+        grants: [{ name: 'herdr', scope: 'phone sessions' }, { name: 'GitHub Actions', scope: 'deploy on push' }, { name: 'Daytona', scope: 'token invalid' }, { name: 'Discord bot', scope: 'needs token' }] },
+    ];
+    const vmOn = id => !s.vmOff[id];
+    const rooms = rooms0.map(r => ({ ...r,
+      crew: r.crew.map(c => { const dot = vmOn(r.vm) ? C[c.st] : '#5C3D14';
+        return { ...c, dot, short: vmOn(r.vm) ? c.task : 'Machine stopped', dotEl: React.createElement('span', { style: { width: 6, height: 6, background: dot, flexShrink: 0, animation: c.st === 'working' ? 'snPulse 1.6s ease-in-out infinite' : c.st === 'waiting' ? 'snBlink 1s steps(1) infinite' : 'none' } }) }; }),
+      grantsShown: mobile ? [r.grants.length + ' grants'] : r.grants.map(g => g.name),
+      vmDot: vmOn(r.vm) ? '#9BE36A' : '#8A6533',
+      border: s.room === r.id ? '1px solid #F5A623' : '1px solid #5C3D14',
+      pick: () => this.setState({ room: r.id }) }));
+    const selR = rooms.find(r => r.id === s.room);
+    const sel = { ...selR, rate: 'Internal', vmState: vmOn(selR.vm) ? 'Running' : 'Stopped' };
+    const workingCount = rooms.reduce((n, r) => n + (vmOn(r.vm) ? r.crew.filter(c => c.st === 'working').length : 0), 0);
+
+    const briefs0 = [
+      { id: 'b1', agent: 'Agent-Comms', room: 'Comms Room', via: 'Discord', q: '10 messages (5 emails + 5 LinkedIn DMs) are drafted for DeepSeek, Tencent Cloud, NVIDIA Africa, ByteDance and Kami. NVIDIA is urgent while the Cassava AI factory news is live. Which address should they send from?', opts: ['tumelo@studex.global', 'Enter another', 'Hold for now'] },
+      { id: 'b2', agent: 'Agent-Markets', room: 'Markets Room', via: 'In app', q: 'NTechLab has the highest revenue potential ($61K–$151K per quarter). Which pilot should lead the first Africa call this week?', opts: ['Kenya Ministry of Health', 'Nigeria NHIS', 'Nigeria banks KYC'] },
+      { id: 'b3', agent: 'Agent-Ops', room: 'Ops Room', via: 'Discord', q: 'The Daytona token is invalid. It blocks MiroFish-Offline, AutoResearch and last30days-skill. Regenerate it at app.daytona.io now?', opts: ['Regenerate now', 'Remind me tomorrow'] },
+      { id: 'b4', agent: 'Agent-Ops', room: 'Ops Room', via: 'In app', q: 'The 11-command Discord bot for Adam Smasher is built but has no bot token. Add one now?', opts: ['Paste token', 'Later'] },
+    ];
+    const briefs = briefs0.map(b => ({ ...b, opts: b.opts.map(label => { const on = s.answers[b.id] === label;
+      return { label, bg: on ? '#F5A623' : 'transparent', fg: on ? '#0D0A07' : '#F5A623', border: on ? '#F5A623' : '#5C3D14', pick: () => this.setState(st => ({ answers: { ...st.answers, [b.id]: label } })) }; }) }));
+    const openBriefs = briefs0.filter(b => !s.answers[b.id]).length;
+
+    const outbox = [
+      { name: 'Client Intelligence Brief.md', agent: 'Agent-Research', when: 'Jun 17', size: '526 lines' },
+      { name: 'Partnership outreach — 5 emails.md', agent: 'Agent-Comms', when: 'Jun 17', size: 'Awaiting sender' },
+      { name: 'LinkedIn DMs — 5 drafts.md', agent: 'Agent-Comms', when: 'Jun 17', size: 'Ready' },
+      { name: 'Africa deal pipeline — 20 deals.csv', agent: 'Agent-Markets', when: 'Jun 17', size: '5 countries' },
+      { name: '10-year revenue model.xlsx', agent: 'Agent-Strategy', when: 'Jun 17', size: '$434M cumulative' },
+      { name: 'Q3 2026 board minutes.md', agent: 'Adam Smasher', when: 'Jun 17', size: '6 entries' },
+    ];
+
+    const vms = [
+      { id: 'pharmasyntez', room: 'PharmaSyntez VM', spec: 'Russian biopharma', region: 'SA TB · Kenya HIV · Nigeria oncology', cpu: '41%', rate: '$499/mo' },
+      { id: 'art-engineer', room: 'Art Engineer VM', spec: 'Data center infrastructure', region: 'Mining edge · telecom edge', cpu: '58%', rate: '$499/mo' },
+      { id: 'ntechlab', room: 'NTechLab VM', spec: 'AI computer vision', region: 'Healthcare · security · KYC', cpu: '63%', rate: '$499/mo' },
+    ];
+    const machines = vms.map(v => { const on = vmOn(v.id);
+      return { ...v, state: on ? 'Online' : 'Stopped', dot: on ? '#9BE36A' : '#8A6533', cpu: on ? (s.cpu[v.id] ? s.cpu[v.id] + '%' : v.cpu) : '0%', action: on ? 'Stop' : 'Start',
+        toggle: () => this.setState(st => ({ vmOff: { ...st.vmOff, [v.id]: !st.vmOff[v.id] } })) }; });
+    const runningCount = machines.filter(m => m.state === 'Online').length;
+
+    const led0 = [['NTechLab', '$61,497–$151,497 / quarter', 151497], ['Art Engineer', '$36,497–$76,497 / quarter', 76497], ['PharmaSyntez', '$11,497–$26,497 / quarter', 26497]];
+    const ledger = led0.map(([name, room, a]) => ({ name, room, amt: this.money(a), pct: Math.round(a / 151497 * 100) + '%' }));
+
+    const notes0 = [
+      { title: 'Adam Smasher — CEO mandate', folder: 'Agents', when: 'Jun 17', use: 'Adam Smasher' },
+      { title: 'Boardroom roster', folder: 'Agents', when: 'Jun 17', use: 'All rooms' },
+      { title: 'Q3 2026 board minutes', folder: 'Agents', when: 'Jun 17', use: 'Adam Smasher' },
+      { title: 'PharmaSyntez', folder: 'Clients', when: 'Jun 17', use: 'Agent-Markets' },
+      { title: 'Art Engineer', folder: 'Clients', when: 'Jun 17', use: 'Agent-Markets' },
+      { title: 'NTechLab', folder: 'Clients', when: 'Jun 17', use: 'Agent-Markets' },
+      { title: 'DeepSeek', folder: 'Partners', when: 'Jun 17', use: 'Agent-Comms' },
+      { title: 'Tencent Cloud', folder: 'Partners', when: 'Jun 17', use: 'Agent-Comms' },
+      { title: 'NVIDIA + Cassava AI', folder: 'Partners', when: 'Jun 17', use: 'Agent-Comms' },
+      { title: 'NTechLab × Art Engineer bundle', folder: 'Deals', when: 'Jun 17', use: 'Agent-Strategy' },
+      { title: 'SA TB drug tender', folder: 'Deals', when: 'Jun 17', use: 'Agent-Markets' },
+      { title: 'Kenya MoH CT Brain pilot', folder: 'Deals', when: 'Jun 17', use: 'Agent-Markets' },
+      { title: 'Client Intelligence Brief', folder: 'Research', when: 'Jun 17', use: 'Agent-Research' },
+      { title: 'Africa AI market size', folder: 'Research', when: 'Jun 17', use: 'Agent-Research' },
+      { title: 'Africa pharma competitors', folder: 'Research', when: 'Jun 17', use: 'Agent-Research' },
+      { title: 'agent-reach', folder: 'Skills', when: 'Jun 17', use: 'Agent-Research' },
+      { title: 'solo-founder-skills', folder: 'Skills', when: 'Oct 18', use: 'Agent-Strategy' },
+      { title: 'rea-agents (MCP)', folder: 'Skills', when: 'Oct 18', use: 'Agent-Research' },
+    ];
+    const fNames = ['All', 'Agents', 'Clients', 'Partners', 'Deals', 'Research', 'Skills'], fSel = s.folder || 'All';
+    const folders = fNames.map(label => { const on = fSel === label;
+      return { label, n: label === 'All' ? notes0.length : notes0.filter(x => x.folder === label).length, bg: on ? '#F5A623' : 'transparent', fg: on ? '#0D0A07' : '#E8B66A', border: on ? '#F5A623' : '#5C3D14', pick: () => this.setState({ folder: label }) }; });
+    const notes = fSel === 'All' ? notes0 : notes0.filter(x => x.folder === fSel);
+    const CX = 300, CY = 210, fl = fNames.slice(1), gNodes = [], gEdges = [];
+    gNodes.push({ x: CX, y: CY, r: 18, fill: '#F5A623', tc: '#F5A623', fs: 11, ty: CY + 34, label: '2nd Brain', pick: () => this.setState({ folder: 'All' }) });
+    const fPos = {};
+    fl.forEach((f, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / fl.length, x = CX + Math.cos(a) * 105, y = CY + Math.sin(a) * 100; fPos[f] = { x, y, a };
+      const on = fSel === f;
+      gEdges.push({ x1: CX, y1: CY, x2: x, y2: y, c: '#8A6533', dash: '0' });
+      gNodes.push({ x, y, r: 10, fill: on ? '#F5A623' : '#0D0A07', tc: '#FFC861', fs: 11, ty: y - 16, label: f, pick: () => this.setState({ folder: f }) }); });
+    const cnt = {};
+    notes0.forEach(n => { const p = fPos[n.folder]; const k = cnt[n.folder] = (cnt[n.folder] || 0) + 1; const a = p.a + (k - 2) * 0.32, rr = k === 2 ? 1.12 : 1, x = CX + Math.cos(a) * 200 * rr, y = CY + Math.sin(a) * 165 * rr;
+      const dim = fSel !== 'All' && fSel !== n.folder;
+      gEdges.push({ x1: p.x, y1: p.y, x2: x, y2: y, c: dim ? '#2A1C0A' : '#5C3D14', dash: '3 3' });
+      gNodes.push({ x, y, r: 4, fill: dim ? '#2A1C0A' : '#E8B66A', tc: dim ? '#3A2810' : '#C08A45', fs: 9, ty: y + 14, label: n.title.length > 16 ? n.title.slice(0, 15) + '…' : n.title, pick: () => this.setState({ folder: n.folder }) }); });
+    gEdges.push({ x1: fPos.Clients.x, y1: fPos.Clients.y, x2: fPos.Deals.x, y2: fPos.Deals.y, c: '#8A6533', dash: '2 4' });
+    gEdges.push({ x1: fPos.Research.x, y1: fPos.Research.y, x2: fPos.Partners.x, y2: fPos.Partners.y, c: '#8A6533', dash: '2 4' });
+    const pk = (anim, dur, delay, rev) => React.createElement('span', { style: { position: 'absolute', width: 6, height: 6, background: '#FFC861', boxShadow: '0 0 8px #F5A623', pointerEvents: 'none', ...(anim === 'snH' ? { top: '50%', marginTop: -3, marginLeft: -3 } : { left: '50%', marginLeft: -3, marginTop: -3 }), animation: anim + ' ' + dur + 's linear ' + delay + 's infinite' + (rev ? ' reverse' : '') } });
+    const tabDefs = [['station', 'Station', '5'], ['briefs', 'Briefs', String(openBriefs)], ['outbox', 'Outbox', '6'], ['machines', 'Machines', String(runningCount)], ['projects', 'Projects', '1'], ['ledger', 'Ledger', ''], ['vault', 'Vault', '18']];
+    const tabs = tabDefs.map(([id, label, badge]) => { const on = s.tab === id;
+      return { label, badge, mlabel: ({ Machines: 'VMs', Projects: 'Apps', Station: 'Home' })[label] || label, bg: on ? '#F5A623' : 'transparent', fg: on ? '#0D0A07' : '#E8B66A', mfg: on ? '#F5A623' : '#8A6533', bar: on ? '#F5A623' : 'transparent', go: () => this.setState({ tab: id }) }; });
+
+    return {
+      isHost, isFrame, frameSrc: location.pathname.split('/').pop() + '?frame=1',
+      mobile, desktop, tabs,
+      onStation: s.tab === 'station', onBriefs: s.tab === 'briefs', onOutbox: s.tab === 'outbox', onMachines: s.tab === 'machines', onLedger: s.tab === 'ledger',
+      headerPad: mobile ? '44px 16px 12px' : '14px 24px', shellCols: mobile ? 'minmax(0,1fr)' : '200px minmax(0,1fr)',
+      mainPad: mobile ? '20px 16px' : '28px 32px', h2Size: mobile ? '14px' : '18px',
+      planCols: mobile ? 'minmax(0,1fr) 28px minmax(0,1fr)' : 'minmax(0,1fr) 96px minmax(0,1fr)', hallRow: mobile ? '28px' : '56px',
+      roomPad: mobile ? '12px' : '18px', roomTitle: mobile ? '10px' : '12px', detailCols: mobile ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))',
+      rooms, sel, workingCount, bridgeLabel: desktop ? 'Adam Smasher · CEO' : 'CEO',
+      hHalls: [{ area: 'h1', label: 'intel briefs', arrow: '→', packet: pk('snH', 2.6, 0, false) }, { area: 'h2', label: 'new client VMs', arrow: '←', packet: pk('snH', 3.4, 1.1, true) }],
+      vHalls: [{ area: 'v1', label: 'partner leads', arrow: '↑', packet: pk('snV', 2.2, 0.6, true) }, { area: 'v2', label: 'won deals', arrow: '↓', packet: pk('snV', 3, 1.7, false) }],
+      clock: this.ts(s.now), cursor: React.createElement('span', { style: { animation: 'snBlink 1s steps(1) infinite' } }, '█'),
+      log: s.log.map((l, i) => ({ a: l.a, x: l.x, t: this.ts(l.d), op: String(Math.max(0.35, 1 - i * 0.13)) })), logCount: s.logN, logCols: mobile ? '64px minmax(0,1fr)' : '64px 120px minmax(0,1fr)', logTextCol: mobile ? '2 / -1' : 'auto',
+      soundLabel: s.sound ? 'Sound on' : 'Sound', eq: React.createElement('span', { style: { display: 'flex', gap: 2, alignItems: 'flex-end', height: 12 } }, [0, 0.2, 0.4, 0.1].map((d, i) => React.createElement('span', { key: i, style: { width: 2, height: 12, background: '#F5A623', transformOrigin: 'bottom', transform: 'scaleY(0.3)', animation: s.sound ? 'snEq 0.6s ease-in-out ' + d + 's infinite' : 'none' } }))),
+      toggleSound: () => { if (this.state.sound) { this.stopMusic(); this.setState({ sound: false }); } else { this.startMusic(); this.setState({ sound: true }); } },
+      scan: React.createElement('div', { style: { position: 'absolute', left: 0, right: 0, top: 0, height: 140, background: 'linear-gradient(180deg,transparent,rgba(245,166,35,0.05),transparent)', pointerEvents: 'none', animation: 'snScan 7s linear infinite', zIndex: 50 } }),
+      briefs, outbox, machines, runningCount, ledger, onVault: s.tab === 'vault', onProjects: s.tab === 'projects', previewH: mobile ? '420px' : '520px',
+      projStats: [{ l: 'Client VMs', v: runningCount }, { l: 'MRR', v: this.money(runningCount * 499) }, { l: '12-mo target', v: '$1.94M' }, { l: 'Plans', v: 'Starter · Pro · Agency' }],
+      projInts: ['Shopify', 'Google Ads', 'Meta Ads', 'Instagram', 'WhatsApp', 'Google Drive', 'Higgsfield'],
+      stack: [
+        { name: 'herdr web ui', repo: 'devswha/herdr-web-ui', role: 'Sessions from your phone', what: 'Read and reply to Claude Code and Codex sessions running on the station, as chat or live terminal. Approvals become tap cards; push alerts when an agent needs you.', cmd: 'herdr plugin install devswha/herdr-web-ui' },
+        { name: 'eve', repo: 'vercel/eve', role: 'Agent framework', what: 'Each room is an eve agent folder: instructions.md, tools/, skills/, channels/ (Discord, Slack, web) and schedules/ for cron jobs.', cmd: 'npx eve@latest init nest-markets' },
+        { name: 'Solo Founder Skills', repo: 'pratikshadake/claude-solo-founder-skills', role: 'Decision skills', what: 'Build vs Buy, MVP Scoper, Ship-in-7-Days, Incident Commander, Token Cost Optimizer and more, loaded by Adam Smasher and Agent-Strategy.', cmd: 'npx skills add pratikshadake/claude-solo-founder-skills' },
+        { name: 'REA', repo: 'morluto/rea', role: 'Reverse engineering MCP', what: 'Lets Agent-Research inspect apps, websites and binaries locally, explain how a feature works with evidence, and hand a build plan to Ops.', cmd: 'npx rea-agents setup' },
+      ], folders, notes, gNodes, gEdges,
+      spendToday: this.money(runningCount * 499), modelSpend: '$1.94M', vmSpend: 'Month 4',
+      leash: [{ k: 'Send partner outreach', v: 'No, draft only' }, { k: 'Provision client VMs', v: 'Yes' }, { k: 'Push to main (auto-deploy)', v: 'Ask first' }, { k: 'Post board updates to Discord', v: 'Yes' }],
+      night: s.night, nightLabel: s.night ? 'on' : 'off', nightBg: s.night ? '#F5A623' : 'transparent', nightFg: s.night ? '#0D0A07' : '#F5A623', nightDot: s.night ? '#0D0A07' : '#C08A45',
+      toggleNight: () => this.setState(st => ({ night: !st.night })),
+    };
+  }
+}
+</script>
+</body>
+</html>

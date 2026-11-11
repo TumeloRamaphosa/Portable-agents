@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Bare Metal — Studex Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: #8a7f4a;
+      --amber: #FFB000;
+      --obsidian: #050505;
+      --char: #14110c;
+      --cream: #E8DDBA;
+      --mute: #6a6250;
+      --ok: #6BCF7F;
+      --warn: #FFB000;
+      --err: #E85D5D;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: var(--obsidian);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 50% 45%, rgba(201, 168, 76, 0.08) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 1;
+    }
+
+    header {
+      position: relative; z-index: 10;
+      padding: 32px 60px;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+      background: linear-gradient(180deg, rgba(20, 17, 12, 0.9) 0%, rgba(8, 6, 4, 0.8) 100%);
+      backdrop-filter: blur(8px);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      letter-spacing: 12px;
+      color: var(--gold);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+    }
+
+    .logo-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--mute);
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .stats {
+      display: flex; gap: 40px;
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      color: var(--mute); text-transform: uppercase; letter-spacing: 2px;
+    }
+
+    .stat-item { display: flex; align-items: center; gap: 8px; }
+    .stat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 12px var(--ok); }
+    .stat-dot.warn { background: var(--warn); box-shadow: 0 0 12px var(--warn); }
+    .stat-dot.err { background: var(--err); box-shadow: 0 0 12px var(--err); }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 60px;
+      position: relative; z-index: 3;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(20, 17, 12, 0.8) 0%, rgba(8, 6, 4, 0.8) 100%);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(201, 168, 76, 0.8);
+      box-shadow: 0 0 50px rgba(201, 168, 76, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .card-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 12px var(--ok);
+    }
+
+    .card-status.offline {
+      background: var(--err);
+      box-shadow: 0 0 12px var(--err);
+    }
+
+    .card-status.warning {
+      background: var(--warn);
+      box-shadow: 0 0 12px var(--warn);
+    }
+
+    .card-body {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--mute);
+      line-height: 1.8;
+    }
+
+    .card-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(201, 168, 76, 0.1);
+    }
+
+    .card-metric:last-child {
+      border-bottom: none;
+    }
+
+    .metric-label { color: var(--mute); }
+    .metric-value { color: var(--cream); font-weight: bold; }
+
+    .inventory-list {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .inventory-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 9px;
+      color: var(--cream);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(201, 168, 76, 0.15);
+      border-left: 2px solid var(--gold);
+      font-size: 8px;
+      margin: 4px 0;
+      color: var(--gold);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .tag.process { border-left-color: var(--ok); color: var(--ok); }
+    .tag.container { border-left-color: var(--amber); color: var(--amber); }
+    .tag.launchagent { border-left-color: var(--gold); color: var(--gold); }
+
+    .risk-alert {
+      background: rgba(232, 93, 93, 0.1);
+      border-left: 3px solid var(--err);
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-size: 9px;
+      color: var(--err);
+    }
+
+    .external-services {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .service-badge {
+      padding: 6px 12px;
+      background: rgba(107, 207, 127, 0.1);
+      border: 1px solid rgba(107, 207, 127, 0.3);
+      border-radius: 4px;
+      font-size: 8px;
+      color: var(--ok);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      background: rgba(201, 168, 76, 0.2);
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 4px;
+      color: var(--gold);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: rgba(201, 168, 76, 0.4);
+      border-color: var(--gold);
+    }
+
+    footer {
+      position: relative; z-index: 3;
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: #4a4638;
+    }
+
+    .refresh-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--mute);
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">BARE METAL</div>
+    <div class="logo-sub">Local Ops Dashboard · Offline-First · v1.0</div>
+  </div>
+  <div class="stats">
+    <div class="stat-item"><span class="stat-dot"></span>Local: Online</div>
+    <div class="stat-item"><span class="stat-dot"></span>Door: <span id="door-count">—</span></div>
+    <div class="stat-item"><span class="stat-dot warn"></span>Storage: <span id="disk-pct">—</span></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="section">
+    <div class="section-title">◆ Live floor</div>
+    <div data-studex-models>Waiting for the desk bridge on port 8794.</div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">◆ Mesh</div>
+    <div data-studex-mesh>Waiting for the desk bridge on port 8794.</div>
+  </section>
+
+  <!-- LOCAL CONTROL PLANE -->
+  <section class="section">
+    <div class="section-title">◆ Local Control Plane</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">ClawX / OpenClaw</div>
+          <div class="card-status" data-port="18789" data-label="claw-state"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag process">macOS Process</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Main Gateway</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Agents</span>
+            <span class="metric-value">not probed</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Workspaces</span>
+            <span class="metric-value">not probed</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Port 18789</span>
+            <span class="metric-value" id="claw-state">—</span>
+          </div>
+          <div class="action-buttons">
+            <button class="btn">Monitor</button>
+            <button class="btn">Status</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Hermes</div>
+          <div class="card-status" data-port="8787" data-label="hermes-state"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag launchagent">LaunchAgent</span>
+          <span class="tag container">Container</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Agent Gateway</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Port</span>
+            <span class="metric-value">8787</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Status</span>
+            <span class="metric-value" id="hermes-state">—</span>
+          </div>
+          <div class="action-buttons">
+            <button class="btn">Start</button>
+            <button class="btn">Logs</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Ollama</div>
+          <div class="card-status" data-port="11434" data-label="ollama-state"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag process">macOS Process</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Local LLM</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Models</span>
+            <span class="metric-value" id="ollama-count">—</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Port</span>
+            <span class="metric-value">11434</span>
+          </div>
+          <div class="action-buttons">
+            <button class="btn">Start</button>
+            <button class="btn">Models</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Gitea</div>
+          <div class="card-status" data-port="3030" data-label="gitea-state"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag launchagent">LaunchAgent</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Local Git</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Repos</span>
+            <span class="metric-value">43 nested</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Port</span>
+            <span class="metric-value">3030</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Status</span>
+            <span class="metric-value" id="gitea-state">—</span>
+          </div>
+          <div class="risk-alert">Repo count is painted. The status line is the live port.</div>
+          <div class="action-buttons">
+            <button class="btn">Refresh</button>
+            <button class="btn">Web UI</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">OrbStack</div>
+          <div class="card-status warning"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag container">VM/Runtime</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Docker Runtime</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Containers</span>
+            <span class="metric-value">2 active</span>
+          </div>
+          <div class="risk-alert">⚠️ Needs repair — helper processes stuck</div>
+          <div class="action-buttons">
+            <button class="btn">Repair</button>
+            <button class="btn">Logs</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Buzz / Katya</div>
+          <div class="card-status warning"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag container">OrbStack</span>
+          <div class="card-metric">
+            <span class="metric-label">Role</span>
+            <span class="metric-value">Communications</span>
+          </div>
+          <div class="card-metric">
+            <span class="metric-label">Status</span>
+            <span class="metric-value">Degraded</span>
+          </div>
+          <div class="risk-alert">⚠️ Depends on OrbStack repair</div>
+          <div class="action-buttons">
+            <button class="btn">Status</button>
+            <button class="btn">Refresh</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INVENTORY -->
+  <section class="section">
+    <div class="section-title">◆ Local Inventory</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">OpenClaw Agents</div>
+          <div class="card-status"></div>
+        </div>
+        <div class="card-body">
+          <div class="inventory-list">
+            <div class="inventory-item">
+              <span>Defined agents</span>
+              <span style="color: var(--gold);">278</span>
+            </div>
+            <div class="inventory-item">
+              <span>Active workspaces</span>
+              <span style="color: var(--gold);">270</span>
+            </div>
+            <div class="inventory-item">
+              <span>Sessions</span>
+              <span style="color: var(--gold);">399</span>
+            </div>
+            <div class="inventory-item">
+              <span>Main state size</span>
+              <span style="color: var(--gold);">5.9 GB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Storage Status</div>
+          <div class="card-status warning"></div>
+        </div>
+        <div class="card-body">
+          <div class="inventory-list">
+            <div class="inventory-item">
+              <span>Used</span>
+              <span id="disk-pct-card" style="color: var(--warn);">—</span>
+            </div>
+            <div class="inventory-item">
+              <span>OpenClaw .state</span>
+              <span style="color: var(--gold);">5.9 GB</span>
+            </div>
+            <div class="inventory-item">
+              <span>Git repos</span>
+              <span style="color: var(--gold);">~1.2 GB</span>
+            </div>
+            <div class="inventory-item">
+              <span>Ollama models</span>
+              <span style="color: var(--gold);">~40 GB</span>
+            </div>
+          </div>
+          <div class="risk-alert">⚠️ Data volume nearly full — cleanup required</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EXTERNAL SERVICES -->
+  <section class="section">
+    <div class="section-title">◆ External Services</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Cloud & API Connections</div>
+        <div class="card-status"></div>
+      </div>
+      <div class="card-body">
+        <div class="external-services">
+          <span class="service-badge">Google Drive</span>
+          <span class="service-badge">GitHub</span>
+          <span class="service-badge">Gitea (local)</span>
+          <span class="service-badge">Warmwind</span>
+          <span class="service-badge">Orgo.ai</span>
+          <span class="service-badge">Anthropic</span>
+          <span class="service-badge">OpenAI</span>
+          <span class="service-badge">MiniMax</span>
+          <span class="service-badge">OpenRouter</span>
+          <span class="service-badge">Perplexity</span>
+          <span class="service-badge">Cursor</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURRENT RISKS -->
+  <section class="section">
+    <div class="section-title">◆ Risks & Mitigation</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Critical Issues</div>
+          <div class="card-status err"></div>
+        </div>
+        <div class="card-body">
+          <div class="risk-alert" style="background: rgba(232, 93, 93, 0.2);">
+            🔴 <strong>OrbStack Repair:</strong> Helper processes and forwarded ports remain active after reported stop. Requires debugging.
+          </div>
+          <div class="risk-alert" style="background: rgba(232, 93, 93, 0.2);">
+            🔴 <strong>Storage Critical:</strong> The header percent is the live data disk. It is nearly full.
+          </div>
+          <div class="risk-alert" style="background: rgba(232, 93, 93, 0.2);">
+            🔴 <strong>Credential Rotation:</strong> Gateway credential exposed during diagnostics. Rotate before remote access.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Warnings</div>
+          <div class="card-status warn"></div>
+        </div>
+        <div class="card-body">
+          <div class="risk-alert">
+            ⚠️ <strong>Gitea Auth:</strong> Synchronization reports authentication failure. Check credentials and restart service.
+          </div>
+          <div class="risk-alert">
+            ⚠️ <strong>OpenClaw Identities:</strong> 278 configured agents exceeds expected active team size. Audit and cleanup.
+          </div>
+          <div class="risk-alert">
+            ⚠️ <strong>Automation Fragmentation:</strong> Obsidian automation split across multiple scripts. Consolidate into single scheduler.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- QUICK ACTIONS -->
+  <section class="section">
+    <div class="section-title">◆ Quick Actions</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">System Boot</div>
+        </div>
+        <div class="card-body">
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Start All Services</button>
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Health Check</button>
+          <button class="btn" style="width: 100%;">View Logs</button>
+          <div class="refresh-status">Last check: <span id="lastCheck">--:--:--</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Storage Cleanup</div>
+        </div>
+        <div class="card-body">
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Remove Old Sessions</button>
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Clear Caches</button>
+          <button class="btn" style="width: 100%;">Archive Repos</button>
+          <div class="refresh-status">Potential free: ~5-10 GB</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Diagnostics</div>
+        </div>
+        <div class="card-body">
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Run System Audit</button>
+          <button class="btn" style="width: 100%; margin-bottom: 8px;">Port Scan</button>
+          <button class="btn" style="width: 100%;">Network Test</button>
+          <div class="refresh-status">Audit interval: 6h</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  LOCAL BARE METAL DASHBOARD — Offline-First Operations · All data local, no telemetry · Last synced to Claudio-CTO: 2026-09-03
+</footer>
+
+<script>
+  // Update clock
+  function updateClock() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('lastCheck').textContent = `${hh}:${mm}:${ss}`;
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Button click handlers
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const action = this.textContent.trim().toLowerCase();
+      if (action === 'health check' || action === 'port scan' || action === 'status' || action === 'refresh') {
+        if (window.studexRefresh) window.studexRefresh();
+      }
+    });
+  });
+</script>
+<script src="http://127.0.0.1:8794/studex-desk-live.js"></script>
+
+</body>
+</html>

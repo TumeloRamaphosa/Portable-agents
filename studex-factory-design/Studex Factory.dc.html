@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#0a0805;}
+a{color:#FFB000;}a:hover{color:#FFD21F;}
+::selection{background:#FFB000;color:#0a0805;}
+textarea,input{caret-color:#FFB000;}
+@keyframes sx-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes sx-scan{0%{transform:translateY(-20vh)}100%{transform:translateY(120vh)}}
+@keyframes sx-core{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+@keyframes sx-ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@keyframes sx-sweep{0%{background-position:150% 0}100%{background-position:-150% 0}}
+@keyframes sx-flicker{0%,100%{opacity:1}48%{opacity:1}49%{opacity:.9}50%{opacity:1}}
+*::-webkit-scrollbar{width:8px;height:8px}*::-webkit-scrollbar-thumb{background:#3a2c10}*::-webkit-scrollbar-track{background:transparent}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#0a0805;color:#FFB000;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.5;text-shadow:0 0 6px rgba(255,176,0,.28);position:relative;display:flex;flex-direction:column">
+  {{ fx }}
+
+  <header style="position:sticky;top:0;z-index:4;background:#0a0805;border-bottom:1px solid #3a2c10">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(12px,3vw,28px);flex-wrap:wrap">
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+        <span style="font-family:'VT323',monospace;font-size:28px;line-height:1;letter-spacing:.06em;color:#FFB000">STUDEX//FACTORY</span>
+        <span style="font-size:11px;color:#8a6a1f;white-space:nowrap">DROID FABRICATION LINE 01 · {{ clock }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px">
+        <button onClick="{{ toggleSound }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:4px 8px;border:1px solid #3a2c10;color:{{ soundColor }}" style-hover="border-color:#FFB000">SND {{ soundLabel }}</button>
+        <button onClick="{{ toggleAmb }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:4px 8px;border:1px solid {{ ambBorder }};background:{{ ambBg }};color:{{ ambColor }};text-shadow:none" style-hover="border-color:#FFB000">AMB {{ ambLabel }}</button>
+        <button onClick="{{ toggleSpeak }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:4px 8px;border:1px solid #3a2c10;color:{{ speakColor }}" style-hover="border-color:#FFB000">VOX {{ speakLabel }}</button>
+        <span style="padding:4px 8px;color:#7FD36B;white-space:nowrap">● {{ onlineCount }}/7 ONLINE</span>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0;overflow-x:auto;padding:0 clamp(12px,3vw,28px)">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+        <button onClick="{{ tb.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;min-height:40px;padding:0 16px;display:flex;align-items:center;gap:8px;background:{{ tb.bg }};color:{{ tb.color }};border-top:1px solid {{ tb.border }};border-left:1px solid {{ tb.border }};border-right:1px solid {{ tb.border }};font-size:12px;letter-spacing:.12em" style-hover="color:#FFD21F">
+          <span style="color:{{ tb.keyColor }}">[{{ tb.key }}]</span>{{ tb.label }}
+        </button>
+      </sc-for>
+    </nav>
+  </header>
+
+  <main style="flex:1;position:relative;z-index:2;padding:clamp(12px,2.4vw,24px) clamp(12px,3vw,28px) 40px;display:flex;flex-direction:column;gap:16px">
+
+    <sc-if value="{{ pHome }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:1180px;width:100%;margin:0 auto">
+        <div style="display:flex;flex-direction:column;gap:6px;padding-top:clamp(8px,3vw,32px)">
+          <span style="font-size:11px;color:#8a6a1f;letter-spacing:.14em">{{ homeDate }}</span>
+          <span style="font-family:'VT323',monospace;font-size:clamp(34px,5.5vw,64px);line-height:1">{{ greeting }}</span>
+          <span style="font-size:12px;color:#E8DDBA">Talk or type to HERMES. It works across the whole station and asks before anything changes.</span>
+        </div>
+        <div style="border:1px solid #FFB000;display:flex;align-items:center;gap:10px;padding:0 12px;box-shadow:0 0 24px rgba(255,176,0,.12)">
+          <span style="flex:none;font-family:'VT323',monospace;font-size:24px">&gt;</span>
+          <input value="{{ homeDraft }}" onChange="{{ onHomeDraft }}" onKeyDown="{{ onHomeKey }}" placeholder="{{ homePlaceholder }}" style="flex:1;min-width:0;min-height:58px;border:none;outline:none;background:transparent;color:#E8DDBA;font-family:inherit;font-size:15px">
+          <button onClick="{{ homeMic }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 12px;display:flex;align-items:center;border:1px solid {{ micBorder }};color:{{ micColor }};font-size:11px;letter-spacing:.1em;white-space:nowrap">● {{ micLabel }}</button>
+          <button onClick="{{ homeSend }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 16px;display:flex;align-items:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:11px;letter-spacing:.12em">ASK</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ homeSuggest }}" as="x" hint-placeholder-count="4"><button onClick="{{ x.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:5px 10px;border:1px dashed #3a2c10;font-size:11px;color:#8a6a1f" style-hover="color:#FFB000;border-color:#FFB000">{{ x.label }}</button></sc-for>
+        </div>
+        <sc-if value="{{ homeHasReply }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid #3a2c10;padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">HERMES</span>
+            <span style="font-size:14px;line-height:1.6;color:#FFB000;white-space:pre-wrap">{{ homeReply }}{{ homeCaret }}</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ homeActions }}" as="a" hint-placeholder-count="0"><span style="padding:3px 8px;border:1px solid #7FD36B;color:#7FD36B;font-size:11px">✓ {{ a }}</span></sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ homeBusy }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8a6a1f">hermes is working <span style="animation:sx-blink 1s steps(1) infinite">█</span></span></sc-if>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px">
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;white-space:nowrap"><span>┌ NEEDS YOU</span><span style="color:{{ needColor }}">{{ needCount }}</span></div>
+            <sc-for list="{{ needs }}" as="n" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px dashed #1f1709;font-size:12px">
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="color:#E8DDBA">{{ n.title }}</span><span style="font-size:10px;color:#8a6a1f">{{ n.meta }}</span></span>
+                <button onClick="{{ n.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:4px 10px;border:1px solid #E85D5D;color:#E85D5D;font-size:10px;letter-spacing:.1em" style-hover="background:rgba(232,93,93,.1)">{{ n.btn }}</button>
+              </div>
+            </sc-for>
+            <sc-if value="{{ needsEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:10px;font-size:12px;color:#8a6a1f">Nothing waiting. All gates clear.</div></sc-if>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ TODAY</div>
+            <sc-for list="{{ today }}" as="e" hint-placeholder-count="4">
+              <div style="display:flex;gap:12px;padding:7px 10px;font-size:12px"><span style="color:{{ e.color }};flex:none;width:44px">{{ e.time }}</span><span style="color:{{ e.textColor }};min-width:0">{{ e.title }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;white-space:nowrap"><span>┌ RUNNING</span><span style="color:#8a6a1f">{{ runCount }}</span></div>
+            <sc-for list="{{ running }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;gap:10px;padding:6px 10px;font-size:12px;white-space:nowrap;min-width:0"><span style="color:{{ r.color }};flex:none">●</span><span style="color:#E8DDBA;flex:none">{{ r.name }}</span><span style="color:#8a6a1f;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ r.what }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ RECENT FILES</div>
+            <sc-for list="{{ recent }}" as="f" hint-placeholder-count="4">
+              <button onClick="{{ f.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;gap:10px;padding:6px 10px;font-size:12px;white-space:nowrap" style-hover="background:rgba(255,176,0,.06)"><span style="color:#8a6a1f;flex:none">MD</span><span style="color:#E8DDBA;overflow:hidden;text-overflow:ellipsis">{{ f.name }}</span></button>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ ROUTINES</div>
+            <sc-for list="{{ autos }}" as="x" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;padding:6px 10px;font-size:12px"><span style="color:{{ x.color }};flex:none">{{ x.label }}</span><span style="min-width:0;display:flex;flex-direction:column"><span style="color:#FFB000">{{ x.when }}</span><span style="color:#E8DDBA">{{ x.what }}</span></span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ WHAT HERMES REMEMBERS</div>
+            <sc-for list="{{ memory }}" as="m" hint-placeholder-count="4">
+              <div style="display:flex;gap:10px;padding:6px 10px;font-size:12px"><span style="color:#8a6a1f;flex:none">·</span><span style="color:#E8DDBA">{{ m }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pStation }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+            <span style="font-size:11px;color:#8a6a1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">&gt; station map {{ mapCmd }}</span>
+            <span style="font-family:'VT323',monospace;font-size:clamp(28px,4vw,40px);line-height:1">{{ mapTitle }}</span>
+          </div>
+          <sc-if value="{{ roomOpen }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ closeRoom }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;min-height:40px;padding:0 14px;display:flex;align-items:center;border:1px solid #FFB000;font-size:12px;letter-spacing:.12em" style-hover="background:rgba(255,176,0,.08)">← STATION OVERVIEW</button>
+          </sc-if>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+          <div style="flex:{{ mapFlex }};min-width:0;border:1px solid #3a2c10;background:#050403;position:relative;overflow:hidden;aspect-ratio:16 / 9">
+            <div style="position:absolute;inset:0;background-image:url('assets/station-map.png');background-size:cover;background-position:center;transform-origin:{{ zoomOrigin }};transform:{{ zoomTf }};transition:transform 1100ms cubic-bezier(0.16,1,0.3,1),filter 900ms;filter:{{ mapFilter }}"></div>
+            {{ mapFx }}
+            <sc-for list="{{ hotspots }}" as="h" hint-placeholder-count="5">
+              <button onClick="{{ h.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;left:{{ h.l }};top:{{ h.t }};width:{{ h.w }};height:{{ h.h }};z-index:{{ h.z }};display:{{ h.display }};transition:background 240ms,box-shadow 240ms" style-hover="background:rgba(255,176,0,.07);box-shadow:inset 0 0 0 1px rgba(255,176,0,.7)">
+                <span style="position:absolute;left:{{ h.ll }};top:{{ h.lt }};display:flex;flex-direction:column;gap:1px;padding:5px 8px;background:rgba(10,8,5,.86);border:1px solid rgba(255,176,0,.55);white-space:nowrap;text-shadow:none">
+                  <span style="font-size:11px;letter-spacing:.12em;color:#FFB000">{{ h.num }} {{ h.name }}</span>
+                  <span style="font-size:10px;color:#E8DDBA">{{ h.meta }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ roomOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:0 1 340px;min-width:280px;max-height:max(420px,calc(100vh - 220px));overflow-y:auto;border:1px solid #FFB000;display:flex;flex-direction:column">
+              <div style="padding:10px 12px;border-bottom:1px solid #3a2c10;display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:10px;letter-spacing:.16em;color:#8a6a1f">ROOM {{ room.num }} · {{ room.kind }}</span>
+                <span style="font-family:'VT323',monospace;font-size:30px;line-height:1">{{ room.name }}</span>
+                <span style="font-size:12px;color:#E8DDBA;line-height:1.5">{{ room.desc }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid #3a2c10">
+                <sc-for list="{{ room.stats }}" as="k" hint-placeholder-count="3">
+                  <div style="padding:8px 12px;display:flex;flex-direction:column;border-right:1px solid #1f1709">
+                    <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">{{ k.label }}</span>
+                    <span style="font-family:'VT323',monospace;font-size:26px;line-height:1;color:{{ k.color }}">{{ k.val }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="padding:8px 12px 4px;font-size:10px;letter-spacing:.16em;color:#8a6a1f">CREW</div>
+              <sc-for list="{{ room.crew }}" as="c" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;white-space:nowrap">
+                  <span style="width:7px;height:7px;flex:none;background:{{ c.color }}"></span>
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis"><span style="color:#E8DDBA">{{ c.name }}</span> <span style="color:#8a6a1f;font-size:11px">{{ c.meta }}</span></span>
+                  <button onClick="{{ c.onChat }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:3px 8px;border:1px solid #3a2c10;font-size:10px" style-hover="border-color:#FFB000">CHAT</button>
+                </div>
+              </sc-for>
+              <div style="padding:10px 12px 4px;font-size:10px;letter-spacing:.16em;color:#8a6a1f">{{ room.listTitle }}</div>
+              <sc-for list="{{ room.items }}" as="j" hint-placeholder-count="3">
+                <div style="display:flex;gap:10px;padding:5px 12px;font-size:12px;white-space:nowrap;min-width:0">
+                  <span style="color:#8a6a1f;flex:none">{{ j.id }}</span>
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;color:#E8DDBA">{{ j.title }}</span>
+                  <span style="color:{{ j.color }};flex:none">{{ j.state }}</span>
+                </div>
+              </sc-for>
+              <div style="margin-top:auto;padding:12px;border-top:1px solid #3a2c10;display:flex;gap:8px;flex-wrap:wrap">
+                <button onClick="{{ room.primary }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:44px;display:flex;align-items:center;justify-content:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:11px;letter-spacing:.12em" style-hover="background:#FFD21F">{{ room.primaryLabel }}</button>
+                <button onClick="{{ room.secondary }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid #FFB000;font-size:11px;letter-spacing:.12em" style-hover="background:rgba(255,176,0,.08)">{{ room.secondaryLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ roomClosed }}" hint-placeholder-val="{{ true }}">
+          <span style="font-size:11px;color:#8a6a1f">Click a room to zoom in. Dots are droids: amber working, red blocked, cream idle, green done.</span>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pFactory }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:11px;color:#8a6a1f">&gt; line status --all</span>
+            <span style="font-family:'VT323',monospace;font-size:clamp(28px,4vw,40px);line-height:1">SOFTWARE FACTORY</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+              <div style="padding:6px 10px;border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:96px">
+                <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">{{ k.label }}</span>
+                <span style="font-family:'VT323',monospace;font-size:26px;line-height:1;color:{{ k.color }}">{{ k.val }}</span>
+              </div>
+            </sc-for>
+            <button onClick="{{ goDispatch }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;padding:0 16px;min-height:48px;height:48px;display:flex;align-items:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:12px;letter-spacing:.14em" style-hover="background:#FFD21F">+ DISPATCH</button>
+          </div>
+        </div>
+
+        <div style="border:1px solid #3a2c10;display:flex;flex-direction:column">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>┌ FACTORY FLOOR · LIVE</span><span style="color:#8a6a1f">click a droid to open comms</span></div>
+          <div style="background:#0d0a06;padding:8px">
+            <canvas ref="{{ floorRef }}" width="960" height="528" onClick="{{ onFloorClick }}" style="display:block;width:100%;max-width:1100px;margin:0 auto;aspect-ratio:320 / 176;image-rendering:pixelated;cursor:pointer;filter:sepia(.22) saturate(1.05)"></canvas>
+          </div>
+          <div style="padding:6px 10px;border-top:1px solid #3a2c10;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#8a6a1f">
+            <span><span style="color:#FFB000">■</span> typing at desk</span><span><span style="color:#E85D5D">■</span> blocked · needs you</span><span><span style="color:#E8DDBA">■</span> idle · wandering</span><span><span style="color:#7FD36B">■</span> done</span>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;border:1px solid #3a2c10"><div style="display:grid;grid-template-columns:repeat(6,minmax(200px,1fr));gap:1px;background:#3a2c10;min-width:1210px">
+          <sc-for list="{{ stations }}" as="st" hint-placeholder-count="6">
+            <div style="background:#0a0805;display:flex;flex-direction:column;min-height:260px;min-width:0">
+              <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:8px;white-space:nowrap">
+                <span style="min-width:0;overflow:hidden;text-overflow:ellipsis"><span style="color:#8a6a1f">{{ st.num }}</span> {{ st.name }}</span><span style="color:#8a6a1f;flex:none">{{ st.count }}</span>
+              </div>
+              <div style="padding:8px;display:flex;flex-direction:column;gap:8px;flex:1">
+                <sc-for list="{{ st.jobs }}" as="j" hint-placeholder-count="1">
+                  <div style="border:1px solid {{ j.border }};padding:8px;display:flex;flex-direction:column;gap:4px;background:{{ j.bg }}">
+                    <div style="display:flex;justify-content:space-between;gap:6px;font-size:11px;white-space:nowrap"><span style="color:#E8DDBA">{{ j.id }}</span><span style="color:#8a6a1f">{{ j.drd }}</span></div>
+                    <span style="font-size:12px;color:#E8DDBA;line-height:1.35">{{ j.title }}</span>
+                    <span style="font-size:11px;color:#8a6a1f">@{{ j.agent }}</span>
+                    <span style="font-size:11px;letter-spacing:-.02em;color:{{ j.barColor }};white-space:nowrap;overflow:hidden">{{ j.bar }} {{ j.pct }}</span>
+                    <sc-if value="{{ j.blocked }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ j.approve }}" style="all:unset;box-sizing:border-box;cursor:pointer;margin-top:4px;min-height:32px;display:flex;align-items:center;justify-content:center;border:1px solid #E85D5D;color:#E85D5D;font-size:11px;letter-spacing:.12em" style-hover="background:rgba(232,93,93,.12)">APPROVE GATE</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="padding:6px 10px;border-top:1px dashed #3a2c10;font-size:10px;color:#8a6a1f;line-height:1.4">EXIT GATE: {{ st.gate }}</div>
+            </div>
+          </sc-for>
+        </div></div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px">
+          <div style="border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:0">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between"><span>┌ EVENT LOG</span><span style="color:#8a6a1f">tail -f factory.log</span></div>
+            <div ref="{{ logRef }}" style="height:220px;overflow-y:auto;padding:8px 10px;font-size:12px;display:flex;flex-direction:column;gap:1px">
+              <sc-for list="{{ logs }}" as="l" hint-placeholder-count="6">
+                <div style="display:flex;gap:10px;min-width:0"><span style="color:#5a4515;flex:none">{{ l.t }}</span><span style="color:{{ l.color }};flex:none;width:56px">{{ l.tag }}</span><span style="color:#E8DDBA;min-width:0;word-break:break-word">{{ l.text }}</span></div>
+              </sc-for>
+              <span style="display:inline-block;width:8px;height:14px;background:#FFB000;animation:sx-blink 1s steps(1) infinite"></span>
+            </div>
+          </div>
+          <div style="border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:0">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between"><span>┌ STANDARD OPERATING PROCEDURE</span><span style="color:#8a6a1f">vault/30 Playbooks/Dispatch SOP.md</span></div>
+            <div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;font-size:12px">
+              <sc-for list="{{ sop }}" as="g" hint-placeholder-count="6">
+                <div style="display:flex;gap:10px"><span style="color:#8a6a1f;flex:none">{{ g.n }}</span><span style="color:#E8DDBA">{{ g.text }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pVault }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+        <div style="flex:1 1 220px;max-width:min(100%,280px);border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:0">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;flex-direction:column;gap:2px">
+            <span>┌ BRAIN VAULT</span>
+            <span style="font-size:10px;color:#8a6a1f">cloud://studex-brain · {{ noteCount }} notes</span>
+          </div>
+          <div style="padding:6px 0;display:flex;flex-direction:column">
+            <sc-for list="{{ tree }}" as="n" hint-placeholder-count="8">
+              <button onClick="{{ n.onClick }}" style="all:unset;box-sizing:border-box;cursor:{{ n.cursor }};padding:4px 10px;display:flex;gap:6px;font-size:12px;background:{{ n.bg }};color:{{ n.color }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis" style-hover="background:rgba(255,176,0,.06)"><span style="color:#5a4515;flex:none">{{ n.pre }}</span>{{ n.label }}</button>
+            </sc-for>
+          </div>
+          <div style="padding:8px 10px;border-top:1px solid #3a2c10;display:flex;gap:6px;flex-wrap:wrap">
+            <button onClick="{{ newNote }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:6px 10px;border:1px solid #FFB000;font-size:11px" style-hover="background:rgba(255,176,0,.08)">+ NEW NOTE</button>
+          </div>
+        </div>
+
+        <div style="flex:999 1 420px;min-width:0;border:1px solid #3a2c10;display:flex;flex-direction:column">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <span style="color:#E8DDBA;min-width:0;word-break:break-all">{{ notePath }}</span>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px">
+              <sc-for list="{{ modes }}" as="m" hint-placeholder-count="3">
+                <button onClick="{{ m.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:4px 8px;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.color }};text-shadow:none">{{ m.label }}</button>
+              </sc-for>
+              <span style="padding:4px 8px;color:{{ syncColor }}">{{ syncLabel }}</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ editorCols }};min-height:60vh">
+            <sc-if value="{{ showEditor }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;min-width:0;border-right:1px solid #3a2c10">
+                <pre style="margin:0;padding:12px 8px;text-align:right;color:#5a4515;font-family:inherit;font-size:13px;line-height:1.6;user-select:none;flex:none;min-width:28px">{{ lineNums }}</pre>
+                <textarea value="{{ noteBody }}" onChange="{{ onEdit }}" onKeyDown="{{ onKeyTick }}" spellcheck="false" style="flex:1;min-width:0;resize:none;border:none;outline:none;background:transparent;color:#E8DDBA;text-shadow:0 0 5px rgba(232,221,186,.18);font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.6;padding:12px 12px 12px 4px;min-height:60vh"></textarea>
+              </div>
+            </sc-if>
+            <sc-if value="{{ showPreview }}" hint-placeholder-val="{{ true }}">
+              <div ref="{{ previewRef }}" onClick="{{ onPreviewClick }}" style="padding:12px 18px;min-width:0;overflow-wrap:anywhere;color:#E8DDBA;font-size:13px;line-height:1.65"></div>
+            </sc-if>
+          </div>
+          <div style="padding:8px 10px;border-top:1px solid #3a2c10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:11px;color:#8a6a1f">
+            <span>BACKLINKS: {{ backlinks }}</span><span>{{ wordCount }} words · {{ lineCount }} lines · markdown</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pFleets }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:11px;color:#8a6a1f;line-height:1.5;margin-bottom:4px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">&gt; rig ps --nodes &amp;&amp; herdr session list &amp;&amp; orca worktree ls</span>
+            <span style="font-family:'VT323',monospace;font-size:clamp(28px,4vw,40px);line-height:1">AGENT FLEETS</span>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#8a6a1f">
+            <sc-for list="{{ fleetStats }}" as="k" hint-placeholder-count="5"><span style="white-space:nowrap">{{ k.label }} <span style="color:#FFB000">{{ k.val }}</span></span></sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:16px;align-items:start">
+          <div style="border:1px solid #3a2c10;min-width:0">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between"><span style="white-space:nowrap;flex:none">┌ OPENRIG ASSEMBLY</span><span style="color:#8a6a1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">rigs → pods → seats</span></div>
+            <div style="padding:8px 10px;display:flex;flex-direction:column;font-size:12px">
+              <sc-for list="{{ rigRows }}" as="r" hint-placeholder-count="10">
+                <div style="display:flex;align-items:center;gap:8px;min-height:30px;white-space:nowrap;min-width:0">
+                  <span style="color:#5a4515;white-space:pre">{{ r.pre }}</span>
+                  <span style="color:{{ r.color }}">{{ r.text }}</span>
+                  <span style="color:#8a6a1f;font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span>
+                  <sc-if value="{{ r.isSeat }}" hint-placeholder-val="{{ false }}">
+                    <span style="margin-left:auto;display:flex;gap:4px;flex:none">
+                      <button onClick="{{ r.onChat }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:2px 6px;border:1px solid #3a2c10;font-size:10px" style-hover="border-color:#FFB000">CHAT</button>
+                      <button onClick="{{ r.onSend }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:2px 6px;border:1px solid #3a2c10;font-size:10px" style-hover="border-color:#FFB000">SEND</button>
+                    </span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border:1px solid #3a2c10;min-width:0">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between"><span style="white-space:nowrap;flex:none">┌ HERDR SESSIONS</span><span style="color:#8a6a1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">panes by host</span></div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ hosts }}" as="h" hint-placeholder-count="3">
+                <div style="padding:8px 10px;border-bottom:1px dashed #3a2c10;display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;flex-direction:column;gap:1px;font-size:12px;line-height:1.4"><span style="color:#E8DDBA">{{ h.host }}</span><span style="color:#8a6a1f;font-size:11px">{{ h.meta }}</span></div>
+                  <sc-for list="{{ h.panes }}" as="p" hint-placeholder-count="2">
+                    <div style="display:grid;grid-template-columns:76px 1fr;gap:8px;font-size:11px;align-items:start">
+                      <span style="color:{{ p.color }}">[{{ p.state }}]</span>
+                      <span style="display:flex;flex-direction:column;min-width:0"><span style="color:#E8DDBA">{{ p.agent }} <span style="color:#8a6a1f">· {{ p.up }}</span></span><span style="color:#8a6a1f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">$ {{ p.cmd }}</span></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border:1px solid #3a2c10;min-width:0">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between"><span style="white-space:nowrap;flex:none">┌ ORCA WORKTREES</span><span style="color:#8a6a1f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">fan out · compare · merge</span></div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ worktrees }}" as="w" hint-placeholder-count="3">
+                <div style="padding:8px 10px;border-bottom:1px dashed #3a2c10;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <span style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;font-size:12px"><span style="color:#E8DDBA">{{ w.branch }}</span><span style="color:#8a6a1f;font-size:11px">@{{ w.agent }} · {{ w.diff }}</span></span>
+                  <span style="font-size:11px;color:{{ w.color }}">{{ w.state }}</span>
+                  <button onClick="{{ w.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:4px 8px;border:1px solid {{ w.btnBorder }};font-size:11px;color:{{ w.btnColor }}" style-hover="border-color:#FFD21F">{{ w.btn }}</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div id="dispatch" style="border:1px solid #FFB000;display:flex;flex-direction:column">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>┌ DISPATCH CONSOLE</span><span style="color:#8a6a1f">rome sandbox → cloudflare tunnel studex-edge</span></div>
+          <div style="padding:12px 10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">DROID</span>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                <sc-for list="{{ dAgents }}" as="a" hint-placeholder-count="7">
+                  <button onClick="{{ a.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:4px 8px;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.color }};text-shadow:none;font-size:11px">{{ a.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">SANDBOX HOST</span>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                <sc-for list="{{ dHosts }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:4px 8px;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.color }};text-shadow:none;font-size:11px">{{ a.name }}</button>
+                </sc-for>
+              </div>
+              <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f;margin-top:6px">BUDGET CAP</span>
+              <div style="display:flex;flex-wrap:wrap;gap:4px">
+                <sc-for list="{{ dBudgets }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:4px 8px;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.color }};text-shadow:none;font-size:11px">{{ a.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:10px;letter-spacing:.14em;color:#8a6a1f">MISSION</span>
+              <div style="display:flex;align-items:center;gap:6px;border:1px solid #3a2c10;padding:0 8px"><span>&gt;</span><input value="{{ dMission }}" onChange="{{ onDMission }}" onKeyDown="{{ onDKey }}" placeholder="describe the job" style="flex:1;min-width:0;min-height:40px;border:none;outline:none;background:transparent;color:#E8DDBA;font-family:inherit;font-size:13px"></div>
+              <button onClick="{{ launch }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:12px;letter-spacing:.14em" style-hover="background:#FFD21F">LAUNCH {{ dSummary }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pComms }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
+        <div style="flex:1 1 200px;max-width:min(100%,260px);border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:0">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10">┌ CHANNELS</div>
+          <sc-for list="{{ channels }}" as="c" hint-placeholder-count="7">
+            <button onClick="{{ c.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:8px 10px;display:flex;align-items:center;gap:8px;background:{{ c.bg }};border-bottom:1px dashed #1f1709" style-hover="background:rgba(255,176,0,.06)">
+              <span style="width:7px;height:7px;flex:none;background:{{ c.dot }}"></span>
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="color:{{ c.color }}">{{ c.name }}</span><span style="font-size:10px;color:#8a6a1f">{{ c.drd }} · {{ c.host }}</span></span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="flex:999 1 420px;min-width:0;border:1px solid #3a2c10;display:flex;flex-direction:column;height:max(460px,calc(100vh - 190px))">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <span>COMMS // {{ chName }}@{{ chHost }}</span>
+            <span style="font-size:11px;color:#8a6a1f">{{ chRole }}</span>
+          </div>
+          <div ref="{{ chatRef }}" style="flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ messages }}" as="m" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;font-size:13px;line-height:1.55;min-width:0">
+                <span style="color:#5a4515;flex:none;font-size:11px;padding-top:2px">{{ m.time }}</span>
+                <span style="color:{{ m.whoColor }};flex:none">{{ m.who }} {{ m.arrow }}</span>
+                <span style="color:{{ m.color }};min-width:0;white-space:pre-wrap;word-break:break-word">{{ m.text }}{{ m.caret }}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px;color:#8a6a1f">{{ chName }} is processing <span style="animation:sx-blink 1s steps(1) infinite">█</span></div>
+            </sc-if>
+          </div>
+          <div style="border-top:1px solid #3a2c10;padding:8px 10px;display:flex;align-items:center;gap:8px">
+            <span style="flex:none">tumelo@studex:~$</span>
+            <input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onChatKey }}" placeholder="{{ placeholder }}" style="flex:1;min-width:0;min-height:40px;border:none;outline:none;background:transparent;color:#E8DDBA;font-family:inherit;font-size:13px">
+            <button onClick="{{ toggleMic }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 12px;display:flex;align-items:center;gap:6px;border:1px solid {{ micBorder }};color:{{ micColor }};font-size:11px;letter-spacing:.1em" style-hover="border-color:#FFD21F">● {{ micLabel }}</button>
+            <button onClick="{{ sendDraft }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 14px;display:flex;align-items:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:11px;letter-spacing:.12em" style-hover="background:#FFD21F">SEND</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ pSessions }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:stretch">
+        <div style="flex:1 1 240px;max-width:min(100%,300px);border:1px solid #3a2c10;display:flex;flex-direction:column;min-width:0">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span>┌ SESSION INBOX</span><span style="color:#8a6a1f">{{ sessCount }}</span></div>
+          <div style="padding:8px 10px;display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px dashed #3a2c10">
+            <sc-for list="{{ sessFilters }}" as="f" hint-placeholder-count="5">
+              <button onClick="{{ f.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:3px 7px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};text-shadow:none;font-size:10px">{{ f.label }} {{ f.n }}</button>
+            </sc-for>
+          </div>
+          <sc-for list="{{ sessRows }}" as="r" hint-placeholder-count="5">
+            <button onClick="{{ r.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:9px 10px;display:flex;flex-direction:column;gap:3px;background:{{ r.bg }};border-bottom:1px dashed #1f1709;min-width:0" style-hover="background:rgba(255,176,0,.06)">
+              <span style="display:flex;gap:6px;align-items:center;min-width:0;white-space:nowrap"><span style="color:{{ r.flagColor }};flex:none">⚑</span><span style="color:#E8DDBA;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ r.title }}</span></span>
+              <span style="display:flex;gap:8px;font-size:10px;white-space:nowrap"><span style="color:{{ r.stColor }}">[{{ r.status }}]</span><span style="color:#8a6a1f">@{{ r.agent }} · {{ r.t }}</span></span>
+            </button>
+          </sc-for>
+          <div style="margin-top:auto;padding:8px 10px;border-top:1px solid #3a2c10"><button onClick="{{ newSession }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:36px;display:flex;align-items:center;justify-content:center;border:1px solid #FFB000;font-size:11px;letter-spacing:.12em" style-hover="background:rgba(255,176,0,.08)">+ NEW SESSION</button></div>
+        </div>
+
+        <div style="flex:999 1 420px;min-width:0;border:1px solid #3a2c10;display:flex;flex-direction:column;height:max(480px,calc(100vh - 190px))">
+          <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+              <span style="color:#E8DDBA;min-width:0">{{ sess.title }}</span>
+              <button onClick="{{ sess.toggleFlag }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:3px 8px;border:1px solid #3a2c10;font-size:10px;color:{{ sess.flagColor }}" style-hover="border-color:#FFB000">⚑ {{ sess.flagLabel }}</button>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:10px">
+              <span style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="color:#8a6a1f;letter-spacing:.14em">STATUS</span>
+                <sc-for list="{{ sess.statuses }}" as="x" hint-placeholder-count="4"><button onClick="{{ x.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:3px 7px;border:1px solid {{ x.border }};background:{{ x.bg }};color:{{ x.color }};text-shadow:none">{{ x.label }}</button></sc-for>
+              </span>
+              <span style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="color:#8a6a1f;letter-spacing:.14em">MODE</span>
+                <sc-for list="{{ sess.modes }}" as="x" hint-placeholder-count="3"><button onClick="{{ x.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:3px 7px;border:1px solid {{ x.border }};background:{{ x.bg }};color:{{ x.color }};text-shadow:none">{{ x.label }}</button></sc-for>
+                <span style="color:#5a4515">shift+tab</span>
+              </span>
+            </div>
+          </div>
+          <div ref="{{ sessRef }}" style="flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ sess.msgs }}" as="m" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                <span style="font-size:10px;letter-spacing:.12em;color:{{ m.whoColor }}">{{ m.who }} <span style="color:#5a4515">{{ m.t }}</span></span>
+                <sc-for list="{{ m.tools }}" as="tl" hint-placeholder-count="0">
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border:1px solid {{ tl.border }};font-size:11px;line-height:1.45">
+                    <span style="color:{{ tl.color }};flex:none;white-space:nowrap">{{ tl.icon }}</span>
+                    <span style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column"><span style="color:#E8DDBA;word-break:break-word">{{ tl.name }}</span><span style="color:#8a6a1f;word-break:break-word">{{ tl.result }}</span></span>
+                    <sc-if value="{{ tl.needsOk }}" hint-placeholder-val="{{ false }}">
+                      <span style="flex:none;display:flex;gap:4px"><button onClick="{{ tl.allow }}" style="all:unset;cursor:pointer;padding:2px 8px;background:#FFB000;color:#0a0805;text-shadow:none;font-size:10px">ALLOW</button><button onClick="{{ tl.deny }}" style="all:unset;cursor:pointer;padding:2px 8px;border:1px solid #E85D5D;color:#E85D5D;font-size:10px">DENY</button></span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <span style="color:{{ m.color }};font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word">{{ m.text }}{{ m.caret }}</span>
+              </div>
+            </sc-for>
+            <sc-if value="{{ sessBusy }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8a6a1f">working <span style="animation:sx-blink 1s steps(1) infinite">█</span></span></sc-if>
+          </div>
+          <div style="border-top:1px solid #3a2c10;padding:8px 10px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:10px">
+              <sc-for list="{{ mentions }}" as="x" hint-placeholder-count="6"><button onClick="{{ x.onClick }}" style="all:unset;cursor:pointer;white-space:nowrap;padding:2px 6px;border:1px dashed #3a2c10;color:#8a6a1f" style-hover="color:#FFB000;border-color:#FFB000">@{{ x.label }}</button></sc-for>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="flex:none">&gt;</span>
+              <input value="{{ sessDraft }}" onChange="{{ onSessDraft }}" onKeyDown="{{ onSessKey }}" placeholder="ask anything · @ to mention a source or skill" style="flex:1;min-width:0;min-height:40px;border:none;outline:none;background:transparent;color:#E8DDBA;font-family:inherit;font-size:13px">
+              <button onClick="{{ sessSend }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:40px;padding:0 14px;display:flex;align-items:center;background:#FFB000;color:#0a0805;text-shadow:none;font-weight:600;font-size:11px;letter-spacing:.12em" style-hover="background:#FFD21F">SEND</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1 1 240px;max-width:min(100%,320px);display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;display:flex;justify-content:space-between;white-space:nowrap"><span>┌ SOURCES</span><span style="color:#8a6a1f">MCP · API · LOCAL</span></div>
+            <sc-for list="{{ sources }}" as="x" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:12px;white-space:nowrap"><span style="width:6px;height:6px;flex:none;background:{{ x.dot }}"></span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;color:#E8DDBA">{{ x.name }}</span><span style="font-size:10px;color:#8a6a1f">{{ x.type }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ SKILLS</div>
+            <sc-for list="{{ skills }}" as="x" hint-placeholder-count="5">
+              <div style="display:flex;flex-direction:column;padding:6px 10px;font-size:12px;min-width:0"><span style="color:#E8DDBA">{{ x.name }}</span><span style="font-size:10px;color:#8a6a1f">{{ x.desc }}</span></div>
+            </sc-for>
+          </div>
+          <div style="border:1px solid #3a2c10">
+            <div style="padding:8px 10px;border-bottom:1px solid #3a2c10;white-space:nowrap">┌ AUTOMATIONS</div>
+            <sc-for list="{{ autos }}" as="x" hint-placeholder-count="3">
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:7px 10px;font-size:11px;border-bottom:1px dashed #1f1709">
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="color:#FFB000">{{ x.when }}</span><span style="color:#E8DDBA;line-height:1.4">{{ x.what }}</span></span>
+                <button onClick="{{ x.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:2px 7px;border:1px solid {{ x.border }};color:{{ x.color }};font-size:10px">{{ x.label }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+
+  <footer style="position:relative;z-index:2;border-top:1px solid #3a2c10;padding:6px clamp(12px,3vw,28px);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:10px;letter-spacing:.12em;color:#5a4515">
+    <span>KEYS 0-6 SWITCH PAGES · / FOCUS COMMS · ESC LEAVE ROOM</span><span>SAMPLE DATA · NOT CONNECTED TO LIVE HOSTS</span>
+  </footer>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:6;padding:10px 14px;background:#0a0805;border:1px solid #FFB000;color:#E8DDBA;font-size:12px;max-width:90vw">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;ambVolume&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.14,&quot;min&quot;:0.03,&quot;max&quot;:0.4,&quot;step&quot;:0.01,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Sound&quot;}}">
+const AG = [
+  { id: 'hermes', name: 'HERMES', drd: 'DRD-01', role: 'Orchestrator. Breaks missions into tasks, routes them to droids, reports over WhatsApp.', rig: 'studex-factory', pod: 'lead', host: 'mac-mini', herdr: 'working', cmd: 'hermes run --rig studex-factory', up: '6h12m' },
+  { id: 'claude', name: 'CLAUDE', drd: 'DRD-02', role: 'Builder. Writes code and docs in its own worktree.', rig: 'studex-factory', pod: 'build', host: 'cloud-boxer-01', herdr: 'working', cmd: 'claude --worktree wt/claude-pricing', up: '2h40m' },
+  { id: 'openclaw', name: 'OPENCLAW', drd: 'DRD-03', role: 'Gateway builder. Runs local tools and integrations on port 18789.', rig: 'studex-factory', pod: 'build', host: 'mac-mini', herdr: 'blocked', cmd: 'openclaw agent --port 18789', up: '41m' },
+  { id: 'codex', name: 'CODEX', drd: 'DRD-04', role: 'QA and review. Tests, diffs, adversarial review.', rig: 'studex-factory', pod: 'qa', host: 'cloud-boxer-01', herdr: 'idle', cmd: 'codex review --watch', up: '2h38m' },
+  { id: 'grokbot', name: 'GROKBOT', drd: 'DRD-05', role: 'Research. Market and competitor briefs with sources.', rig: 'studex-factory', pod: 'research', host: 'cloud-boxer-02', herdr: 'done', cmd: 'grok research --brief', up: '1h05m' },
+  { id: 'base44', name: 'BASE44', drd: 'DRD-06', role: 'Ship. Builds apps and deploys previews.', rig: 'studex-factory', pod: 'ship', host: 'cloud-boxer-02', herdr: 'idle', cmd: 'base44 deploy --preview', up: '58m' },
+  { id: 'robusca', name: 'ROBUSCA', drd: 'DRD-07', role: 'Chief of Staff. Owns handoffs, approvals and the weekly report.', rig: 'agents-nest', pod: 'ops', host: 'mac-mini', herdr: 'working', cmd: 'robusca ops --daily', up: '6h10m' },
+];
+const HOSTS = { 'mac-mini': 'local · ollama :11434 · gitea :3030', 'cloud-boxer-01': 'rome sandbox · 8 vCPU · tunnel ok', 'cloud-boxer-02': 'rome sandbox · 4 vCPU · tunnel ok' };
+const STN = ['INTAKE', 'PLAN', 'BUILD', 'QA', 'REVIEW', 'SHIP'];
+const GATE = ['brief logged in vault', 'plan.md signed by HERMES', 'tests pass in worktree', 'CODEX review · 0 blockers', 'human approval', 'preview → prod via tunnel'];
+const SOP = [
+  'Every job starts as a brief in the vault. No brief, no droid.',
+  'HERMES writes plan.md and assigns one owner droid per job.',
+  'Builders work only in their own Orca worktree, inside a Rome sandbox.',
+  'CODEX reviews every diff. Blockers send the job back to BUILD.',
+  'Anything that sends, spends over $5 or touches prod waits for you.',
+  'BASE44 ships through the Cloudflare tunnel. Sandbox is destroyed after.',
+];
+const JOBS0 = [
+  ['J-0146', 'Weekly ops report', 'robusca', 0, 30], ['J-0145', 'Recovery screen v2 polish', 'claude', 1, 55],
+  ['J-0141', 'Agents Nest pricing page', 'claude', 2, 40], ['J-0147', 'herdr socket bridge', 'openclaw', 2, 15],
+  ['J-0142', 'Wagyu launch email flow', 'base44', 3, 70], ['J-0144', 'Gitea auth fix', 'openclaw', 4, 100, true],
+  ['J-0143', 'Competitor brief: SA VM hosts', 'grokbot', 5, 35],
+].map(([id, title, agent, st, p, blocked]) => ({ id, title, agent, st, p, blocked: !!blocked, gate: !!blocked }));
+const NOTES0 = {
+  '00 Inbox/Ideas.md': '# Ideas\n\n- Voice standup with [[Hermes]] every morning at 07:00\n- Pixel office view per room\n- Sell [[Agents Nest Cloud]] VMs to 10 more clients\n',
+  '10 Companies/Studex Meat.md': '# Studex Meat\n\nHalaal-certified **Wagyu** beef, direct to consumer.\n\n## Range\n- Steaks and cuts\n- Boerewors\n- Biltong Gold\n- Black Box gift sets\n\n## Agents\n- Launch emails: [[Base44]]\n- Market briefs: GROKBOT\n',
+  '10 Companies/Agents Nest Cloud.md': '# Agents Nest Cloud\n\nVirtual machines as a service for AI agents.\n\n## Pricing in code\n- Client VM: **$499/month**\n- 3 clients listed = $1,497/month\n- Strategic advisory: $2,500/month\n- Deal facilitation: 5-10% of deal value\n\n## Blocked\n- Daytona token invalid. Regenerate at app.daytona.io\n\nSee [[Dispatch SOP]] and [[Cloudflare Tunnel]].\n',
+  '20 Agents/Hermes.md': '# Hermes\n\n`DRD-01` · orchestrator · mac-mini\n\nBreaks missions into tasks and routes them. Reports over WhatsApp.\n\n> No sends without approval.\n\nFollows [[Dispatch SOP]] and [[Night Shift]].\n',
+  '20 Agents/Robusca.md': '# Robusca\n\n`DRD-07` · Chief of Staff\n\nOwns handoffs, approvals and the weekly report.\nEmail: president-robusca@studex-group.com\n',
+  '30 Playbooks/Night Shift.md': '# Night Shift\n\nAgents keep working while you are away.\n\n## Leash\n- No sends\n- No spend over $5\n- No production deploys\n- Every action logged\n\nOwner: [[Robusca]]\n',
+  '30 Playbooks/Dispatch SOP.md': '# Dispatch SOP\n\n1. Brief in vault\n2. [[Hermes]] signs plan.md\n3. Build in Orca worktree inside a Rome sandbox\n4. CODEX review\n5. Human approval gate\n6. Ship via [[Cloudflare Tunnel]], destroy sandbox\n',
+  '40 Infra/Cloudflare Tunnel.md': '# Cloudflare Tunnel\n\nTunnel: `studex-edge`\n\n## Services\n- gitea :3030\n- ollama :11434\n- hermes :8787\n- openclaw :18789\n\nAccess rules per room. Sandboxes connect outbound only.\n',
+};
+const LS = 'studex-factory-v1';
+const AMB = '#FFB000', DIM = '#8a6a1f', CREAM = '#E8DDBA', RED = '#E85D5D', GRN = '#7FD36B';
+const ST_COL = { working: AMB, blocked: RED, idle: DIM, done: GRN };
+const now = () => new Date().toTimeString().slice(0, 8);
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function md(src) {
+  const inl = s => esc(s)
+    .replace(/`([^`]+)`/g, '<code style="padding:0 4px;border:1px solid #3a2c10;color:#FFB000">$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#FFB000;font-weight:600">$1</strong>')
+    .replace(/\[\[([^\]]+)\]\]/g, '<a data-link="$1" style="color:#FFB000;text-decoration:underline;cursor:pointer">$1</a>');
+  let out = '', inCode = false, list = null;
+  const close = () => { if (list) { out += `</${list}>`; list = null; } };
+  for (const line of src.split('\n')) {
+    if (line.startsWith('```')) { close(); out += inCode ? '</pre>' : '<pre style="margin:8px 0;padding:10px;border:1px solid #3a2c10;color:#FFB000;white-space:pre-wrap">'; inCode = !inCode; continue; }
+    if (inCode) { out += esc(line) + '\n'; continue; }
+    let m;
+    if ((m = line.match(/^(#{1,3})\s+(.*)/))) { close(); const sz = [0, 30, 22, 17][m[1].length]; out += `<div style="font-family:VT323,monospace;font-size:${sz}px;line-height:1.1;color:#FFB000;margin:${m[1].length === 1 ? '0 0 10px' : '16px 0 6px'}">${m[1].length > 1 ? '## ' : ''}${inl(m[2])}</div>`; continue; }
+    if ((m = line.match(/^\s*[-*]\s+(.*)/))) { if (list !== 'ul') { close(); out += '<ul style="margin:4px 0;padding-left:20px">'; list = 'ul'; } out += `<li>${inl(m[1])}</li>`; continue; }
+    if ((m = line.match(/^\s*\d+\.\s+(.*)/))) { if (list !== 'ol') { close(); out += '<ol style="margin:4px 0;padding-left:22px">'; list = 'ol'; } out += `<li>${inl(m[1])}</li>`; continue; }
+    if ((m = line.match(/^>\s?(.*)/))) { close(); out += `<div style="margin:8px 0;padding:4px 10px;border-left:2px solid #FFB000;color:#FFB000">${inl(m[1])}</div>`; continue; }
+    close();
+    out += line.trim() ? `<p style="margin:6px 0">${inl(line)}</p>` : '';
+  }
+  close(); if (inCode) out += '</pre>';
+  return out;
+}
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    let saved = {}; try { saved = JSON.parse(localStorage.getItem(LS) || '{}'); } catch (e) {}
+    const chats = {}; AG.forEach(a => chats[a.id] = [{ from: a.id, text: `${a.name} online. ${a.drd} on ${a.host}. ${a.role}`, shown: 9999, t: now() }]);
+    this.state = {
+      tab: 'home', notes: saved.notes || NOTES0, open: saved.open || '10 Companies/Agents Nest Cloud.md', mode: 'split', sync: 'SYNCED',
+      jobs: JOBS0, shipped: 4, seq: 148, logs: [{ t: now(), tag: 'BOOT', text: 'factory line 01 online · 7 droids · 2 rigs', color: GRN }],
+      agents: AG.map(a => ({ ...a })), merged: null,
+      dAgent: 'claude', dHost: 'cloud-boxer-01', dBudget: '$5', dMission: '',
+      ch: 'hermes', chats, draft: '', thinking: false, sound: true, speak: false, mic: false, toast: null,
+    };
+    this.logRef = React.createRef(); this.chatRef = React.createRef(); this.previewRef = React.createRef(); this.inputRef = React.createRef(); this.floorRef = React.createRef(); this.sessRef = React.createRef();
+    Object.assign(this.state, this.initSessions());
+  }
+  componentDidMount() {
+    this.tk = setInterval(() => this.tick(), 1300);
+    this.onKey = e => {
+      const tag = (e.target.tagName || '').toLowerCase(); if (tag === 'input' || tag === 'textarea') return;
+      const map = { 0: 'home', 1: 'station', 2: 'factory', 3: 'vault', 4: 'fleets', 5: 'comms', 6: 'sessions' };
+      if (e.key === 'Escape' && this.state.room) this.setState({ room: null });
+      if (map[e.key]) this.go(map[e.key]);
+      if (e.key === '/') { e.preventDefault(); this.go('comms'); setTimeout(() => this.inputRef.current && this.inputRef.current.focus(), 50); }
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.paint();
+    this.initFloor();
+  }
+  initFloor() {
+    const L = src => { const i = new Image(); i.src = src; return i; };
+    const P = 'assets/pixel/';
+    this.img = { ch: [0, 1, 2, 3, 4, 5].map(i => L(`${P}char_${i}.png`)), pc: [1, 2, 3].map(i => L(`${P}pc_on_${i}.png`)), desk: L(P + 'desk_front.png'), plant: L(P + 'plant.png'), board: L(P + 'whiteboard.png'), floor: L(P + 'floor_0.png') };
+    this.desks = []; for (let r = 0; r < 2; r++) for (let c = 0; c < 4; c++) this.desks.push({ x: 12 + c * 56, y: 46 + r * 62 });
+    this.sim = AG.map((a, i) => { const d = this.desks[i], seat = { x: d.x + 16, y: d.y + 10 };
+      return { id: a.id, name: a.name, sheet: i % 6, hue: i >= 6 ? 150 : 0, desk: d, seat, x: seat.x, y: seat.y, dir: 'up', mode: 'type', frame: 0, ft: Math.random(), path: [], wait: .5 + Math.random() * 2.5 }; });
+    this.last = performance.now();
+    const loop = now => { this.fr = requestAnimationFrame(loop); const dt = Math.min(.05, (now - this.last) / 1000); this.last = now; this.stepFloor(dt); this.drawFloor(now); };
+    this.fr = requestAnimationFrame(loop);
+  }
+  stepFloor(dt) {
+    const SPD = 34;
+    this.sim.forEach(c => {
+      const st = (this.state.agents.find(a => a.id === c.id) || {}).herdr, wantSeat = st === 'working' || st === 'blocked';
+      c.ft += dt;
+      if (c.path.length) {
+        const p = c.path[0], dx = p.x - c.x, dy = p.y - c.y, dist = Math.hypot(dx, dy);
+        if (dist < 1) { c.x = p.x; c.y = p.y; c.path.shift(); }
+        else { const k = Math.min(1, SPD * dt / dist); c.x += dx * k; c.y += dy * k; c.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); }
+        c.mode = 'walk'; if (c.ft > .14) { c.ft = 0; c.frame = (c.frame + 1) % 4; }
+        return;
+      }
+      const atSeat = Math.abs(c.x - c.seat.x) < 1 && Math.abs(c.y - c.seat.y) < 1;
+      if (wantSeat) {
+        if (atSeat) { c.mode = st === 'blocked' ? 'stuck' : 'type'; c.dir = 'up'; if (c.ft > .3) { c.ft = 0; c.frame = (c.frame + 1) % 2; } }
+        else { const lane = c.seat.y + 30; c.path = [{ x: c.x, y: Math.max(c.y, lane) === c.y ? c.y : lane }, { x: c.seat.x, y: lane }, { x: c.seat.x, y: c.seat.y }]; }
+        return;
+      }
+      c.mode = 'idle'; c.frame = 1; c.wait -= dt;
+      if (c.wait <= 0) {
+        c.wait = 1.5 + Math.random() * 3.5;
+        const tx = 238 + Math.random() * 60, ty = 44 + Math.random() * 100;
+        c.path = atSeat ? [{ x: c.x, y: c.seat.y + 30 }, { x: tx, y: c.seat.y + 30 }, { x: tx, y: ty }] : [{ x: tx, y: c.y }, { x: tx, y: ty }];
+        if (Math.random() < .25) { const lane = c.seat.y + 30; c.path = [{ x: c.x < 230 ? c.x : 230, y: c.y }, { x: 230, y: lane }, { x: c.seat.x, y: lane }, { x: c.seat.x, y: c.seat.y }]; }
+      }
+    });
+  }
+  drawFloor(now) {
+    const cv = this.floorRef.current; if (!cv || !this.img) return;
+    const g = cv.getContext('2d'), I = this.img; g.setTransform(3, 0, 0, 3, 0, 0); g.imageSmoothingEnabled = false;
+    g.fillStyle = '#0d0a06'; g.fillRect(0, 0, 320, 176);
+    if (I.floor.complete) for (let y = 32; y < 176; y += 16) for (let x = 0; x < 320; x += 16) g.drawImage(I.floor, x, y);
+    g.fillStyle = 'rgba(10,8,5,.35)'; g.fillRect(0, 32, 320, 144);
+    g.fillStyle = '#16110a'; g.fillRect(0, 0, 320, 32); g.fillStyle = '#FFB000'; g.fillRect(0, 31, 320, 1);
+    g.fillStyle = '#3a2c10'; for (let x = 0; x < 320; x += 32) g.fillRect(x, 4, 1, 24);
+    g.font = '600 6px "IBM Plex Mono", monospace'; g.fillStyle = '#FFB000'; g.fillText('STUDEX // FLOOR 01', 8, 13);
+    g.fillStyle = '#8a6a1f'; g.font = '5px "IBM Plex Mono", monospace'; g.fillText(`LINE ${this.state.jobs.length} JOBS · SHIPPED ${this.state.shipped}`, 8, 22);
+    if (I.board.complete) g.drawImage(I.board, 250, 0);
+    g.strokeStyle = 'rgba(255,176,0,.35)'; g.lineWidth = 1; g.strokeRect(236.5, 40.5, 76, 128); g.fillStyle = 'rgba(255,176,0,.04)'; g.fillRect(237, 41, 75, 127);
+    g.fillStyle = '#8a6a1f'; g.fillText('LOUNGE', 240, 48);
+    const items = [];
+    this.desks.forEach((d, i) => {
+      const owner = this.sim.find(c => c.desk === d), busy = owner && owner.mode === 'type';
+      items.push({ k: d.y + 32, draw: () => { if (I.desk.complete) g.drawImage(I.desk, d.x, d.y); const pc = I.pc[busy ? Math.floor(now / 180 + i) % 3 : 0]; if (pc.complete) { g.globalAlpha = owner ? 1 : .45; g.drawImage(pc, d.x + 16, d.y - 14); g.globalAlpha = 1; } } });
+    });
+    [[300, 136], [222, 0]].forEach(([x, y]) => items.push({ k: y + 32, draw: () => I.plant.complete && g.drawImage(I.plant, x, y) }));
+    const COL = { type: '#FFB000', stuck: '#E85D5D', idle: '#E8DDBA', walk: '#E8DDBA' };
+    this.sim.forEach(c => items.push({ k: c.y + 32.5, draw: () => {
+      const im = I.ch[c.sheet]; if (!im.complete) return;
+      const row = c.dir === 'down' ? 0 : c.dir === 'up' ? 1 : 2;
+      const col = c.mode === 'walk' ? [0, 1, 2, 1][c.frame] : c.mode === 'type' ? 3 + c.frame : c.mode === 'stuck' ? 5 : 1;
+      const x = Math.round(c.x), y = Math.round(c.y);
+      if (c.hue) g.filter = `hue-rotate(${c.hue}deg)`;
+      if (c.dir === 'left') { g.save(); g.translate(x + 16, y); g.scale(-1, 1); g.drawImage(im, col * 16, row * 32, 16, 32, 0, 0, 16, 32); g.restore(); }
+      else g.drawImage(im, col * 16, row * 32, 16, 32, x, y, 16, 32);
+      g.filter = 'none';
+      const st = (this.state.agents.find(a => a.id === c.id) || {}).herdr;
+      g.font = '600 5px "IBM Plex Mono", monospace'; const w = g.measureText(c.name).width + 4;
+      g.fillStyle = 'rgba(10,8,5,.85)'; g.fillRect(x + 8 - w / 2, y - 7, w, 7);
+      g.fillStyle = st === 'done' ? '#7FD36B' : COL[c.mode]; g.fillText(c.name, x + 10 - w / 2, y - 2);
+      if (st === 'blocked' && Math.floor(now / 400) % 2) { g.fillStyle = '#E85D5D'; g.fillRect(x + 12, y - 16, 7, 8); g.fillStyle = '#0a0805'; g.fillRect(x + 15, y - 15, 1, 4); g.fillRect(x + 15, y - 10, 1, 1); }
+      if (st === 'done') { g.fillStyle = '#7FD36B'; g.fillRect(x + 12, y - 16, 7, 8); g.fillStyle = '#0a0805'; g.fillRect(x + 13, y - 12, 1, 1); g.fillRect(x + 14, y - 11, 1, 1); g.fillRect(x + 15, y - 12, 1, 1); g.fillRect(x + 16, y - 13, 1, 1); g.fillRect(x + 17, y - 14, 1, 1); }
+    } }));
+    items.sort((a, b) => a.k - b.k).forEach(it => it.draw());
+  }
+  floorClick(e) {
+    const cv = this.floorRef.current; if (!cv || !this.sim) return;
+    const r = cv.getBoundingClientRect(), lx = (e.clientX - r.left) / r.width * 320, ly = (e.clientY - r.top) / r.height * 176;
+    const hit = this.sim.slice().reverse().find(c => lx >= c.x && lx <= c.x + 16 && ly >= c.y - 8 && ly <= c.y + 32);
+    if (hit) { this.setState({ ch: hit.id }); this.go('comms'); }
+  }
+  componentWillUnmount() { this.stopAmb(); cancelAnimationFrame(this.fr); clearInterval(this.tk); clearInterval(this.rv); clearTimeout(this.sv); clearTimeout(this.tt); window.removeEventListener('keydown', this.onKey); try { this.rec && this.rec.stop(); } catch (e) {} }
+  componentDidUpdate() { this.paint(); }
+  paint() {
+    const p = this.previewRef.current; if (p && p._h !== this._html) { p.innerHTML = this._html; p._h = this._html; }
+    [this.logRef, this.chatRef, this.sessRef].forEach(r => { const el = r.current; if (el && el._n !== el.scrollHeight) { el.scrollTop = el.scrollHeight; el._n = el.scrollHeight; } });
+  }
+  persist(patch) { const s = { ...this.state, ...patch }; try { localStorage.setItem(LS, JSON.stringify({ tab: s.tab, notes: s.notes, open: s.open })); } catch (e) {} }
+  go(tab) { this.sfx('beep'); this.setState({ tab }); this.persist({ tab }); }
+  toastMsg(m) { clearTimeout(this.tt); this.setState({ toast: m }); this.tt = setTimeout(() => this.setState({ toast: null }), 2800); }
+  log(tag, text, color = CREAM) { this.setState(s => ({ logs: [...s.logs, { t: now(), tag, text, color }].slice(-60) })); }
+
+  sfx(kind) {
+    if (!this.state.sound) return;
+    try {
+      const ctx = this.ac || (this.ac = new (window.AudioContext || window.webkitAudioContext)());
+      if (ctx.state === 'suspended') ctx.resume();
+      const t = ctx.currentTime, g = ctx.createGain();
+      if (kind === 'beep') {
+        const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = 880; g.gain.setValueAtTime(.025, t); g.gain.exponentialRampToValueAtTime(.0001, t + .07);
+        o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .08); return;
+      }
+      const len = Math.floor(ctx.sampleRate * .028), b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
+      const src = ctx.createBufferSource(); src.buffer = b;
+      const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = (kind === 'key' ? 1500 : 2600) + Math.random() * 900; f.Q.value = 1.4;
+      g.gain.value = kind === 'key' ? .5 : .22; src.playbackRate.value = .9 + Math.random() * .3;
+      src.connect(f).connect(g).connect(ctx.destination); src.start(t);
+    } catch (e) {}
+  }
+
+  startAmb() {
+    const ctx = this.ac || (this.ac = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime, A = this.amb = { nodes: [] };
+    const keep = n => (A.nodes.push(n), n);
+    const master = A.master = keep(ctx.createGain()); master.gain.setValueAtTime(0, t0); master.gain.linearRampToValueAtTime(this.props.ambVolume ?? .14, t0 + 4);
+    const comp = keep(ctx.createDynamicsCompressor()); master.connect(comp).connect(ctx.destination);
+    const len = ctx.sampleRate * 3.5, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    const verb = keep(ctx.createConvolver()); verb.buffer = ir; const wet = keep(ctx.createGain()); wet.gain.value = .55; verb.connect(wet).connect(master);
+    const delay = keep(ctx.createDelay(2)); delay.delayTime.value = .5; const fb = keep(ctx.createGain()); fb.gain.value = .42; delay.connect(fb).connect(delay); delay.connect(verb); delay.connect(master);
+    // pad
+    const padF = keep(ctx.createBiquadFilter()); padF.type = 'lowpass'; padF.frequency.value = 700; padF.Q.value = 5;
+    const lfo = keep(ctx.createOscillator()); lfo.frequency.value = .05; const lfoG = keep(ctx.createGain()); lfoG.gain.value = 450; lfo.connect(lfoG).connect(padF.frequency); lfo.start();
+    const padG = keep(ctx.createGain()); padG.gain.value = .07; padF.connect(padG); padG.connect(master); padG.connect(verb);
+    A.pad = [0, 1, 2].flatMap(() => [-8, 8].map(det => { const o = keep(ctx.createOscillator()); o.type = 'sawtooth'; o.detune.value = det; o.connect(padF); o.start(); return o; }));
+    // rain hiss
+    const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    const ns = keep(ctx.createBufferSource()); ns.buffer = nb; ns.loop = true; const nf = keep(ctx.createBiquadFilter()); nf.type = 'bandpass'; nf.frequency.value = 5200; nf.Q.value = .6;
+    const ng = keep(ctx.createGain()); ng.gain.value = .012; ns.connect(nf).connect(ng).connect(master); ns.start();
+    // progression Am F Dm E (A minor, dark synthwave)
+    const CH = [[45, 48, 52], [41, 45, 48], [38, 41, 45], [40, 44, 47]], hz = m => 440 * Math.pow(2, (m - 69) / 12);
+    const BPM = 84, step = 60 / BPM / 4; let n = 0, next = t0 + .1;
+    const note = (freq, at, dur, type, gain, dest) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.value = freq; g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(gain, at + .008); g.gain.exponentialRampToValueAtTime(.0001, at + dur); o.connect(g); dest.forEach(d => g.connect(d)); o.start(at); o.stop(at + dur + .05); };
+    const bassF = keep(ctx.createBiquadFilter()); bassF.type = 'lowpass'; bassF.frequency.value = 320; bassF.connect(master);
+    A.iv = setInterval(() => {
+      while (next < ctx.currentTime + .25) {
+        const bar = Math.floor(n / 16), chord = CH[Math.floor(bar / 2) % 4], s = n % 16;
+        if (s === 0 && bar % 2 === 0) chord.forEach((m, i) => { A.pad[i * 2].frequency.setTargetAtTime(hz(m), next, .6); A.pad[i * 2 + 1].frequency.setTargetAtTime(hz(m + 12), next, .6); });
+        if (s % 2 === 0) note(hz(chord[0] - 12), next, step * 1.6, 'sawtooth', s % 8 === 0 ? .16 : .09, [bassF]);
+        if (Math.random() < (s % 4 === 2 ? .7 : .28)) note(hz(chord[Math.floor(Math.random() * 3)] + 24 + (Math.random() < .3 ? 12 : 0)), next, .16, 'square', .022, [delay, verb]);
+        if (s === 8 && bar % 4 === 3) note(hz(chord[2] + 36), next, 2.4, 'triangle', .02, [verb]);
+        next += step; n++;
+      }
+    }, 60);
+  }
+  stopAmb() {
+    const A = this.amb; if (!A) return; this.amb = null; clearInterval(A.iv);
+    const t = this.ac.currentTime; A.master.gain.cancelScheduledValues(t); A.master.gain.setValueAtTime(A.master.gain.value, t); A.master.gain.linearRampToValueAtTime(0, t + 1.5);
+    setTimeout(() => A.nodes.forEach(nd => { try { nd.stop && nd.stop(); } catch (e) {} try { nd.disconnect(); } catch (e) {} }), 1700);
+  }
+  tick() {
+    const s = this.state; let shipped = s.shipped; const events = [];
+    const jobs = s.jobs.map(j => ({ ...j })).filter(j => {
+      if (j.blocked) return true;
+      j.p += 4 + Math.random() * 9;
+      if (j.p < 100) return true;
+      if (j.st === 4 && j.gate) { j.p = 100; j.blocked = true; events.push(['GATE', `${j.id} waiting for human approval`, RED]); return true; }
+      if (j.st === 5) { shipped++; events.push(['SHIP', `${j.id} ${j.title} shipped · sandbox destroyed`, GRN]); return false; }
+      j.st++; j.p = 0; events.push(['MOVE', `${j.id} → ${STN[j.st]} · gate passed: ${GATE[j.st - 1]}`, AMB]); return true;
+    });
+    this.setState({ jobs, shipped, logs: [...s.logs, ...events.map(([tag, text, color]) => ({ t: now(), tag, text, color }))].slice(-60) });
+    if (events.length) this.sfx('tick');
+  }
+  approve(id) { this.sfx('beep'); this.setState(s => ({ jobs: s.jobs.map(j => j.id === id ? { ...j, blocked: false, gate: false, st: 5, p: 0 } : j) })); this.log('OK', `${id} approved by tumelo → SHIP`, GRN); }
+
+  launch() {
+    const s = this.state, a = AG.find(x => x.id === s.dAgent), mission = s.dMission.trim() || 'Untitled mission';
+    const id = `J-0${s.seq}`, sbx = 'sbx-' + Math.random().toString(36).slice(2, 6);
+    this.sfx('beep');
+    this.setState({ seq: s.seq + 1, dMission: '', jobs: [...s.jobs, { id, title: mission, agent: a.id, st: 0, p: 0, blocked: false, gate: Math.random() < .5 }],
+      agents: s.agents.map(x => x.id === a.id ? { ...x, herdr: 'working', host: s.dHost, cmd: `${a.id} run --job ${id}` } : x) });
+    [['ROME', `${sbx} created on ${s.dHost} · cap ${s.dBudget} · 2h limit`, CREAM], ['TUNNEL', `${sbx} → studex-edge · gitea, ollama attached`, CREAM], ['HERDR', `pane opened for ${a.name} on ${s.dHost}`, CREAM], ['NEW', `${id} ${mission} → INTAKE @${a.name}`, AMB]]
+      .forEach(([t, x, c], i) => setTimeout(() => { this.log(t, x, c); this.sfx('tick'); }, i * 260));
+    this.toastMsg(`${id} dispatched to ${a.name} on ${s.dHost}`);
+  }
+
+  async send(text) {
+    text = (text || '').trim(); if (!text || this.state.thinking) return;
+    const id = this.state.ch, a = AG.find(x => x.id === id);
+    this.sfx('beep');
+    const hist = [...this.state.chats[id], { from: 'me', text, shown: 9999, t: now() }];
+    this.setState(s => ({ draft: '', thinking: true, chats: { ...s.chats, [id]: hist } }));
+    const msgs = hist.map(m => ({ role: m.from === 'me' ? 'user' : 'assistant', content: m.text }));
+    while (msgs.length && msgs[0].role !== 'user') msgs.shift();
+    const jobs = this.state.jobs.filter(j => j.agent === id).map(j => `${j.id} "${j.title}" at ${STN[j.st]} ${Math.floor(j.p)}%${j.blocked ? ' BLOCKED' : ''}`).join('; ') || 'none';
+    const system = `You are ${a.name} (${a.drd}), a droid in the Studex software factory. Role: ${a.role} Host: ${a.host}. Rig: ${a.rig}, pod: ${a.pod}. Your current jobs: ${jobs}. Vault notes available: ${Object.keys(this.state.notes).join(', ')}. The operator is Tumelo. Reply like a terse old-school terminal droid: plain text, no markdown, under 70 words. Be concrete about next steps. Never claim to have sent, spent or deployed anything without approval.`;
+    let reply;
+    try { reply = await window.claude.complete({ system, messages: msgs, max_tokens: 300 }); }
+    catch (e) { reply = `${a.name}: link degraded. Message queued. Current jobs: ${jobs}.`; }
+    reply = (reply || '').trim();
+    this.setState(s => ({ thinking: false, chats: { ...s.chats, [id]: [...s.chats[id], { from: id, text: reply, shown: 0, t: now() }] } }));
+    this.reveal(id, reply);
+  }
+  reveal(id, text) {
+    clearInterval(this.rv); let n = 0;
+    this.rv = setInterval(() => {
+      n += 2; if (n % 4 === 0) this.sfx('tick');
+      this.setState(s => { const list = s.chats[id].slice(); const last = { ...list[list.length - 1], shown: n }; list[list.length - 1] = last; return { chats: { ...s.chats, [id]: list } }; });
+      if (n >= text.length) { clearInterval(this.rv); this.say(text); }
+    }, 22);
+  }
+  say(text) {
+    if (!this.state.speak || !window.speechSynthesis) return;
+    const u = new SpeechSynthesisUtterance(text); u.rate = 1.04; u.pitch = .75;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+  toggleMic() {
+    const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!R) { this.toastMsg('Voice input is not supported in this browser. Try Chrome.'); return; }
+    if (this.state.mic) { try { this.rec.stop(); } catch (e) {} return; }
+    const rec = this.rec = new R(); rec.lang = 'en-ZA'; rec.interimResults = true; let fin = '';
+    rec.onresult = e => { let txt = ''; for (const r of e.results) { txt += r[0].transcript; if (r.isFinal) fin = txt; } this.setState(this.state.tab === 'home' ? { homeDraft: txt } : { draft: txt }); };
+    rec.onend = () => { this.setState({ mic: false }); if (fin) { if (this.state.tab === 'home') this.hermesAsk(fin); else this.send(fin); } };
+    rec.onerror = () => this.setState({ mic: false });
+    this.sfx('beep'); this.setState({ mic: true }); rec.start();
+  }
+  openNote(path) { this.setState({ open: path }); this.persist({ open: path }); this.sfx('tick'); }
+  edit(v) {
+    const notes = { ...this.state.notes, [this.state.open]: v };
+    this.setState({ notes, sync: 'UNSAVED' }); clearTimeout(this.sv);
+    this.sv = setTimeout(() => { this.setState({ sync: 'SYNCING…' }); setTimeout(() => { this.setState({ sync: 'SYNCED' }); this.persist({ notes }); }, 450); }, 700);
+  }
+
+  async hermesAsk(text) {
+    text = (text || '').trim(); if (!text || this.state.homeBusy) return;
+    this.sfx('beep'); this.setState({ homeDraft: '', homeBusy: true, homeReply: '', homeShown: 0, homeActions: [] });
+    const s = this.state, blocked = s.jobs.filter(j => j.blocked).map(j => j.id).join(', ') || 'none';
+    const system = `You are HERMES, the interface of Studex OS, an agent-native operating system for Tumelo's companies (Studex Meat, Agents Nest Cloud). You can act on the OS by emitting action lines. Available actions: OPEN station|factory|vault|fleets|comms|sessions ; NOTE <vault note title> ; APPROVE <job id> ; CHAT <hermes|claude|openclaw|codex|grokbot|base44|robusca>. Factory: ${s.jobs.length} jobs in line, ${s.shipped} shipped, blocked: ${blocked}. Vault notes: ${Object.keys(s.notes).map(p => p.split('/').pop().replace('.md', '')).join(', ')}. Reply format: zero to two lines "ACTION: ...", blank line, then a plain-text answer under 60 words in a terse terminal tone. Never approve unless Tumelo explicitly asks.`;
+    let out;
+    try { out = await window.claude.complete({ system, messages: [{ role: 'user', content: text }], max_tokens: 300 }); }
+    catch (e) { out = 'Link to the core dropped. Try again in a moment.'; }
+    const acts = [], body = [];
+    out.split('\n').forEach(l => { const m = l.match(/^\s*ACTION:\s*(\w+)\s*(.*)$/i); if (m) acts.push([m[1].toUpperCase(), m[2].trim()]); else body.push(l); });
+    const done = [];
+    acts.forEach(([a, arg]) => {
+      const low = arg.toLowerCase();
+      if (a === 'OPEN' && ['station', 'factory', 'vault', 'fleets', 'comms', 'sessions'].includes(low)) { setTimeout(() => this.go(low), 1600); done.push(`opening ${low}`); }
+      if (a === 'NOTE') { const p = Object.keys(s.notes).find(x => x.toLowerCase().includes(low)); if (p) { setTimeout(() => { this.openNote(p); this.go('vault'); }, 1600); done.push(`opening note ${p.split('/').pop()}`); } }
+      if (a === 'APPROVE') { const j = s.jobs.find(x => x.id.toLowerCase() === low && x.blocked); if (j) { this.approve(j.id); done.push(`approved ${j.id}`); } }
+      if (a === 'CHAT') { const ag = AG.find(x => x.id === low); if (ag) { setTimeout(() => { this.setState({ ch: ag.id }); this.go('comms'); }, 1600); done.push(`opening comms with ${ag.name}`); } }
+    });
+    const reply = body.join('\n').trim();
+    this.setState({ homeBusy: false, homeReply: reply, homeShown: 0, homeActions: done });
+    clearInterval(this.hrv); let n = 0;
+    this.hrv = setInterval(() => { n += 2; if (n % 4 === 0) this.sfx('tick'); this.setState({ homeShown: n }); if (n >= reply.length) { clearInterval(this.hrv); this.say(reply); } }, 20);
+  }
+  homeVals(s) {
+    const hr = new Date().getHours(), greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+    const blockedJobs = s.jobs.filter(j => j.blocked);
+    const pendingTools = []; s.sessions.forEach(x => x.msgs.forEach(m => (m.tools || []).forEach(t => t.pending && pendingTools.push([x, t]))));
+    const needs = [
+      ...blockedJobs.map(j => ({ title: `${j.id} ${j.title}`, meta: `gate: human approval · @${AG.find(a => a.id === j.agent).name}`, btn: 'APPROVE', onClick: () => this.approve(j.id) })),
+      ...pendingTools.map(([x, t]) => ({ title: t.name, meta: `session: ${x.title}`, btn: 'REVIEW', onClick: () => { this.setState({ sel: x.id }); this.go('sessions'); } })),
+    ];
+    const reply = s.homeReply || '', streaming = (s.homeShown || 0) < reply.length;
+    return {
+      pHome: s.tab === 'home', greeting: `${greet}, Tumelo.`, homeDate: new Date().toDateString().toUpperCase() + ' · STUDEX OS',
+      homeDraft: s.homeDraft || '', onHomeDraft: e => this.setState({ homeDraft: e.target.value }), onHomeKey: e => { this.sfx('key'); if (e.key === 'Enter') this.hermesAsk(s.homeDraft); },
+      homeSend: () => this.hermesAsk(s.homeDraft), homeMic: () => this.toggleMic(), homePlaceholder: s.mic ? 'listening…' : 'ask hermes anything · "what is blocked?" · "open the pricing note"',
+      homeSuggest: ['What needs me today?', 'Open the Agents Nest note', 'Who is blocked and why?', 'Chat with Robusca'].map(label => ({ label, onClick: () => this.hermesAsk(label) })),
+      homeHasReply: !!reply, homeReply: streaming ? reply.slice(0, s.homeShown) : reply, homeActions: s.homeActions || [], homeBusy: !!s.homeBusy,
+      homeCaret: streaming ? React.createElement('span', { style: { display: 'inline-block', width: 8, height: 15, marginLeft: 2, verticalAlign: '-2px', background: AMB, animation: 'sx-blink 1s steps(1) infinite' } }) : null,
+      needs, needsEmpty: !needs.length, needCount: needs.length ? `${needs.length} WAITING` : 'CLEAR', needColor: needs.length ? RED : GRN,
+      today: [['07:00', 'Standup briefing sent to WhatsApp', true], ['11:00', 'Agents Nest client call · 3 VMs renewal', false], ['15:00', 'Sovereign Alliance sync · Council Cave', false], ['17:00', 'Weekly report due · ROBUSCA', false]]
+        .map(([time, title, past]) => ({ time, title, color: past ? DIM : AMB, textColor: past ? DIM : CREAM })),
+      running: s.agents.filter(a => a.herdr === 'working' || a.herdr === 'blocked').map(a => ({ name: a.name, what: `${a.cmd} · ${a.host}`, color: ST_COL[a.herdr] })),
+      runCount: `${s.agents.filter(a => a.herdr === 'working').length} working`,
+      recent: Object.keys(s.notes).slice(-5).reverse().map(p => ({ name: p, onClick: () => { this.openNote(p); this.go('vault'); } })),
+      memory: ['Prefers short, direct answers', 'Night Shift leash: no sends, $5 cap, no prod deploys', 'Agents Nest client VM is $499/month', 'Robusca owns handoffs and the weekly report', 'Gitea sync token expired 2026-10-20'],
+    };
+  }
+  initSessions() {
+    const T = '09:12';
+    return {
+      sessions: [
+        { id: 's1', title: 'Triage Gitea auth failure', status: 'In Progress', flag: true, agent: 'OPENCLAW', t: T, msgs: [
+          { role: 'me', text: 'Why is Gitea sync failing? @gitea @herdr', t: '09:10' },
+          { role: 'agent', t: '09:11', tools: [{ name: 'gitea.health', result: ':3030 up · auth 401 on sync', ok: true }, { name: 'herdr.read_pane openclaw', result: 'token expired 2026-10-20', ok: true }], text: 'Sync token expired yesterday. Rotating it needs a write to the Gitea config. Switch to Ask or Auto and I will request it.' } ] },
+        { id: 's2', title: 'Agents Nest pricing page copy', status: 'Needs Review', flag: false, agent: 'CLAUDE', t: '08:40', msgs: [{ role: 'agent', t: '08:40', tools: [{ name: 'vault.read Agents Nest Cloud.md', result: '$499/mo per VM · 3 clients', ok: true }], text: 'Draft is in wt/claude-pricing. Hero: one VM per client, $499 a month. Waiting for your review.' }] },
+        { id: 's3', title: 'Daily standup briefing', status: 'Done', flag: false, agent: 'HERMES', t: '07:00', msgs: [{ role: 'agent', t: '07:00', tools: [{ name: 'factory.status', result: '7 jobs · 1 blocked', ok: true }], text: 'Standup: 7 jobs in line, 1 blocked at review (J-0144 Gitea auth fix). Night shift logged 0 sends, $0.00 spend.' }] },
+        { id: 's4', title: 'Wagyu launch email: subject lines', status: 'Todo', flag: true, agent: 'BASE44', t: 'yest', msgs: [] },
+        { id: 's5', title: 'Competitor scan: SA VM hosts', status: 'Todo', flag: false, agent: 'GROKBOT', t: 'yest', msgs: [] },
+      ],
+      sel: 's1', sFilter: 'All', perm: 'ask', sessDraft: '', sessBusy: false,
+      autos: [
+        { when: 'Mon–Fri 07:00', what: 'Standup briefing from @factory to WhatsApp', on: true },
+        { when: 'label: urgent', what: 'Triage the session and summarise what needs attention', on: true },
+        { when: 'Fri 17:00', what: "Summarise this week's shipped jobs into the vault", on: false },
+      ],
+    };
+  }
+  async sessionSend(text) {
+    text = (text || '').trim(); const s = this.state; if (!text || s.sessBusy) return;
+    const id = s.sel, cur = s.sessions.find(x => x.id === id);
+    const upd = fn => this.setState(st => ({ sessions: st.sessions.map(x => x.id === id ? fn(x) : x) }));
+    upd(x => ({ ...x, status: x.status === 'Todo' ? 'In Progress' : x.status, msgs: [...x.msgs, { role: 'me', text, t: now() }] }));
+    this.setState({ sessDraft: '', sessBusy: true }); this.sfx('beep');
+    const sys = `You are ${cur.agent}, an agent in a Studex work session titled "${cur.title}". Permission mode: ${s.perm} (explore = read only; ask = writes need approval; auto = writes allowed). Sources: gitea, github, google-drive, shopify, whatsapp, studex-brain vault, herdr. Reply in this exact format: zero to three lines starting with "TOOL: <source.action> | <one-line result>", then a blank line, then your answer in under 70 words, plain text, terse terminal tone. Mark write actions with the word write, send or deploy in the action name.`;
+    let out;
+    try { out = await window.claude.complete({ system: sys, messages: [{ role: 'user', content: text }], max_tokens: 350 }); }
+    catch (e) { out = 'TOOL: herdr.ping | link degraded\n\nConnection to the session host dropped. Message queued.'; }
+    const tools = [], body = [];
+    out.split('\n').forEach(l => { const m = l.match(/^\s*TOOL:\s*([^|]+)\|?\s*(.*)$/i); if (m) tools.push({ name: m[1].trim(), result: m[2].trim() }); else body.push(l); });
+    const isWrite = n => /write|send|deploy|delete|create|update|post/i.test(n);
+    const tl = tools.map(x => ({ ...x, ok: !isWrite(x.name) || s.perm === 'auto', blocked: isWrite(x.name) && s.perm === 'explore', pending: isWrite(x.name) && s.perm === 'ask' }));
+    const answer = body.join('\n').trim();
+    upd(x => ({ ...x, msgs: [...x.msgs, { role: 'agent', t: now(), tools: tl, text: answer, shown: 0 }] }));
+    this.setState({ sessBusy: false });
+    clearInterval(this.srv); let n = 0;
+    this.srv = setInterval(() => { n += 2; if (n % 4 === 0) this.sfx('tick');
+      upd(x => { const msgs = x.msgs.slice(); msgs[msgs.length - 1] = { ...msgs[msgs.length - 1], shown: n }; return { ...x, msgs }; });
+      if (n >= answer.length) clearInterval(this.srv); }, 20);
+  }
+  sessionVals(s) {
+    const ST = ['Todo', 'In Progress', 'Needs Review', 'Done'], STC = { Todo: DIM, 'In Progress': AMB, 'Needs Review': RED, Done: GRN };
+    const chip = (label, on, onClick) => ({ label, onClick, border: on ? AMB : '#3a2c10', bg: on ? AMB : 'transparent', color: on ? '#0a0805' : AMB });
+    const cur = s.sessions.find(x => x.id === s.sel) || s.sessions[0];
+    const upd = fn => this.setState(st => ({ sessions: st.sessions.map(x => x.id === cur.id ? fn(x) : x) }));
+    const list = s.sessions.filter(x => s.sFilter === 'All' || (s.sFilter === 'Flagged' ? x.flag : x.status === s.sFilter));
+    const MODES = [['EXPLORE', 'explore'], ['ASK TO EDIT', 'ask'], ['AUTO', 'auto']];
+    const msgs = cur.msgs.map((m, mi) => { const me = m.role === 'me', streaming = !me && m.shown != null && m.shown < m.text.length;
+      return { who: me ? 'TUMELO' : cur.agent, t: m.t, whoColor: me ? CREAM : AMB, color: me ? CREAM : AMB, text: streaming ? m.text.slice(0, m.shown) : m.text,
+        caret: streaming ? React.createElement('span', { style: { display: 'inline-block', width: 8, height: 14, marginLeft: 2, verticalAlign: '-2px', background: AMB, animation: 'sx-blink 1s steps(1) infinite' } }) : null,
+        tools: (m.tools || []).map((t, ti) => { const set = patch => upd(x => ({ ...x, msgs: x.msgs.map((mm, i) => i === mi ? { ...mm, tools: mm.tools.map((tt, j) => j === ti ? { ...tt, ...patch } : tt) } : mm) }));
+          const state = t.blocked ? 'blocked' : t.pending ? 'pending' : t.denied ? 'denied' : 'ok';
+          return { name: t.name, result: state === 'blocked' ? 'blocked · explore mode is read only' : state === 'pending' ? 'waiting for your approval' : state === 'denied' ? 'denied' : t.result,
+            icon: { ok: '⚙ ✓', pending: '⚙ ?', blocked: '⚙ ✕', denied: '⚙ ✕' }[state], color: { ok: GRN, pending: AMB, blocked: RED, denied: RED }[state], border: state === 'pending' ? AMB : '#3a2c10', needsOk: state === 'pending',
+            allow: () => { this.sfx('beep'); set({ pending: false }); this.log('ALLOW', `${cur.agent} · ${t.name} approved by tumelo`, GRN); }, deny: () => set({ pending: false, denied: true }) }; }) }; });
+    return {
+      pSessions: s.tab === 'sessions', sessCount: `${s.sessions.length} sessions`,
+      sessFilters: ['All', 'Flagged', ...ST].map(f => ({ ...chip(f.toUpperCase(), s.sFilter === f, () => this.setState({ sFilter: f })), n: f === 'All' ? s.sessions.length : f === 'Flagged' ? s.sessions.filter(x => x.flag).length : s.sessions.filter(x => x.status === f).length })),
+      sessRows: list.map(x => ({ title: x.title, status: x.status.toUpperCase(), stColor: STC[x.status], agent: x.agent, t: x.t, flagColor: x.flag ? AMB : '#3a2c10', bg: x.id === cur.id ? '#140f07' : 'transparent', onClick: () => { this.sfx('tick'); this.setState({ sel: x.id }); } })),
+      newSession: () => { const id = 's' + Date.now(); this.setState(st => ({ sessions: [{ id, title: 'New session', status: 'Todo', flag: false, agent: 'HERMES', t: now(), msgs: [] }, ...st.sessions], sel: id, sFilter: 'All' })); },
+      sess: { title: cur.title, flagColor: cur.flag ? AMB : DIM, flagLabel: cur.flag ? 'FLAGGED' : 'FLAG', toggleFlag: () => upd(x => ({ ...x, flag: !x.flag })),
+        statuses: ST.map(x => chip(x.toUpperCase(), cur.status === x, () => upd(y => ({ ...y, status: x })))),
+        modes: MODES.map(([l, m]) => chip(l, s.perm === m, () => { this.sfx('tick'); this.setState({ perm: m }); })), msgs },
+      sessRef: this.sessRef, sessBusy: s.sessBusy, sessDraft: s.sessDraft,
+      onSessDraft: e => { const v = e.target.value; this.setState(st => ({ sessDraft: v, sessions: st.sessions.map(x => x.id === cur.id && x.title === 'New session' && v.length > 6 ? { ...x, title: v.slice(0, 48) } : x) })); },
+      onSessKey: e => { if (e.key === 'Tab' && e.shiftKey) { e.preventDefault(); const i = MODES.findIndex(m => m[1] === s.perm); this.setState({ perm: MODES[(i + 1) % 3][1] }); return; } this.sfx('key'); if (e.key === 'Enter') this.sessionSend(s.sessDraft); },
+      sessSend: () => this.sessionSend(s.sessDraft),
+      mentions: ['gitea', 'github', 'google-drive', 'shopify', 'whatsapp', 'studex-brain', 'deployment-guard'].map(l => ({ label: l, onClick: () => this.setState(st => ({ sessDraft: (st.sessDraft + ' @' + l + ' ').replace(/^ /, '') })) })),
+      sources: [['studex-brain vault', 'LOCAL', GRN], ['gitea :3030', 'MCP', RED], ['github', 'MCP', GRN], ['google-drive', 'API', GRN], ['shopify', 'API', GRN], ['whatsapp', 'API', AMB], ['herdr socket', 'LOCAL', GRN]].map(([name, type, dot]) => ({ name, type, dot })),
+      skills: [['business-ghost-onboarding', 'Onboard a new client onto a Business Ghost'], ['context-compressor', 'Save long sessions to the vault'], ['deployment-guard', 'Pre-flight checks before any deploy'], ['/saas-health', 'ARR, MRR, churn, CAC, LTV'], ['/financial-health', 'Ratios, DCF, 13-week cash flow']].map(([name, desc]) => ({ name, desc })),
+      autos: s.autos.map((a, i) => ({ when: a.when, what: a.what, label: a.on ? 'ON' : 'OFF', color: a.on ? AMB : DIM, border: a.on ? AMB : '#3a2c10', toggle: () => this.setState(st => ({ autos: st.autos.map((x, j) => j === i ? { ...x, on: !x.on } : x) })) })),
+    };
+  }
+  stationVals(s) {
+    const ROOMS = [
+      { id: 'war', num: '01', name: 'WAR ROOM', kind: 'BUILD FLOOR', desc: 'Builders and researchers at their desks. Plans become code here, each droid in its own worktree.', rect: [1, 2, 41, 42], label: [4, 4], origin: '0% 0%', crew: ['claude', 'openclaw', 'grokbot'], st: [1, 2], dots: [[14, 26], [22, 30], [30, 20], [10, 18]] },
+      { id: 'assembly', num: '02', name: 'ASSEMBLY LINE', kind: 'QA + SHIP', desc: 'Finished work runs down the line. CODEX tests every part, BASE44 packages and ships through the tunnel.', rect: [58, 1, 41, 42], label: [62, 4], origin: '100% 0%', crew: ['codex', 'base44'], st: [3, 5], dots: [[70, 26], [84, 22], [90, 30]] },
+      { id: 'machines', num: '03', name: 'MACHINE HALL', kind: 'SERVERS · SANDBOXES', desc: 'Your bare metal and cloud boxes. Rome spins sandboxes up here and destroys them when a job ends.', rect: [0, 45, 42, 52], label: [3, 48], origin: '0% 100%', crew: [], st: [], dots: [[16, 66], [26, 74], [8, 60]] },
+      { id: 'board', num: '04', name: 'BOARDROOM', kind: 'REVIEW + APPROVALS', desc: 'Human gates live here. Anything that sends, spends or touches prod waits at the glass table for you.', rect: [58, 45, 41, 52], label: [62, 48], origin: '100% 100%', crew: ['robusca'], st: [4], dots: [[80, 70], [72, 64]] },
+      { id: 'core', num: '00', name: 'CORE', kind: 'ORCHESTRATOR · BRAIN VAULT', desc: 'HERMES routes every mission from the core. The orb is the brain vault: every note, plan and decision.', rect: [39, 22, 22, 56], label: [41, 24], origin: '50% 45%', crew: ['hermes'], st: [0], dots: [[50, 46]] },
+    ];
+    const open = ROOMS.find(r => r.id === s.room);
+    const pct = v => v + '%';
+    const hotspots = ROOMS.map(r => {
+      const crewN = r.crew.length, jobs = s.jobs.filter(j => r.st.includes(j.st)).length, blocked = s.jobs.filter(j => r.st.includes(j.st) && j.blocked).length;
+      const meta = r.id === 'machines' ? `${Object.keys(HOSTS).length} hosts · ${s.agents.length} panes` : `${crewN} droid${crewN === 1 ? '' : 's'} · ${jobs} jobs${blocked ? ` · ${blocked} blocked` : ''}`;
+      return { num: r.num, name: r.name, meta, l: pct(r.rect[0]), t: pct(r.rect[1]), w: pct(r.rect[2]), h: pct(r.rect[3]), z: r.id === 'core' ? 3 : 2, display: open ? 'none' : 'block',
+        ll: pct(((r.label[0] - r.rect[0]) / r.rect[2]) * 100), lt: pct(((r.label[1] - r.rect[1]) / r.rect[3]) * 100), onClick: () => { this.sfx('beep'); this.setState({ room: r.id }); } };
+    });
+    const t = performance.now();
+    const mapFx = [
+      React.createElement('div', { key: 'core', style: { position: 'absolute', left: '50%', top: '30%', width: '14%', aspectRatio: '1', transform: 'translate(-50%,-50%)', borderRadius: '50%', pointerEvents: 'none', background: 'radial-gradient(circle, rgba(255,190,60,.35) 0%, rgba(255,176,0,0) 70%)', animation: 'sx-core 3.2s ease-in-out infinite', opacity: open && open.id !== 'core' ? 0 : 1, transition: 'opacity 600ms', zIndex: 1 } }),
+      React.createElement('div', { key: 'sweep', style: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(100deg, transparent 40%, rgba(255,176,0,.06) 50%, transparent 60%)', backgroundSize: '250% 100%', animation: 'sx-sweep 7s linear infinite' } }),
+      ...(open ? [] : ROOMS.flatMap(r => {
+        const ids = r.id === 'machines' ? Object.keys(HOSTS).map(h => ({ id: h, herdr: 'working' })) : r.crew.map(id => s.agents.find(a => a.id === id));
+        return ids.map((a, i) => { const [x, y] = r.dots[i % r.dots.length], c = ST_COL[a.herdr] === DIM ? CREAM : ST_COL[a.herdr];
+          return React.createElement('span', { key: r.id + i, style: { position: 'absolute', left: x + '%', top: y + '%', width: 9, height: 9, marginLeft: -4, marginTop: -4, borderRadius: '50%', background: c, boxShadow: `0 0 10px ${c}`, pointerEvents: 'none', zIndex: 4 } },
+            React.createElement('span', { style: { position: 'absolute', inset: -6, borderRadius: '50%', border: `1px solid ${c}`, animation: `sx-ping 2s ${i * .4}s ease-out infinite` } }));
+        });
+      })),
+    ];
+    let room = null;
+    if (open) {
+      const crew = open.crew.map(id => { const a = s.agents.find(x => x.id === id); return { name: a.name, meta: `${a.drd} · ${a.herdr} · ${a.host}`, color: ST_COL[a.herdr] === DIM ? CREAM : ST_COL[a.herdr], onChat: () => { this.setState({ ch: id }); this.go('comms'); } }; });
+      const hostCrew = open.id === 'machines' ? Object.keys(HOSTS).map(h => ({ name: h, meta: HOSTS[h], color: GRN, onChat: () => this.toastMsg(`ssh ${h} — opens via the tunnel`) })) : [];
+      const jobs = s.jobs.filter(j => open.st.includes(j.st));
+      const items = open.id === 'machines'
+        ? s.agents.map(a => ({ id: a.host.replace('cloud-boxer', 'cb'), title: `${a.name} · ${a.cmd}`, state: a.herdr.toUpperCase(), color: ST_COL[a.herdr] }))
+        : open.id === 'core' ? Object.keys(s.notes).slice(0, 6).map(p => ({ id: 'MD', title: p, state: 'SYNCED', color: GRN }))
+        : jobs.map(j => ({ id: j.id, title: j.title, state: j.blocked ? 'BLOCKED' : `${STN[j.st]} ${Math.floor(j.p)}%`, color: j.blocked ? RED : AMB }));
+      const blocked = jobs.filter(j => j.blocked).length;
+      const stats = open.id === 'machines' ? [['HOSTS', 3, AMB], ['PANES', s.agents.length, AMB], ['TUNNEL', 'OK', GRN]]
+        : open.id === 'core' ? [['NOTES', Object.keys(s.notes).length, AMB], ['IN LINE', s.jobs.length, AMB], ['SHIPPED', s.shipped, GRN]]
+        : [['CREW', open.crew.length, AMB], ['JOBS', jobs.length, AMB], ['BLOCKED', blocked, blocked ? RED : DIM]];
+      const acts = {
+        war: ['DISPATCH TO WAR ROOM', () => { this.setState({ dAgent: 'claude' }); this.go('fleets'); }, 'OPEN FACTORY LINE', () => this.go('factory')],
+        assembly: ['OPEN FACTORY LINE', () => this.go('factory'), 'CHAT WITH CODEX', () => { this.setState({ ch: 'codex' }); this.go('comms'); }],
+        machines: ['OPEN FLEETS', () => this.go('fleets'), 'RUN HEALTH CHECK', () => { this.log('HEALTH', 'mac-mini ok · cloud-boxer-01 ok · cloud-boxer-02 ok · tunnel studex-edge ok', GRN); this.toastMsg('Health check passed on 3 hosts'); }],
+        board: [blocked ? `APPROVE ${blocked} GATE${blocked > 1 ? 'S' : ''}` : 'NO GATES WAITING', () => jobs.filter(j => j.blocked).forEach(j => this.approve(j.id)), 'CHAT WITH ROBUSCA', () => { this.setState({ ch: 'robusca' }); this.go('comms'); }],
+        core: ['OPEN BRAIN VAULT', () => this.go('vault'), 'TALK TO HERMES', () => { this.setState({ ch: 'hermes' }); this.go('comms'); }],
+      }[open.id];
+      room = { num: open.num, name: open.name, kind: open.kind, desc: open.desc, stats: stats.map(([label, val, color]) => ({ label, val, color })), crew: [...crew, ...hostCrew],
+        listTitle: open.id === 'machines' ? 'HERDR PANES' : open.id === 'core' ? 'VAULT' : 'JOBS IN THIS ROOM', items: items.length ? items : [{ id: '—', title: 'nothing here right now', state: '', color: DIM }],
+        primaryLabel: acts[0], primary: acts[1], secondaryLabel: acts[2], secondary: acts[3] };
+    }
+    return {
+      pStation: s.tab === 'station', mapFlex: open ? '1 1 480px' : '1 1 100%', hotspots, mapFx, room, roomOpen: !!open, roomClosed: !open,
+      zoomOrigin: open ? open.origin : '50% 50%', zoomTf: open ? (open.id === 'core' ? 'scale(1.9)' : 'scale(2.2)') : 'scale(1)', mapFilter: open ? 'saturate(1.08) contrast(1.04)' : 'saturate(.92)',
+      mapTitle: open ? open.name : 'STUDEX STATION', mapCmd: open ? `--room ${open.id}` : '--overview', closeRoom: () => { this.sfx('tick'); this.setState({ room: null }); },
+    };
+  }
+  renderVals() {
+    const s = this.state, title = p => p.split('/').pop().replace(/\.md$/, '');
+    const tabs = [['0', 'HERMES', 'home'], ['1', 'STATION', 'station'], ['2', 'FACTORY', 'factory'], ['3', 'BRAIN VAULT', 'vault'], ['4', 'FLEETS', 'fleets'], ['5', 'COMMS', 'comms'], ['6', 'SESSIONS', 'sessions']].map(([key, label, id]) => {
+      const on = s.tab === id;
+      return { key, label, bg: on ? '#140f07' : 'transparent', color: on ? AMB : DIM, keyColor: on ? '#FFD21F' : '#5a4515', border: on ? '#3a2c10' : 'transparent', onClick: () => this.go(id) };
+    });
+    const jobsOf = i => s.jobs.filter(j => j.st === i);
+    const stations = STN.map((name, i) => ({
+      num: String(i + 1).padStart(2, '0'), name, count: `[${jobsOf(i).length}]`, gate: GATE[i],
+      jobs: jobsOf(i).map(j => { const a = AG.find(x => x.id === j.agent), n = Math.round(j.p / 10);
+        return { id: j.id, title: j.title, agent: a.name, drd: a.drd, bar: '█'.repeat(n) + '░'.repeat(10 - n), pct: `${String(Math.floor(j.p)).padStart(3, ' ')}%`,
+          barColor: j.blocked ? RED : AMB, border: j.blocked ? RED : '#3a2c10', bg: j.blocked ? 'rgba(232,93,93,.05)' : 'transparent', blocked: j.blocked, approve: () => this.approve(j.id) }; }),
+    }));
+    const blocked = s.jobs.filter(j => j.blocked).length;
+    const kpis = [['IN LINE', s.jobs.length, AMB], ['SHIPPED', s.shipped, GRN], ['BLOCKED', blocked, blocked ? RED : DIM]].map(([label, val, color]) => ({ label, val, color }));
+
+    const paths = Object.keys(s.notes).sort(); const tree = []; let last = '';
+    paths.forEach(p => { const parts = p.split('/'), folder = parts.length > 1 ? parts[0] : ''; if (folder !== last) { tree.push({ pre: '▾', label: folder || 'root', color: DIM, bg: 'transparent', cursor: 'default', onClick: () => {} }); last = folder; }
+      const on = p === s.open; tree.push({ pre: '  ├', label: title(p), color: on ? '#0a0805' : CREAM, bg: on ? AMB : 'transparent', cursor: 'pointer', onClick: () => this.openNote(p) }); });
+    const body = s.notes[s.open] || '';
+    this._html = md(body);
+    const t = title(s.open);
+    const backs = paths.filter(p => p !== s.open && s.notes[p].includes(`[[${t}]]`)).map(title);
+    const modes = [['EDIT', 'edit'], ['SPLIT', 'split'], ['VIEW', 'view']].map(([label, m]) => ({ label, bg: s.mode === m ? AMB : 'transparent', color: s.mode === m ? '#0a0805' : AMB, border: s.mode === m ? AMB : '#3a2c10', onClick: () => this.setState({ mode: m }) }));
+    const lines = body.split('\n').length;
+
+    const rigRows = []; const rigs = [...new Set(s.agents.map(a => a.rig))];
+    rigs.forEach((rig, ri) => {
+      const pods = [...new Set(s.agents.filter(a => a.rig === rig).map(a => a.pod))];
+      rigRows.push({ pre: ri ? '\n' : '', text: `rig ${rig}`, sub: `${pods.length} pods`, color: AMB, isSeat: false });
+      pods.forEach((pod, pi) => { const lastPod = pi === pods.length - 1;
+        rigRows.push({ pre: lastPod ? '└─' : '├─', text: `pod ${pod}`, sub: '', color: DIM, isSeat: false });
+        s.agents.filter(a => a.rig === rig && a.pod === pod).forEach(a => rigRows.push({ pre: (lastPod ? '   ' : '│  ') + '└─', text: a.name, sub: `${a.drd} · ${a.herdr}`, color: ST_COL[a.herdr] === DIM ? CREAM : ST_COL[a.herdr], isSeat: true,
+          onChat: () => { this.setState({ ch: a.id }); this.go('comms'); }, onSend: () => { this.setState({ dAgent: a.id }); this.toastMsg(`${a.name} selected in dispatch console`); } }));
+      });
+    });
+    const hosts = Object.keys(HOSTS).map(h => ({ host: h, meta: HOSTS[h], panes: s.agents.filter(a => a.host === h).map(a => ({ agent: a.name, state: a.herdr.toUpperCase(), color: ST_COL[a.herdr], cmd: a.cmd, up: a.up })) }));
+    const WT = [['wt/claude-pricing', 'CLAUDE', '+412 −38', true], ['wt/codex-pricing', 'CODEX', '+366 −51', true], ['wt/openclaw-bridge', 'OPENCLAW', 'running', false]];
+    const worktrees = WT.map(([branch, agent, diff, ready]) => { const won = s.merged === branch;
+      return { branch, agent, diff, state: won ? 'MERGED' : ready ? 'READY' : 'RUNNING', color: won ? GRN : ready ? AMB : DIM, btn: won ? 'MERGED' : ready ? 'MERGE' : 'ATTACH', btnBorder: ready && !won ? AMB : '#3a2c10', btnColor: ready && !won ? AMB : DIM,
+        onClick: () => { if (ready && !s.merged) { this.setState({ merged: branch }); this.log('ORCA', `${branch} merged → main · others archived`, GRN); this.sfx('beep'); } else this.toastMsg(`herdr attach ${agent.toLowerCase()} — opens the live terminal`); } }; });
+    const chip = (name, on, onClick) => ({ name, border: on ? AMB : '#3a2c10', bg: on ? AMB : 'transparent', color: on ? '#0a0805' : AMB, onClick });
+    const pods = new Set(s.agents.map(a => a.rig + a.pod)).size;
+
+    const a = AG.find(x => x.id === s.ch), cur = s.agents.find(x => x.id === s.ch);
+    const caret = React.createElement('span', { style: { display: 'inline-block', width: 8, height: 14, marginLeft: 2, verticalAlign: '-2px', background: AMB, animation: 'sx-blink 1s steps(1) infinite' } });
+    const messages = s.chats[s.ch].map(m => { const me = m.from === 'me', streaming = !me && m.shown < m.text.length;
+      return { time: m.t, who: me ? 'TUMELO' : a.name, arrow: me ? '>' : '<', whoColor: me ? CREAM : AMB, color: me ? CREAM : AMB, text: streaming ? m.text.slice(0, m.shown) : m.text, caret: streaming ? caret : null }; });
+
+    const fx = [
+      React.createElement('div', { key: 'l', style: { position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 5, backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px)', animation: 'sx-flicker 5s infinite' } }),
+      React.createElement('div', { key: 'v', style: { position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 5, background: 'radial-gradient(130% 100% at 50% 40%, transparent 60%, rgba(0,0,0,.6) 100%)' } }),
+      React.createElement('div', { key: 's', style: { position: 'fixed', left: 0, right: 0, top: 0, height: '14vh', pointerEvents: 'none', zIndex: 5, background: 'linear-gradient(180deg, transparent, rgba(255,176,0,.04), transparent)', animation: 'sx-scan 8s linear infinite' } }),
+    ];
+    return {
+      fx, clock: now(), tabs, toast: s.toast, floorRef: this.floorRef, onFloorClick: e => this.floorClick(e),
+      soundLabel: s.sound ? 'ON' : 'OFF', soundColor: s.sound ? AMB : DIM, toggleSound: () => this.setState({ sound: !s.sound }),
+      ambLabel: s.amb ? 'ON' : 'OFF', ambColor: s.amb ? '#0a0805' : DIM, ambBorder: s.amb ? AMB : '#3a2c10', ambBg: s.amb ? AMB : 'transparent',
+      toggleAmb: () => { if (s.amb) this.stopAmb(); else this.startAmb(); this.setState({ amb: !s.amb }); },
+      speakLabel: s.speak ? 'ON' : 'OFF', speakColor: s.speak ? AMB : DIM, toggleSpeak: () => { if (s.speak && window.speechSynthesis) speechSynthesis.cancel(); this.setState({ speak: !s.speak }); },
+      onlineCount: s.agents.length,
+      ...this.stationVals(s), ...this.sessionVals(s), ...this.homeVals(s),
+      pFactory: s.tab === 'factory', pVault: s.tab === 'vault', pFleets: s.tab === 'fleets', pComms: s.tab === 'comms',
+      kpis, stations, logs: s.logs, logRef: this.logRef, sop: SOP.map((text, i) => ({ n: String(i + 1).padStart(2, '0'), text })),
+      goDispatch: () => { this.go('fleets'); setTimeout(() => { const el = document.getElementById('dispatch'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }, 60); },
+      tree, noteCount: paths.length, notePath: `cloud://studex-brain/${s.open}`, modes, syncLabel: `● ${s.sync}`, syncColor: s.sync === 'SYNCED' ? GRN : AMB,
+      editorCols: s.mode === 'split' ? 'repeat(auto-fit,minmax(min(100%,320px),1fr))' : '1fr', showEditor: s.mode !== 'view', showPreview: s.mode !== 'edit',
+      lineNums: Array.from({ length: lines }, (_, i) => i + 1).join('\n'), noteBody: body, lineCount: lines, wordCount: (body.match(/\S+/g) || []).length,
+      onEdit: e => this.edit(e.target.value), onKeyTick: () => this.sfx('key'), previewRef: this.previewRef,
+      onPreviewClick: e => { const l = e.target.closest && e.target.closest('[data-link]'); if (!l) return; const p = paths.find(x => title(x).toLowerCase() === l.dataset.link.toLowerCase()); if (p) this.openNote(p); else this.toastMsg(`No note named "${l.dataset.link}" yet`); },
+      backlinks: backs.length ? backs.join(' · ') : 'none',
+      newNote: () => { const p = `00 Inbox/Untitled ${paths.length + 1}.md`; const notes = { ...s.notes, [p]: `# Untitled ${paths.length + 1}\n\n` }; this.setState({ notes, open: p, mode: 'edit' }); this.persist({ notes, open: p }); },
+      fleetStats: [['RIGS', rigs.length], ['PODS', pods], ['SEATS', s.agents.length], ['HERDR PANES', s.agents.length], ['WORKTREES', WT.length]].map(([label, val]) => ({ label, val })),
+      rigRows, hosts, worktrees,
+      dAgents: AG.map(x => chip(x.name, s.dAgent === x.id, () => { this.sfx('tick'); this.setState({ dAgent: x.id }); })),
+      dHosts: Object.keys(HOSTS).map(h => chip(h, s.dHost === h, () => { this.sfx('tick'); this.setState({ dHost: h }); })),
+      dBudgets: ['$1', '$5', '$20'].map(b => chip(b, s.dBudget === b, () => { this.sfx('tick'); this.setState({ dBudget: b }); })),
+      dMission: s.dMission, onDMission: e => this.setState({ dMission: e.target.value }), onDKey: e => { this.sfx('key'); if (e.key === 'Enter') this.launch(); },
+      launch: () => this.launch(), dSummary: `→ ${AG.find(x => x.id === s.dAgent).name}`,
+      channels: s.agents.map(x => ({ name: x.name, drd: x.drd, host: x.host, dot: ST_COL[x.herdr], color: s.ch === x.id ? '#FFD21F' : AMB, bg: s.ch === x.id ? '#140f07' : 'transparent', onClick: () => { this.sfx('tick'); this.setState({ ch: x.id }); } })),
+      chName: a.name, chHost: cur.host, chRole: a.role, messages, thinking: s.thinking, chatRef: this.chatRef, inputRef: this.inputRef,
+      draft: s.draft, onDraft: e => this.setState({ draft: e.target.value }), onChatKey: e => { this.sfx('key'); if (e.key === 'Enter') this.send(s.draft); },
+      sendDraft: () => this.send(s.draft), placeholder: s.mic ? 'listening…' : `message ${a.name.toLowerCase()} or press MIC to talk`,
+      toggleMic: () => this.toggleMic(), micLabel: s.mic ? 'LISTENING' : 'MIC', micColor: s.mic ? RED : AMB, micBorder: s.mic ? RED : '#3a2c10',
+    };
+  }
+}
+</script>
+</body>
+</html>

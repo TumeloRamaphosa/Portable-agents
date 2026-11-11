@@ -1,0 +1,286 @@
+/* ============================================================
+   Studex Meat — Design System
+   colors_and_type.css
+
+   Drop into any HTML file with: <link rel="stylesheet" href="colors_and_type.css">
+   Or, when used inside a UI kit, scope by adding the kit's font files alongside.
+   ============================================================ */
+
+/* --- Fonts (Google Fonts substitutions — see README "Caveats") --- */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* ---------- PALETTE ---------- */
+  /* Surfaces & ink */
+  --ink:            #1A1411;   /* warm-black, primary text / dark surface */
+  --charcoal:       #2B221E;   /* secondary dark surface (footer, header) */
+  --ash:            #6B5D52;   /* body text on cream */
+  --smoke:          #9C8E80;   /* tertiary text, captions */
+  --bone:           #E8DFC9;   /* hairline borders, subtle dividers */
+  --cream:          #F5EFE6;   /* secondary surface */
+  --paper:          #FAF6EF;   /* default page background */
+  --white:          #FFFFFF;   /* used VERY sparingly — true white feels clinical here */
+
+  /* Brand reds */
+  --oxblood:        #6E1818;   /* brand primary */
+  --oxblood-deep:   #531010;   /* hover/active for oxblood buttons */
+  --ember:          #B33A2A;   /* accent — sale, link hover, ember on dark */
+
+  /* Brand golds */
+  --gold:           #B8924E;   /* marbling / certification badges */
+  --gold-light:     #D4B576;   /* hover/illustration highlight */
+  --gold-deep:      #8C6E36;   /* pressed gold */
+
+  /* Semantic */
+  --success:        #5C7A3D;
+  --warning:        #B8762E;
+  --danger:         #8A1F1F;
+  --info:           #4A5B6B;
+
+  /* Translucent inks (for overlays, hairlines on photography) */
+  --ink-12:         rgba(26,20,17,0.12);
+  --ink-24:         rgba(26,20,17,0.24);
+  --ink-48:         rgba(26,20,17,0.48);
+  --ink-72:         rgba(26,20,17,0.72);
+  --paper-12:       rgba(250,246,239,0.12);
+  --paper-72:       rgba(250,246,239,0.72);
+
+  /* ---------- TYPE FAMILIES ---------- */
+  --serif-display:  "Playfair Display", "Cormorant Garamond", "Times New Roman", serif;
+  --sans-body:      "DM Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --mono:           "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---------- TYPE SCALE (1.250 — major third, anchored at 16px) ---------- */
+  --fs-xs:    12px;   /* legal, micro labels */
+  --fs-sm:    14px;   /* meta, captions */
+  --fs-base:  16px;   /* body */
+  --fs-md:    18px;   /* lead paragraph, larger body */
+  --fs-lg:    20px;
+  --fs-xl:    25px;   /* h5 */
+  --fs-2xl:   31px;   /* h4 */
+  --fs-3xl:   39px;   /* h3 */
+  --fs-4xl:   49px;   /* h2 */
+  --fs-5xl:   61px;   /* h1 — section hero */
+  --fs-6xl:   76px;   /* display — landing hero */
+  --fs-7xl:   95px;   /* display max */
+
+  --lh-tight: 1.05;
+  --lh-snug:  1.18;
+  --lh-body:  1.55;
+  --lh-loose: 1.75;
+
+  --tracking-tight: -0.02em;
+  --tracking-snug:  -0.01em;
+  --tracking-flat:   0;
+  --tracking-wide:   0.08em;
+  --tracking-eyebrow:0.16em;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ---------- RADII ---------- */
+  --radius-none:  0;
+  --radius-xs:    2px;     /* cards, product imagery */
+  --radius-sm:    4px;     /* form inputs */
+  --radius-md:    8px;     /* drawers, modals */
+  --radius-pill:  999px;   /* badges, chip secondaries */
+
+  /* ---------- SHADOWS (sparing, warm-black tinted) ---------- */
+  --shadow-xs: 0 1px 2px rgba(26,20,17,0.06);
+  --shadow-sm: 0 4px 16px rgba(26,20,17,0.08);
+  --shadow-md: 0 8px 28px rgba(26,20,17,0.12);
+  --shadow-lg: 0 24px 60px rgba(26,20,17,0.18);
+
+  /* ---------- BORDERS ---------- */
+  --border-hairline: 1px solid var(--bone);
+  --border-ink:      1px solid var(--ink);
+  --border-on-dark:  1px solid rgba(232,223,201,0.15);
+
+  /* ---------- MOTION ---------- */
+  --ease-out:    cubic-bezier(0.32, 0.72, 0.36, 1);
+  --ease-in:     cubic-bezier(0.40, 0.00, 1.00, 1);
+  --ease-in-out: cubic-bezier(0.65, 0.05, 0.36, 1);
+  --dur-fast:    160ms;
+  --dur-base:    240ms;
+  --dur-slow:    400ms;
+
+  /* ---------- LAYOUT ---------- */
+  --container:    1320px;
+  --article:      680px;
+  --gutter:       24px;
+  --section-y:    96px;
+  --section-y-sm: 48px;
+}
+
+/* ============================================================
+   Semantic element styles
+   These are scoped by `.studex-type` so they don't fight host styles
+   when copied into other contexts. Strip the class to apply globally.
+   ============================================================ */
+
+.studex-type {
+  font-family: var(--sans-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headlines — serif display */
+.studex-type h1,
+.studex-type .h1 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: var(--fs-5xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+  margin: 0 0 var(--space-5);
+  text-wrap: balance;
+}
+
+.studex-type .display,
+.studex-type .h0 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: var(--fs-6xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.studex-type h2,
+.studex-type .h2 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: var(--fs-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 var(--space-4);
+  text-wrap: balance;
+}
+
+.studex-type h3,
+.studex-type .h3 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: var(--fs-3xl);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-snug);
+  margin: 0 0 var(--space-3);
+  text-wrap: balance;
+}
+
+.studex-type h4,
+.studex-type .h4 {
+  font-family: var(--serif-display);
+  font-weight: 600;
+  font-size: var(--fs-2xl);
+  line-height: var(--lh-snug);
+  margin: 0 0 var(--space-3);
+}
+
+.studex-type h5,
+.studex-type .h5 {
+  font-family: var(--sans-body);
+  font-weight: 600;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  margin: 0 0 var(--space-2);
+}
+
+/* Body */
+.studex-type p,
+.studex-type .body {
+  font-family: var(--sans-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--ash);
+  margin: 0 0 var(--space-4);
+  text-wrap: pretty;
+}
+
+.studex-type .lead {
+  font-family: var(--sans-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+.studex-type small,
+.studex-type .caption {
+  font-family: var(--sans-body);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--smoke);
+}
+
+.studex-type .micro {
+  font-family: var(--sans-body);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-snug);
+  color: var(--smoke);
+}
+
+/* Eyebrow / kicker — ALL CAPS tracked */
+.studex-type .eyebrow {
+  font-family: var(--sans-body);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--ember);
+  margin: 0 0 var(--space-3);
+}
+
+/* Links */
+.studex-type a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.studex-type a:hover { color: var(--ember); }
+
+/* Inline emphasis */
+.studex-type strong,
+.studex-type b { font-weight: 600; color: var(--ink); }
+.studex-type em,
+.studex-type i { font-style: italic; }
+
+/* Code */
+.studex-type code,
+.studex-type .mono {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--cream);
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-xs);
+}
+
+/* Price — semantic helper used in product UIs */
+.studex-type .price {
+  font-family: var(--sans-body);
+  font-weight: 600;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.studex-type .price--strike {
+  color: var(--smoke);
+  text-decoration: line-through;
+  font-weight: 400;
+}

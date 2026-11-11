@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Halaal certified seal">
+  <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.25"></circle>
+  <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="0.75"></circle>
+  <path id="halTop" d="M 18 60 A 42 42 0 0 1 102 60" fill="none"></path>
+  <path id="halBot" d="M 18 60 A 42 42 0 0 0 102 60" fill="none"></path>
+  <text font-family="DM Sans, sans-serif" font-size="9" letter-spacing="3" fill="currentColor" font-weight="600">
+    <textPath href="#halTop" startOffset="50%" text-anchor="middle">HALAAL CERTIFIED</textPath>
+  </text>
+  <text font-family="DM Sans, sans-serif" font-size="8" letter-spacing="3" fill="currentColor">
+    <textPath href="#halBot" startOffset="50%" text-anchor="middle">STUDEX MEAT</textPath>
+  </text>
+  <text x="60" y="66" text-anchor="middle" font-family="Playfair Display, serif" font-size="22" font-weight="600" font-style="italic" fill="currentColor">حلال</text>
+</svg>

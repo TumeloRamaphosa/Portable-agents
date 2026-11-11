@@ -1,0 +1,224 @@
+{
+  "v": 1,
+  "mode": "omelette",
+  "root": "project/",
+  "title": "It's so disappointing",
+  "entry": "Studex Factory copy.dc.html",
+  "pages": [
+    {
+      "path": "Studex Factory copy.dc.html",
+      "title": "Studex Factory copy",
+      "kind": "page"
+    },
+    {
+      "path": "StudexMeat.dc.html",
+      "title": "StudexMeat",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Factory Red.dc.html",
+      "title": "Studex Factory Red",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Command Red.dc.html",
+      "title": "Studex Command Red",
+      "kind": "page"
+    },
+    {
+      "path": "Studex War Room.dc.html",
+      "title": "Studex War Room",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Herdr Room.dc.html",
+      "title": "Studex Herdr Room",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Factory.dc.html",
+      "title": "Studex Factory",
+      "kind": "page"
+    },
+    {
+      "path": "Studex War Room Red.dc.html",
+      "title": "Studex War Room Red",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Recovery v2.dc.html",
+      "title": "Studex Recovery v2",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Recovery.dc.html",
+      "title": "Studex Recovery",
+      "kind": "page"
+    },
+    {
+      "path": "Studex Agent OS.dc.html",
+      "title": "Studex Agent OS",
+      "kind": "page"
+    },
+    {
+      "path": "StudEx OS v2.dc.html",
+      "title": "StudEx OS v2",
+      "kind": "page"
+    },
+    {
+      "path": "StudEx OS.dc.html",
+      "title": "StudEx OS",
+      "kind": "page"
+    },
+    {
+      "path": "products/agents-nest-cloud/index.html",
+      "title": "StudEx Agents Nest Cloud | Global Markets OS",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/herdr-command-center-320cda13.html",
+      "title": "STUDEX • Herdr Command Center",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/herdr-command-center.html",
+      "title": "STUDEX • Herdr Command Center",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/index.html",
+      "title": "StudEx Agents Nest Cloud | Global Markets OS",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/investment-company-dashboard.html",
+      "title": "StudEx Global Markets — Investment Command Center",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/local-bare-metal-dashboard.before-stud-bot.html",
+      "title": "Local Bare Metal — Studex Operations",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/nexus-command-deck-chat.html",
+      "title": "NEXUS Command Deck — Agent Lord",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/Programme Briefing Deck.dc.html",
+      "title": "Programme Briefing Deck",
+      "kind": "page"
+    },
+    {
+      "path": "uploads/studex-unified-command-center.html",
+      "title": "StudEx OS",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/Stud-Bot mobile app design/Studex Agent OS.dc.html",
+      "title": "Studex Agent OS",
+      "kind": "page"
+    },
+    {
+      "path": "uploads/Stud-Bot mobile app design/repo/index.html",
+      "title": "StudEx Super Agents",
+      "kind": "plain"
+    },
+    {
+      "path": "uploads/Stud-Bot mobile app design/export/studex-agent-os/index.html",
+      "title": "index",
+      "kind": "page"
+    }
+  ],
+  "migratorVersion": "artifact-migrator (claude-design-backend ed667f7ac9c1)",
+  "createdAt": "2026-11-05T00:34:39.110Z",
+  "source": {
+    "v": 1,
+    "app": "claude-design",
+    "url": "https://claude.ai/design/p/e196ac2e-b86e-445e-8654-84b3e007a110",
+    "projectId": "e196ac2e-b86e-445e-8654-84b3e007a110",
+    "exportedAt": "2026-11-05T00:34:39.110Z"
+  },
+  "report": {
+    "itemsVersion": 2,
+    "pages": {
+      "total": 25,
+      "ok": 15,
+      "partial": 10,
+      "notMigrated": 0
+    },
+    "items": [
+      {
+        "kind": "file_left_out",
+        "path": "uploads/Stud-Bot mobile app design/uploads/studex-super-agents-site.bundle",
+        "text": "“.bundle” file, not copied (not a kind of file an artifact can serve)",
+        "bound": "unsupported_kind"
+      },
+      {
+        "kind": "external_blocked",
+        "path": "products/agents-nest-cloud/index.html",
+        "text": "https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=1920&q=80"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex Factory copy.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex Factory Red.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex Factory.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex Herdr Room.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex War Room Red.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "Studex War Room.dc.html",
+        "text": "its calls to Claude (window.claude.complete) may not work after the move, or may ask viewers for permission first",
+        "capability": "claude_calls"
+      },
+      {
+        "kind": "external_blocked",
+        "path": "uploads/index.html",
+        "text": "https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=1920&q=80"
+      },
+      {
+        "kind": "external_blocked",
+        "path": "uploads/local-bare-metal-dashboard.before-stud-bot.html",
+        "text": "http://127.0.0.1:8794/studex-desk-live.js"
+      },
+      {
+        "kind": "needs_capability",
+        "path": "uploads/Programme Briefing Deck.dc.html",
+        "text": "has speaker notes (10 slides): kept, but not shown while presenting in Claude",
+        "capability": "presenter_view"
+      },
+      {
+        "kind": "external_blocked",
+        "path": "uploads/index.js",
+        "text": "https://studexmeat.com/images/wagyu-fillet.jpg\nhttps://studexmeat.com/images/wagyu-patties.jpg\nhttps://studexmeat.com/images/biltong.jpg\nhttps://studexmeat.com/images/coffee.jpg\nhttps://studexmeat.com/images/box-braai.jpg\nand 28 more addresses"
+      }
+    ],
+    "truncated": 0,
+    "truncatedLeftOut": 0
+  }
+}

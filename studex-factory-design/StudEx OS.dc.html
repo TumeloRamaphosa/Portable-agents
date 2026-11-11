@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="./colors_and_type.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#F5EFE6;}
+*{box-sizing:border-box;}
+a{color:#1A1411;text-decoration:underline;}
+a:hover{color:#B33A2A;}
+button{font-family:inherit;}
+</style>
+</helmet>
+
+<sc-if value="{{ isHost }}" hint-placeholder-val="{{ false }}">
+  <section style="padding:48px;display:flex;flex-direction:column;gap:32px;font-family:'DM Sans',sans-serif;color:#1A1411;min-height:100vh;background:#F5EFE6;">
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:720px;">
+      <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Turn 1 · StarNet ideas inside StudEx OS</div>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:600;font-size:40px;line-height:1.1;margin:0;">The Station</h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;color:#6B5D52;text-wrap:pretty;">Rooms are capability-scoped teams, each running on its own virtual machine. Hallways are authorised handoff lanes between them. Every tool a room holds is a real grant. Same app, two widths.</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start;">
+      <div id="1a" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#1A1411;color:#FAF6EF;padding:3px 8px;border-radius:999px;">1a</span><span style="font-size:14px;color:#6B5D52;">Desktop · 1280</span></div>
+        <iframe src="{{ frameSrc }}" title="Desktop" style="width:1280px;height:820px;border:1px solid #E8DFC9;background:#FAF6EF;box-shadow:0 24px 60px rgba(26,20,17,0.18);"></iframe>
+      </div>
+      <div id="1b" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:8px;align-items:center;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#1A1411;color:#FAF6EF;padding:3px 8px;border-radius:999px;">1b</span><span style="font-size:14px;color:#6B5D52;">Mobile · 390</span></div>
+        <div style="padding:10px;background:#1A1411;border-radius:44px;box-shadow:0 24px 60px rgba(26,20,17,0.18);">
+          <iframe src="{{ frameSrc }}" title="Mobile" style="width:390px;height:844px;border:0;border-radius:34px;background:#FAF6EF;display:block;"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isFrame }}" hint-placeholder-val="{{ false }}">
+<div style="height:100vh;display:flex;flex-direction:column;background:#FAF6EF;color:#1A1411;font-family:'DM Sans',sans-serif;font-size:15px;overflow:hidden;">
+
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:{{ headerPad }};border-bottom:1px solid #E8DFC9;background:#1A1411;color:#FAF6EF;flex-shrink:0;">
+    <div style="display:flex;align-items:baseline;gap:10px;min-width:0;">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:20px;letter-spacing:-0.01em;">StudEx OS</span>
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#9C8E80;">Johannesburg station</span></sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#D4B576;">{{ spendToday }} today</span></sc-if>
+      <button onClick="{{ toggleNight }}" style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;border:1px solid rgba(232,223,201,0.25);background:{{ nightBg }};color:#FAF6EF;font-size:13px;cursor:pointer;">
+        <span style="width:8px;height:8px;border-radius:999px;background:{{ nightDot }};"></span>Night Shift {{ nightLabel }}
+      </button>
+    </div>
+  </header>
+
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:{{ shellCols }};">
+
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="border-right:1px solid #E8DFC9;padding:20px 12px;display:flex;flex-direction:column;gap:2px;background:#F5EFE6;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <button onClick="{{ t.go }}" style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 12px;border:0;border-radius:2px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:500;cursor:pointer;text-align:left;">
+            <span>{{ t.label }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;opacity:0.7;">{{ t.badge }}</span>
+          </button>
+        </sc-for>
+        <div style="margin-top:auto;padding:12px;border-top:1px solid #E8DFC9;display:flex;flex-direction:column;gap:4px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Signed in</span>
+          <span style="font-size:14px;font-weight:500;">Tumelo</span>
+        </div>
+      </nav>
+    </sc-if>
+
+    <main style="min-width:0;overflow:auto;padding:{{ mainPad }};display:flex;flex-direction:column;gap:20px;">
+
+      <sc-if value="{{ onStation }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Floor plan</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Four rooms, seven crew, {{ workingCount }} at work</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ planCols }};grid-template-rows:auto {{ hallRow }} auto;grid-template-areas:'a h1 b' 'v1 c v2' 'd h2 e';">
+          <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+            <button onClick="{{ r.pick }}" style="grid-area:{{ r.area }};text-align:left;cursor:pointer;background:#FFFFFF;border:{{ r.border }};border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:10px;min-width:0;color:#1A1411;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+                <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ roomTitle }};line-height:1.2;">{{ r.name }}</span>
+                <span style="width:8px;height:8px;margin-top:6px;border-radius:999px;background:{{ r.vmDot }};flex-shrink:0;"></span>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6B5D52;">{{ r.vm }}</span>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <sc-for list="{{ r.crew }}" as="c" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+                    <span style="width:6px;height:6px;border-radius:999px;background:{{ c.dot }};flex-shrink:0;"></span>
+                    <span style="font-size:13px;font-weight:500;">{{ c.name }}</span>
+                    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;color:#6B5D52;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;">{{ c.short }}</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                <sc-for list="{{ r.grantsShown }}" as="g" hint-placeholder-count="2">
+                  <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#F5EFE6;border:1px solid #E8DFC9;color:#2B221E;">{{ g }}</span>
+                </sc-for>
+              </div>
+            </button>
+          </sc-for>
+          <sc-for list="{{ hHalls }}" as="h" hint-placeholder-count="2">
+            <div style="grid-area:{{ h.area }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0 4px;">
+              <div style="width:100%;border-top:1px dashed #B8924E;"></div>
+              <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6B5D52;text-align:center;line-height:1.3;">{{ h.label }}</span></sc-if>
+              <span style="font-size:12px;color:#B8924E;">{{ h.arrow }}</span>
+            </div>
+          </sc-for>
+          <sc-for list="{{ vHalls }}" as="v" hint-placeholder-count="2">
+            <div style="grid-area:{{ v.area }};display:flex;align-items:center;justify-content:center;gap:8px;">
+              <div style="height:100%;border-left:1px dashed #B8924E;"></div>
+              <span style="font-size:12px;color:#B8924E;">{{ v.arrow }}</span>
+              <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6B5D52;">{{ v.label }}</span></sc-if>
+            </div>
+          </sc-for>
+          <div style="grid-area:c;display:flex;align-items:center;justify-content:center;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;background:#6E1818;color:#FAF6EF;padding:4px 8px;border-radius:999px;">Bridge</span>
+          </div>
+        </div>
+
+        <section style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Selected room</span>
+              <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:24px;">{{ sel.name }}</span>
+              <span style="font-size:14px;color:#6B5D52;line-height:1.5;text-wrap:pretty;">{{ sel.purpose }}</span>
+            </div>
+            <button style="height:40px;padding:0 16px;border:0;border-radius:0;background:#6E1818;color:#FAF6EF;font-size:14px;font-weight:500;cursor:pointer;">Summon Specialist</button>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ detailCols }};gap:16px;">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Crew</span>
+              <sc-for list="{{ sel.crew }}" as="c" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid #E8DFC9;">
+                  <div style="display:flex;align-items:center;gap:8px;"><span style="width:6px;height:6px;border-radius:999px;background:{{ c.dot }};"></span><span style="font-weight:600;font-size:14px;">{{ c.name }}</span><span style="font-size:12px;color:#6B5D52;">{{ c.role }}</span></div>
+                  <span style="font-size:13px;color:#2B221E;line-height:1.45;">{{ c.task }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Grants</span>
+              <sc-for list="{{ sel.grants }}" as="g" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid #E8DFC9;font-size:13px;"><span style="font-weight:500;">{{ g.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6B5D52;">{{ g.scope }}</span></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Machine</span>
+              <div style="display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid #E8DFC9;font-size:13px;">
+                <span style="font-family:'JetBrains Mono',monospace;">{{ sel.vm }}</span>
+                <span style="color:#6B5D52;">{{ sel.spec }}</span>
+                <span style="color:#6B5D52;">{{ sel.rate }} · {{ sel.vmState }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ onBriefs }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Task briefs</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Your crew asks before it guesses</h2>
+        </div>
+        <sc-for list="{{ briefs }}" as="b" hint-placeholder-count="3">
+          <div style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;padding:{{ roomPad }};display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#6B5D52;"><span><strong style="color:#1A1411;">{{ b.agent }}</strong> · {{ b.room }}</span><span style="font-family:'JetBrains Mono',monospace;">{{ b.via }}</span></div>
+            <span style="font-size:16px;line-height:1.5;text-wrap:pretty;">{{ b.q }}</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ b.opts }}" as="o" hint-placeholder-count="2">
+                <button onClick="{{ o.pick }}" style="min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.fg }};font-size:13px;font-weight:500;cursor:pointer;text-align:left;">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ onOutbox }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Outbox</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Finished work, as real files</h2>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;">
+          <sc-for list="{{ outbox }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid #E8DFC9;">
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+                <span style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;">{{ f.name }}</span>
+                <span style="font-size:12px;color:#6B5D52;">{{ f.agent }} · {{ f.when }} · {{ f.size }}</span>
+              </div>
+              <button style="height:36px;padding:0 14px;border:1px solid #E8DFC9;border-radius:999px;background:transparent;font-size:13px;cursor:pointer;flex-shrink:0;" style-hover="border-color:#1A1411;">Open</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onMachines }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Machines</span>
+            <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">One machine per room</h2>
+          </div>
+          <button style="height:40px;padding:0 16px;border:0;border-radius:0;background:#1A1411;color:#FAF6EF;font-size:14px;font-weight:500;cursor:pointer;">Provision Machine</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+          <sc-for list="{{ machines }}" as="m" hint-placeholder-count="4">
+            <div style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;">{{ m.id }}</span>
+                <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:#2B221E;"><span style="width:8px;height:8px;border-radius:999px;background:{{ m.dot }};"></span>{{ m.state }}</span>
+              </div>
+              <span style="font-size:14px;font-weight:500;">{{ m.room }}</span>
+              <span style="font-size:13px;color:#6B5D52;">{{ m.spec }} · {{ m.region }}</span>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#6B5D52;"><span>CPU {{ m.cpu }}</span><span>{{ m.rate }}</span></div>
+              <div style="height:4px;background:#F5EFE6;"><div style="height:4px;width:{{ m.cpu }};background:#B8924E;"></div></div>
+              <div style="display:flex;gap:8px;">
+                <button onClick="{{ m.toggle }}" style="flex:1;height:36px;border:1px solid #E8DFC9;border-radius:999px;background:transparent;font-size:13px;cursor:pointer;">{{ m.action }}</button>
+                <button style="flex:1;height:36px;border:1px solid #E8DFC9;border-radius:999px;background:transparent;font-size:13px;cursor:pointer;">Snapshot</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ onLedger }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Ledger</span>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:{{ h2Size }};line-height:1.15;margin:0;">Spend, shown as-is</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ detailCols }};gap:12px;">
+          <div style="background:#1A1411;color:#FAF6EF;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#9C8E80;">Today</span><span style="font-family:'Playfair Display',serif;font-size:30px;font-weight:600;">{{ spendToday }}</span><span style="font-size:12px;color:#D4B576;">of {{ budget }} daily budget</span></div>
+          <div style="background:#FFFFFF;border:1px solid #E8DFC9;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Models</span><span style="font-family:'Playfair Display',serif;font-size:30px;font-weight:600;">{{ modelSpend }}</span><span style="font-size:12px;color:#6B5D52;">412 calls</span></div>
+          <div style="background:#FFFFFF;border:1px solid #E8DFC9;padding:16px;border-radius:2px;display:flex;flex-direction:column;gap:6px;"><span style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#6B5D52;">Machines</span><span style="font-family:'Playfair Display',serif;font-size:30px;font-weight:600;">{{ vmSpend }}</span><span style="font-size:12px;color:#6B5D52;">{{ runningCount }} running</span></div>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;">
+          <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 80px;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid #E8DFC9;">
+              <div style="display:flex;flex-direction:column;gap:6px;min-width:0;">
+                <span style="font-size:14px;font-weight:500;">{{ l.name }} <span style="font-weight:400;color:#6B5D52;font-size:12px;">· {{ l.room }}</span></span>
+                <div style="height:4px;background:#F5EFE6;"><div style="height:4px;width:{{ l.pct }};background:#6E1818;"></div></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;">{{ l.amt }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid #E8DFC9;border-radius:2px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+          <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:20px;">Night Shift leash</span>
+          <span style="font-size:13px;color:#6B5D52;line-height:1.5;">While you're away, agents may only act inside these limits. Every away-action is logged here for review.</span>
+          <sc-for list="{{ leash }}" as="x" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E8DFC9;font-size:13px;"><span>{{ x.k }}</span><span style="font-family:'JetBrains Mono',monospace;color:#2B221E;">{{ x.v }}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #E8DFC9;background:#F5EFE6;padding-bottom:16px;flex-shrink:0;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+        <button onClick="{{ t.go }}" style="height:56px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:{{ t.mfg }};">
+          <span style="width:20px;height:2px;background:{{ t.bar }};"></span>
+          <span style="font-size:12px;font-weight:500;">{{ t.label }}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ZAR&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;ZAR&quot;,&quot;tsType&quot;:&quot;'ZAR'|'USD'&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;station&quot;,&quot;briefs&quot;,&quot;outbox&quot;,&quot;machines&quot;,&quot;ledger&quot;],&quot;default&quot;:&quot;station&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { w: window.innerWidth, tab: this.props.startTab ?? 'station', room: 'store', night: false, answers: {}, vmOff: {} };
+  componentDidMount() { this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  money(n) { const usd = this.props.currency === 'USD'; return (usd ? '$' : 'R') + (usd ? (n / 18).toFixed(2) : n.toLocaleString('en-ZA', { maximumFractionDigits: 0 })); }
+  renderVals() {
+    const q = new URLSearchParams(location.search), isFrame = q.has('frame'), isHost = !isFrame;
+    const s = this.state, mobile = s.w < 760, desktop = !mobile;
+    const C = { working: '#5C7A3D', waiting: '#B8762E', idle: '#9C8E80' };
+    const rooms0 = [
+      { id: 'growth', area: 'a', name: 'Growth Room', vm: 'jhb-02', spec: '2 vCPU · 4 GB', rate: 3.1, purpose: 'Social posts, campaigns and weekly performance reads across Instagram and TikTok.',
+        crew: [{ name: 'Herald', role: 'Content', st: 'working', task: 'Drafting three Black Box captions for Friday' }, { name: 'Analyst', role: 'Reporting', st: 'idle', task: 'Next run: Monday 07:00 weekly read' }],
+        grants: [{ name: 'Instagram', scope: 'draft only' }, { name: 'TikTok', scope: 'draft only' }, { name: 'Sheets', scope: 'read/write' }] },
+      { id: 'store', area: 'b', name: 'Storefront Room', vm: 'jhb-01', spec: '4 vCPU · 8 GB', rate: 5.8, purpose: 'Keeps the Shopify store current and answers customers within the hour.',
+        crew: [{ name: 'Merchant', role: 'Listings', st: 'working', task: 'Rewriting the Denver 500g product page' }, { name: 'Concierge', role: 'Support', st: 'waiting', task: 'Needs your call on a late-delivery refund' }],
+        grants: [{ name: 'Shopify', scope: 'products, orders' }, { name: 'Gmail', scope: 'info@ inbox' }, { name: 'WhatsApp', scope: 'reply only' }] },
+      { id: 'fin', area: 'd', name: 'Finance Room', vm: 'jhb-04', spec: '2 vCPU · 4 GB', rate: 3.1, purpose: 'Reconciles payouts, courier invoices and the bank feed each evening.',
+        crew: [{ name: 'Ledgerman', role: 'Bookkeeping', st: 'idle', task: 'Next run: 18:00 daily reconciliation' }],
+        grants: [{ name: 'Xero', scope: 'draft entries' }, { name: 'Bank feed', scope: 'read only' }] },
+      { id: 'ops', area: 'e', name: 'Ops Room', vm: 'jhb-03', spec: '2 vCPU · 4 GB', rate: 3.1, purpose: 'Stock levels, slaughter-week planning and courier bookings. No weekend dispatch.',
+        crew: [{ name: 'Quartermaster', role: 'Stock', st: 'working', task: 'Booking 14 courier collections for Tuesday' }, { name: 'Scout', role: 'Suppliers', st: 'waiting', task: 'Tomahawk at 6 units — asked you about the promo' }],
+        grants: [{ name: 'Courier API', scope: 'book, track' }, { name: 'Inventory', scope: 'read/write' }, { name: 'Calendar', scope: 'read' }] },
+    ];
+    const vmOn = id => !s.vmOff[id];
+    const rooms = rooms0.map(r => ({ ...r,
+      crew: r.crew.map(c => ({ ...c, dot: vmOn(r.vm) ? C[c.st] : '#E8DFC9', short: vmOn(r.vm) ? c.task : 'Machine stopped' })),
+      grantsShown: mobile ? [r.grants.length + ' grants'] : r.grants.map(g => g.name),
+      vmDot: vmOn(r.vm) ? '#5C7A3D' : '#9C8E80',
+      border: s.room === r.id ? '1px solid #1A1411' : '1px solid #E8DFC9',
+      pick: () => this.setState({ room: r.id }) }));
+    const selR = rooms.find(r => r.id === s.room);
+    const sel = { ...selR, rate: this.money(selR.rate) + '/hr', vmState: vmOn(selR.vm) ? 'Running' : 'Stopped' };
+    const workingCount = rooms.reduce((n, r) => n + (vmOn(r.vm) ? r.crew.filter(c => c.st === 'working').length : 0), 0);
+
+    const briefs0 = [
+      { id: 'b1', agent: 'Scout', room: 'Ops Room', via: 'WhatsApp', q: 'Tomahawk stock is down to 6 units and Friday\'s promo features it. Should I keep the promo, swap the hero cut to Ribeye, or cap orders at 6?', opts: ['Keep promo', 'Swap to Ribeye', 'Cap at 6'] },
+      { id: 'b2', agent: 'Concierge', room: 'Storefront Room', via: 'In app', q: 'Order #4471 arrived two days late. The customer is asking for a refund on the delivery fee. Refund R120, refund the full order, or offer a voucher?', opts: ['Refund R120', 'Full refund', 'R200 voucher'] },
+      { id: 'b3', agent: 'Herald', room: 'Growth Room', via: 'Telegram', q: 'For the Springbok weekend post, lead with Biltong Gold or the Braai Black Box?', opts: ['Biltong Gold', 'Black Box'] },
+    ];
+    const briefs = briefs0.map(b => ({ ...b, opts: b.opts.map(label => { const on = s.answers[b.id] === label;
+      return { label, bg: on ? '#1A1411' : 'transparent', fg: on ? '#FAF6EF' : '#1A1411', border: on ? '#1A1411' : '#E8DFC9', pick: () => this.setState(st => ({ answers: { ...st.answers, [b.id]: label } })) }; }) }));
+    const openBriefs = briefs0.filter(b => !s.answers[b.id]).length;
+
+    const outbox = [
+      { name: 'Week 42 sales summary.pdf', agent: 'Analyst', when: 'Today 07:02', size: '214 KB' },
+      { name: 'Black Box captions — 3 drafts.md', agent: 'Herald', when: 'Today 10:40', size: '4 KB' },
+      { name: 'Courier invoice reconciliation.xlsx', agent: 'Ledgerman', when: 'Yesterday 18:21', size: '38 KB' },
+      { name: 'Denver 500g product page.html', agent: 'Merchant', when: 'Yesterday 15:05', size: '12 KB' },
+    ];
+
+    const machines = rooms0.map((r, i) => { const on = vmOn(r.vm);
+      return { id: r.vm, room: r.name, spec: r.spec, region: 'Johannesburg', state: on ? 'Running' : 'Stopped', dot: on ? '#5C7A3D' : '#9C8E80',
+        cpu: on ? ['41%', '63%', '58%', '12%'][i] : '0%', rate: this.money(r.rate) + '/hr', action: on ? 'Stop' : 'Start',
+        toggle: () => this.setState(st => ({ vmOff: { ...st.vmOff, [r.vm]: !st.vmOff[r.vm] } })) }; });
+    const runningCount = machines.filter(m => m.state === 'Running').length;
+
+    const led0 = [['Merchant', 'Storefront', 64], ['Herald', 'Growth', 52], ['Concierge', 'Storefront', 38], ['Quartermaster', 'Ops', 27], ['Scout', 'Ops', 14]];
+    const max = 64;
+    const ledger = led0.map(([name, room, a]) => ({ name, room, amt: this.money(a), pct: Math.round(a / max * 100) + '%' }));
+    const vmTotal = Math.round(rooms0.filter(r => vmOn(r.vm)).reduce((n, r) => n + r.rate, 0) * 11);
+
+    const tabDefs = [['station', 'Station', '7'], ['briefs', 'Briefs', String(openBriefs)], ['outbox', 'Outbox', '4'], ['machines', 'Machines', String(runningCount)], ['ledger', 'Ledger', '']];
+    const tabs = tabDefs.map(([id, label, badge]) => { const on = s.tab === id;
+      return { label, badge, bg: on ? '#1A1411' : 'transparent', fg: on ? '#FAF6EF' : '#2B221E', mfg: on ? '#1A1411' : '#9C8E80', bar: on ? '#6E1818' : 'transparent', go: () => this.setState({ tab: id }) }; });
+
+    return {
+      isHost, isFrame, frameSrc: location.pathname.split('/').pop() + '?frame=1',
+      mobile, desktop, tabs,
+      onStation: s.tab === 'station', onBriefs: s.tab === 'briefs', onOutbox: s.tab === 'outbox', onMachines: s.tab === 'machines', onLedger: s.tab === 'ledger',
+      headerPad: mobile ? '44px 16px 12px' : '14px 24px', shellCols: mobile ? 'minmax(0,1fr)' : '200px minmax(0,1fr)',
+      mainPad: mobile ? '20px 16px' : '28px 32px', h2Size: mobile ? '24px' : '30px',
+      planCols: mobile ? 'minmax(0,1fr) 28px minmax(0,1fr)' : 'minmax(0,1fr) 96px minmax(0,1fr)', hallRow: mobile ? '28px' : '56px',
+      roomPad: mobile ? '12px' : '18px', roomTitle: mobile ? '16px' : '20px', detailCols: mobile ? 'minmax(0,1fr)' : 'repeat(3,minmax(0,1fr))',
+      rooms, sel, workingCount,
+      hHalls: [{ area: 'h1', label: 'promo handoff', arrow: '→' }, { area: 'h2', label: 'dispatch costs', arrow: '←' }],
+      vHalls: [{ area: 'v1', label: 'budget', arrow: '↑' }, { area: 'v2', label: 'paid orders', arrow: '↓' }],
+      briefs, outbox, machines, runningCount, ledger,
+      spendToday: this.money(195 + vmTotal), budget: this.money(600), modelSpend: this.money(195), vmSpend: this.money(vmTotal),
+      leash: [{ k: 'Spend cap overnight', v: this.money(150) }, { k: 'May publish posts', v: 'No, draft only' }, { k: 'May issue refunds', v: 'Up to ' + this.money(120) }, { k: 'May book couriers', v: 'Yes' }],
+      night: s.night, nightLabel: s.night ? 'on' : 'off', nightBg: s.night ? '#6E1818' : 'transparent', nightDot: s.night ? '#D4B576' : '#6B5D52',
+      toggleNight: () => this.setState(st => ({ night: !st.night })),
+    };
+  }
+}
+</script>
+</body>
+</html>

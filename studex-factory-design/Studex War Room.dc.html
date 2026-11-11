@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07050a;}
+a{color:#E9C58F;}a:hover{color:#FFD27A;}
+::selection{background:#E9C58F;color:#07050a;}
+@keyframes wr-sun{0%,100%{box-shadow:0 0 60px 20px rgba(255,190,110,.35)}50%{box-shadow:0 0 90px 30px rgba(255,170,90,.5)}}
+@keyframes wr-ring{from{transform:translate(-50%,-50%) rotateX(68deg) rotate(0)}to{transform:translate(-50%,-50%) rotateX(68deg) rotate(360deg)}}
+@keyframes wr-holo{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes wr-dash{to{stroke-dashoffset:-40}}
+@keyframes wr-ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+@keyframes wr-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes wr-shimmer{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-1px) scaleY(1.01)}}
+@keyframes wr-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#07050a;color:#E9DCC4;font-family:'Space Mono',monospace;font-size:12px;display:flex;flex-direction:column">
+
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px clamp(14px,3vw,36px);border-bottom:1px solid rgba(233,197,143,.22);background:linear-gradient(180deg,#120c0a,#07050a)">
+    <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.24em;line-height:1;color:#E9C58F;text-shadow:0 0 18px rgba(233,197,143,.35)">WAR ROOM</span>
+      <span style="font-size:10px;letter-spacing:.2em;color:#8f7b5c;white-space:nowrap">STUDEX · OUTPOST DUNE-07 · HERDR RUNTIME</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:10px;letter-spacing:.14em">
+      <span style="white-space:nowrap;color:#8f7b5c">LOCAL {{ clock }}</span>
+      <span style="white-space:nowrap;color:#9BC48A">● {{ liveCount }} IN SESSION</span>
+      <button onClick="{{ toggleWind }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:5px 9px;border:1px solid {{ windBorder }};color:{{ windColor }}" style-hover="border-color:#E9C58F">WIND {{ windLabel }}</button>
+      <button onClick="{{ toggleSnd }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:5px 9px;border:1px solid rgba(233,197,143,.25);color:{{ sndColor }}" style-hover="border-color:#E9C58F">SND {{ sndLabel }}</button>
+      <a href="Studex Factory.dc.html" style="white-space:nowrap;padding:5px 9px;border:1px solid rgba(233,197,143,.25);text-decoration:none">← FACTORY</a>
+    </div>
+  </header>
+
+  <div style="position:relative;width:100%;aspect-ratio:16 / 9;max-height:calc(100vh - 70px);overflow:hidden;background:linear-gradient(180deg,#05040b 0%,#120a1a 26%,#3a1a1d 40%,#a3532c 47%,#e09a55 50%,#5a2f1d 54%,#2a1710 100%)">
+    {{ sky }}
+    <div style="position:absolute;left:63%;top:19%;width:6.5%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff4d6 0%,#ffd38a 45%,#ff9b4a 100%);animation:wr-sun 6s ease-in-out infinite"></div>
+    <div style="position:absolute;left:71.5%;top:27%;width:4%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ffe9c4 0%,#ffb36b 55%,#e2683a 100%);animation:wr-sun 7s 1s ease-in-out infinite"></div>
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+      <path d="M0 470 C 180 430 320 455 470 445 C 640 432 760 400 930 430 C 1090 458 1230 420 1380 432 C 1480 440 1550 452 1600 448 L1600 900 L0 900 Z" fill="#7a3f24" opacity=".85"></path>
+      <path d="M0 540 C 220 500 380 560 600 530 C 820 500 980 560 1180 528 C 1360 500 1490 540 1600 520 L1600 900 L0 900 Z" fill="#a8622f"></path>
+      <path d="M0 640 C 260 590 520 660 800 620 C 1060 584 1320 650 1600 610 L1600 900 L0 900 Z" fill="#c88a4c"></path>
+      <path d="M0 760 C 300 720 620 790 900 750 C 1180 712 1400 770 1600 740 L1600 900 L0 900 Z" fill="#dcaa6c"></path>
+      <path d="M0 640 C 260 590 520 660 800 620 C 1060 584 1320 650 1600 610" stroke="rgba(255,226,170,.45)" stroke-width="2" fill="none"></path>
+      <path d="M0 760 C 300 720 620 790 900 750 C 1180 712 1400 770 1600 740" stroke="rgba(255,236,196,.5)" stroke-width="2" fill="none"></path>
+    </svg>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(20,10,6,.45) 100%);pointer-events:none"></div>
+    {{ links }}
+
+    <button onClick="{{ openCore }}" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;left:50%;top:66%;width:17%;aspect-ratio:1.4;transform:translate(-50%,-50%);z-index:3">
+      <span style="position:absolute;left:50%;top:62%;width:100%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(143,211,255,.55);animation:wr-ring 14s linear infinite;box-shadow:0 0 30px rgba(143,211,255,.25)"></span>
+      <span style="position:absolute;left:50%;top:62%;width:72%;aspect-ratio:1;border-radius:50%;border:1px dashed rgba(143,211,255,.5);animation:wr-ring 9s linear infinite reverse"></span>
+      <span style="position:absolute;left:50%;bottom:22%;transform:translateX(-50%);width:46%;height:56%;background:linear-gradient(0deg,rgba(143,211,255,.28),rgba(143,211,255,0));clip-path:polygon(18% 100%,82% 100%,100% 0,0 0);animation:wr-holo 2.4s ease-in-out infinite"></span>
+      <span style="position:absolute;left:50%;bottom:10%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 10px;background:rgba(7,5,10,.82);border:1px solid rgba(143,211,255,.6);white-space:nowrap">
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(13px,1.5vw,20px);letter-spacing:.24em;color:#BDE6FF;line-height:1">HERDR CORE</span>
+        <span style="font-size:9px;letter-spacing:.12em;color:#8fb6cc">{{ coreLine }}</span>
+      </span>
+    </button>
+
+    <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="5">
+      <button onClick="{{ r.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;position:absolute;left:{{ r.x }};top:{{ r.y }};width:{{ r.w }};transform:translate(-50%,-100%);z-index:3;display:flex;flex-direction:column;align-items:center" style-hover="filter:brightness(1.12)">
+        <span style="position:relative;width:100%;aspect-ratio:2.1;border-radius:50% 50% 6px 6px / 90% 90% 6px 6px;background:linear-gradient(180deg,#e8c48c 0%,#b8834b 70%,#8a5a30 100%);box-shadow:inset -10px -8px 20px rgba(60,30,12,.45),0 10px 20px rgba(20,8,4,.5);outline:{{ r.outline }};outline-offset:3px">
+          <span style="position:absolute;left:18%;right:18%;top:48%;height:14%;border-radius:3px;background:{{ r.window }};box-shadow:0 0 14px {{ r.glow }}"></span>
+          <span style="position:absolute;left:50%;top:-10%;width:2px;height:22%;background:#6b4426"></span>
+          <span style="position:absolute;left:50%;top:-14%;width:7px;height:7px;margin-left:-2.5px;border-radius:50%;background:{{ r.beacon }};box-shadow:0 0 10px {{ r.beacon }}"></span>
+        </span>
+        <span style="margin-top:6px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;background:rgba(7,5,10,.8);border:1px solid {{ r.border }};white-space:nowrap">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(12px,1.3vw,17px);letter-spacing:.18em;color:#E9C58F;line-height:1">{{ r.name }}</span>
+          <span style="font-size:9px;letter-spacing:.08em;color:{{ r.stateColor }}">{{ r.stateLine }}</span>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="padding:16px clamp(14px,3vw,36px) 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;letter-spacing:.12em">
+    <span style="color:#8f7b5c;white-space:nowrap">TASK CHAIN</span>
+    <sc-for list="{{ chain }}" as="c" hint-placeholder-count="5">
+      <span style="display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="padding:4px 9px;border:1px solid rgba(233,197,143,.3);color:#E9C58F">{{ c.step }} <span style="color:#8f7b5c">[{{ c.agent }}]</span></span><span style="color:#8f7b5c">{{ c.arrow }}</span></span>
+    </sc-for>
+  </div>
+
+  <div style="padding:10px clamp(14px,3vw,36px) 36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px">
+    <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="5">
+      <button onClick="{{ r.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:14px;border:1px solid {{ r.border }};background:rgba(233,197,143,.03);display:flex;flex-direction:column;gap:8px;min-width:0" style-hover="background:rgba(233,197,143,.07)">
+        <span style="display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.16em;color:#E9C58F;line-height:1">{{ r.name }}</span><span style="font-size:10px;color:{{ r.stateColor }}">{{ r.status }}</span></span>
+        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.25;color:#E9DCC4">{{ r.topic }}</span>
+        <span style="display:flex;gap:4px;flex-wrap:wrap">
+          <sc-for list="{{ r.chips }}" as="a" hint-placeholder-count="3"><span style="padding:2px 6px;border:1px solid rgba(233,197,143,.25);font-size:10px;color:#cdb894">{{ a }}</span></sc-for>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="padding:0 clamp(14px,3vw,36px) 40px">
+    <div style="border:1px solid rgba(233,197,143,.2)">
+      <div style="padding:8px 12px;border-bottom:1px solid rgba(233,197,143,.15);display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;color:#8f7b5c"><span>OUTPOST LOG</span><span>herdr tail</span></div>
+      <div ref="{{ logRef }}" style="height:150px;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:2px;font-size:11px">
+        <sc-for list="{{ logs }}" as="l" hint-placeholder-count="4">
+          <div style="display:flex;gap:10px"><span style="color:#5e4f3a;flex:none">{{ l.t }}</span><span style="color:{{ l.color }}">{{ l.text }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePanel }}" style="position:fixed;inset:0;background:rgba(5,3,6,.45);z-index:8"></div>
+    <aside style="position:fixed;right:0;top:0;bottom:0;width:{{ p.width }};transition:width 400ms cubic-bezier(0.16,1,0.3,1);z-index:9;background:#0d0908;border-left:1px solid rgba(233,197,143,.35);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;animation:wr-in 320ms cubic-bezier(0.16,1,0.3,1) both">
+      <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(233,197,143,.18);display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <span style="font-size:10px;letter-spacing:.18em;color:{{ p.stateColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ p.status }} · {{ p.kind }}</span>
+          <button onClick="{{ closePanel }}" style="all:unset;cursor:pointer;padding:4px 8px;font-size:14px;color:#8f7b5c" style-hover="color:#E9C58F">✕</button>
+        </div>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.14em;line-height:1;color:#E9C58F">{{ p.name }}</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;line-height:1.2;color:#E9DCC4">{{ p.topic }}</span>
+        <span style="font-size:10px;color:#8f7b5c">{{ p.meta }}</span>
+      </div>
+
+      <div style="padding:12px 18px;border-bottom:1px solid rgba(233,197,143,.12);display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:10px;letter-spacing:.16em;color:#8f7b5c">{{ p.attLabel }}</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ p.att }}" as="a" hint-placeholder-count="4">
+            <button onClick="{{ a.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;padding:4px 8px;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.color }};font-size:11px">
+              <span style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(233,197,143,.15);font-size:9px;color:#E9C58F">{{ a.ini }}</span>{{ a.name }}<span style="white-space:nowrap;color:#8f7b5c;font-size:9px">{{ a.role }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;border-bottom:1px solid rgba(233,197,143,.12)">
+        <sc-for list="{{ p.tabs }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:2px solid {{ t.bar }};color:{{ t.color }};font-size:11px;letter-spacing:.14em;white-space:nowrap" style-hover="color:#E9C58F">{{ t.label }}<span style="color:#8f7b5c">{{ t.n }}</span></button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ p.inCall }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 18px;border-bottom:1px solid rgba(233,197,143,.12);display:flex;flex-direction:column;gap:10px;background:#090605">
+          <div style="display:flex;justify-content:space-between;gap:10px;font-size:10px;letter-spacing:.14em;white-space:nowrap"><span style="color:#E85D5D">● LIVE CALL · {{ p.callTime }}</span><span style="color:#8f7b5c">{{ p.callCount }} on the line</span></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;max-height:34vh;overflow-y:auto">
+            <sc-for list="{{ p.tiles }}" as="v" hint-placeholder-count="4">
+              <div style="position:relative;aspect-ratio:16 / 10;background:{{ v.bg }};border:1px solid {{ v.border }};box-shadow:{{ v.glow }};display:flex;align-items:center;justify-content:center;overflow:hidden;transition:box-shadow 200ms,border-color 200ms">
+                <sc-if value="{{ v.isCam }}" hint-placeholder-val="{{ false }}"><video ref="{{ camRef }}" autoplay="autoplay" muted="muted" playsinline="playsinline" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video></sc-if>
+                <sc-if value="{{ v.noCam }}" hint-placeholder-val="{{ true }}"><span style="height:42%;aspect-ratio:1;width:auto;margin-bottom:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;background:{{ v.avatar }};font-family:'Bebas Neue',sans-serif;letter-spacing:.06em;color:#120a08">{{ v.ini }}</span></sc-if>
+                <span style="position:absolute;left:4px;bottom:3px;right:4px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;font-size:8.5px;letter-spacing:.06em;white-space:nowrap;line-height:1.25"><span style="max-width:100%;color:#E9DCC4;overflow:hidden;text-overflow:ellipsis;background:rgba(7,5,10,.7);padding:1px 4px">{{ v.name }}</span><span style="color:{{ v.stateColor }};background:rgba(7,5,10,.7);padding:1px 4px">{{ v.state }}</span></span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ p.controls }}" as="c" hint-placeholder-count="6">
+              <button onClick="{{ c.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 70px;min-height:38px;display:flex;align-items:center;justify-content:center;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:10px;letter-spacing:.12em;white-space:nowrap" style-hover="border-color:#E9C58F">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ p.tabPeople }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:10px;letter-spacing:.16em;color:#8f7b5c">INVITE PEOPLE</span>
+            <div style="display:flex;gap:6px">
+              <input value="{{ p.inviteDraft }}" onChange="{{ p.onInvite }}" onKeyDown="{{ p.onInviteKey }}" placeholder="name@company.com" style="flex:1;min-width:0;min-height:40px;padding:0 10px;border:1px solid rgba(233,197,143,.3);background:transparent;color:#E9DCC4;font-family:inherit;font-size:12px;outline:none">
+              <button onClick="{{ p.invite }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:0 14px;display:flex;align-items:center;background:#E9C58F;color:#120a08;font-weight:700;font-size:10px;letter-spacing:.14em">INVITE</button>
+            </div>
+            <button onClick="{{ p.copyLink }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border:1px dashed rgba(233,197,143,.3);font-size:11px;white-space:nowrap" style-hover="border-color:#E9C58F"><span style="overflow:hidden;text-overflow:ellipsis;color:#E9DCC4">{{ p.link }}</span><span style="color:#E9C58F;flex:none">{{ p.copyLabel }}</span></button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:10px;letter-spacing:.16em;color:#8f7b5c">PEOPLE IN THIS ROOM</span>
+            <sc-for list="{{ p.people }}" as="g" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid rgba(233,197,143,.15);font-size:12px">
+                <span style="width:26px;height:26px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#c9a06a;color:#120a08;font-family:'Bebas Neue',sans-serif;font-size:14px">{{ g.ini }}</span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="color:#E9DCC4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.name }}</span><span style="font-size:10px;color:#8f7b5c">{{ g.meta }}</span></span>
+                <span style="font-size:10px;color:{{ g.color }};white-space:nowrap">{{ g.state }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:10px;letter-spacing:.16em;color:#8f7b5c">CONFERENCE ROOM</span>
+            <button onClick="{{ p.toggleConf }}" style="all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid {{ p.confBorder }};font-size:12px" style-hover="border-color:#E9C58F">
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="color:#E9DCC4">JHB Boardroom · 5 Main Ave</span><span style="font-size:10px;color:#8f7b5c">room screen + ceiling mic · dial-in via meeting link</span></span>
+              <span style="font-size:10px;letter-spacing:.12em;color:{{ p.confColor }};white-space:nowrap">{{ p.confLabel }}</span>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ p.isOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:12px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid rgba(233,197,143,.12)">
+          <span style="font-size:10px;letter-spacing:.16em;color:#8f7b5c">AGENDA</span>
+          <input value="{{ p.draftTopic }}" onChange="{{ p.onTopic }}" placeholder="what is this meeting about?" style="min-height:42px;padding:0 10px;border:1px solid rgba(233,197,143,.3);background:transparent;color:#E9DCC4;font-family:inherit;font-size:12px;outline:none">
+          <button onClick="{{ p.convene }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;background:#E9C58F;color:#120a08;font-weight:700;font-size:11px;letter-spacing:.16em" style-hover="background:#FFD27A">CONVENE MEETING</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ p.tabTalk }}" hint-placeholder-val="{{ true }}">
+      <div ref="{{ txRef }}" style="flex:1 1 auto;min-height:180px;min-width:0;overflow-x:hidden;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ p.tx }}" as="m" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font-size:10px;letter-spacing:.14em;color:{{ m.color }}">{{ m.who }} <span style="color:#5e4f3a">{{ m.t }}</span></span>
+            <span style="font-size:12px;line-height:1.6;color:#E9DCC4;white-space:pre-wrap">{{ m.text }}{{ m.caret }}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{ p.busy }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:11px;color:#8f7b5c">the room is talking <span style="animation:wr-blink 1s steps(1) infinite">█</span></span>
+        </sc-if>
+        <sc-if value="{{ p.empty }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:11px;line-height:1.6;color:#8f7b5c">{{ p.emptyText }}</span>
+        </sc-if>
+      </div>
+
+      </sc-if>
+      <sc-if value="{{ p.tabTalk }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:1px solid rgba(233,197,143,.18);padding:10px 18px 14px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onClick="{{ p.callBtn }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 120px;min-height:40px;display:flex;align-items:center;justify-content:center;white-space:nowrap;background:{{ p.callBg }};color:{{ p.callColor }};border:1px solid {{ p.callBorder }};font-weight:700;font-size:11px;letter-spacing:.14em">{{ p.callLabel }}</button>
+            <button onClick="{{ p.run }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1 1 140px;min-height:40px;display:flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid #E9C58F;color:#E9C58F;font-size:11px;letter-spacing:.14em" style-hover="background:rgba(233,197,143,.08)">{{ p.runLabel }}</button>
+            <sc-if value="{{ p.isLive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ p.end }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:0 1 120px;min-height:40px;display:flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid rgba(232,93,93,.6);color:#E85D5D;font-size:11px;letter-spacing:.14em" style-hover="background:rgba(232,93,93,.08)">END + MINUTES</button></sc-if>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;border:1px solid rgba(233,197,143,.3);padding:0 10px">
+            <span style="color:#E9C58F;flex:none">you&gt;</span>
+            <input value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" placeholder="speak to the room" style="flex:1;min-width:0;min-height:42px;border:none;outline:none;background:transparent;color:#E9DCC4;font-family:inherit;font-size:12px">
+            <button onClick="{{ say }}" style="all:unset;cursor:pointer;flex:none;padding:6px 10px;background:#E9C58F;color:#120a08;font-weight:700;font-size:10px;letter-spacing:.12em">SAY</button>
+          </div>
+        </div>
+      </sc-if>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const AGENTS = {
+  hermes: ['HERMES', 'Orchestrator'], naledi: ['NALEDI', 'CMO agent'], ralf: ['RALF', 'Scheduler'],
+  charlie: ['CHARLIE', 'Voice agent'], eddie: ['EDDIE', 'Ad engine'], openclaw: ['OPENCLAW', 'External CMO'],
+};
+const ROOMS0 = [
+  { id: 'strategy', name: 'STRATEGY DOME', kind: 'COMMAND', x: 17, y: 62, w: 13, topic: 'Q4 Wagyu launch plan', att: ['hermes', 'naledi', 'eddie'], status: 'live', mins: 14 },
+  { id: 'bunker', name: 'BUILD BUNKER', kind: 'ENGINEERING', x: 30, y: 86, w: 12, topic: 'herdr socket bridge standup', att: ['ralf', 'openclaw'], status: 'live', mins: 6 },
+  { id: 'bazaar', name: 'MARKET BAZAAR', kind: 'GROWTH', x: 71, y: 86, w: 12, topic: '', att: ['naledi', 'eddie', 'openclaw'], status: 'open', mins: 0 },
+  { id: 'tower', name: 'SIGNAL TOWER', kind: 'VOICE + COMMS', x: 84, y: 60, w: 11, topic: 'Charlie call script for repeat buyers', att: ['charlie', 'hermes'], status: 'live', mins: 22 },
+  { id: 'council', name: 'COUNCIL CAVE', kind: 'SOVEREIGN ALLIANCE', x: 50, y: 47, w: 10, topic: 'Alliance sync · Johannesburg, Cape Town, Kigali, Eswatini, Rwanda', att: ['hermes', 'naledi'], status: 'scheduled', at: '15:00' },
+];
+const CHAIN = [['RESEARCH', 'hermes'], ['PLAN', 'naledi'], ['BUILD', 'ralf'], ['DEPLOY', 'charlie'], ['MONITOR', 'eddie']];
+const SAND = '#E9C58F', MUTE = '#8f7b5c', GRN = '#9BC48A', HOLO = '#8FD3FF', RED = '#E85D5D';
+const now = () => new Date().toTimeString().slice(0, 5);
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.state = { rooms: ROOMS0.map(r => ({ ...r, tx: [], draftTopic: '', call: false, callAt: 0, guests: r.id === 'strategy' ? [{ name: 'Lerato M.', email: 'lerato@studex-group.com', state: 'joined' }] : [], conf: false })), open: null,
+      ptab: 'chat', cam: false, vox: false, listening: false, speaking: null, inviteDraft: '', copied: false, draft: '', busy: false, snd: true, wind: false,
+      logs: [['herdr.boot() → 6 agents registered', GRN], ['cloudflare tunnel: active', GRN], ['3 meetings in session', SAND]].map(([text, color]) => ({ t: now(), text, color })) };
+    this.skyRef = React.createRef(); this.logRef = React.createRef(); this.txRef = React.createRef(); this.camRef = React.createRef();
+  }
+  componentDidMount() {
+    this.clk = setInterval(() => this.forceUpdate(), 15000);
+    this.initSky();
+    this.esc = e => { if (e.key === 'Escape') this.setState({ open: null }); }; window.addEventListener('keydown', this.esc);
+  }
+  componentWillUnmount() { clearInterval(this.ct); if (this.stream) this.stream.getTracks().forEach(t => t.stop()); clearInterval(this.clk); clearInterval(this.rv); cancelAnimationFrame(this.fr); window.removeEventListener('keydown', this.esc); this.stopWind(); }
+  async toggleCam() {
+    if (this.stream) { this.stream.getTracks().forEach(t => t.stop()); this.stream = null; this.setState({ cam: false }); return; }
+    try { this.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); this.setState({ cam: true }); }
+    catch (e) { this.log('camera not available in this browser or permission denied', RED); }
+  }
+  listen(id) {
+    const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!R) { this.log('voice input needs Chrome', RED); return; }
+    if (this.rec) { try { this.rec.stop(); } catch (e) {} return; }
+    const rec = this.rec = new R(); rec.lang = 'en-ZA'; let fin = '';
+    rec.onresult = e => { let t = ''; for (const r of e.results) { t += r[0].transcript; if (r.isFinal) fin = t; } this.setState({ draft: t }); };
+    rec.onend = () => { this.rec = null; this.setState({ listening: false }); if (fin) this.talk(id, fin); };
+    this.setState({ listening: true }); rec.start();
+  }
+  voice(who, text) {
+    if (!this.state.vox || !window.speechSynthesis) return;
+    const u = new SpeechSynthesisUtterance(text), h = [...who].reduce((a, c) => a + c.charCodeAt(0), 0);
+    u.pitch = .6 + (h % 7) / 10; u.rate = 1.02 + (h % 3) / 20; speechSynthesis.speak(u);
+  }
+  componentDidUpdate() {
+    const v = this.camRef.current; if (v && this.stream && v.srcObject !== this.stream) v.srcObject = this.stream; [this.logRef, this.txRef].forEach(r => { const el = r.current; if (el && el._n !== el.scrollHeight) { el.scrollTop = el.scrollHeight; el._n = el.scrollHeight; } }); }
+  log(text, color = '#cdb894') { this.setState(s => ({ logs: [...s.logs, { t: now(), text, color }].slice(-40) })); }
+
+  initSky() {
+    const stars = Array.from({ length: 140 }, () => ({ x: Math.random(), y: Math.random() * .42, r: Math.random() * 1.2 + .2, p: Math.random() * 6 }));
+    const sand = Array.from({ length: 90 }, () => ({ x: Math.random(), y: .5 + Math.random() * .5, v: .02 + Math.random() * .05, r: Math.random() * 1.4 + .3 }));
+    const loop = t => {
+      this.fr = requestAnimationFrame(loop);
+      const cv = this.skyRef.current; if (!cv) return;
+      const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+      const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+      stars.forEach(s => { const a = .35 + .65 * Math.abs(Math.sin(t / 1400 + s.p)); g.fillStyle = `rgba(255,240,220,${a * (1 - s.y * 1.6)})`; g.beginPath(); g.arc(s.x * w, s.y * h, s.r, 0, 7); g.fill(); });
+      sand.forEach(p => { p.x += p.v * .016 * (this.state.wind ? 2.2 : 1); if (p.x > 1.02) { p.x = -.02; p.y = .5 + Math.random() * .5; } g.fillStyle = `rgba(255,222,170,${.18 + p.r * .12})`; g.fillRect(p.x * w, p.y * h + Math.sin(t / 600 + p.x * 20) * 2, p.r * 2, p.r * .8); });
+    };
+    this.fr = requestAnimationFrame(loop);
+  }
+  ctx() { const c = this.ac || (this.ac = new (window.AudioContext || window.webkitAudioContext)()); if (c.state === 'suspended') c.resume(); return c; }
+  click() {
+    if (!this.state.snd) return;
+    try { const c = this.ctx(), t = c.currentTime, len = Math.floor(c.sampleRate * .025), b = c.createBuffer(1, len, c.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
+      const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(); s.buffer = b; f.type = 'bandpass'; f.frequency.value = 1800 + Math.random() * 900; g.gain.value = .18;
+      s.connect(f).connect(g).connect(c.destination); s.start(t); } catch (e) {}
+  }
+  startWind() {
+    const c = this.ctx(), t = c.currentTime, b = c.createBuffer(1, c.sampleRate * 3, c.sampleRate), d = b.getChannelData(0);
+    let last = 0; for (let i = 0; i < d.length; i++) { last = (last + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }
+    const s = c.createBufferSource(); s.buffer = b; s.loop = true;
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 520; f.Q.value = 3;
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = .08; lg.gain.value = 300; lfo.connect(lg).connect(f.frequency);
+    const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.35, t + 3);
+    s.connect(f).connect(g).connect(c.destination); s.start(); lfo.start();
+    this.wn = { s, lfo, g };
+  }
+  stopWind() { const w = this.wn; if (!w) return; this.wn = null; const t = this.ac.currentTime; w.g.gain.cancelScheduledValues(t); w.g.gain.setValueAtTime(w.g.gain.value, t); w.g.gain.linearRampToValueAtTime(0, t + 1.2); setTimeout(() => { try { w.s.stop(); w.lfo.stop(); } catch (e) {} }, 1400); }
+
+  inviteGuest(id) {
+    const v = this.state.inviteDraft.trim(); if (!v) return;
+    const name = v.includes('@') ? v.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : v;
+    this.patch(id, r => ({ guests: [...r.guests, { name, email: v.includes('@') ? v : 'invited by link', state: 'invited' }] }));
+    this.setState({ inviteDraft: '' }); this.log(`invite sent to ${v} · meet.studex.global/${id}`, SAND);
+    setTimeout(() => { this.patch(id, r => ({ guests: r.guests.map(g => g.name === name ? { ...g, state: 'joined' } : g) })); this.log(`${name} joined ${id}`, GRN); }, 4500);
+  }
+  patch(id, fn) { this.setState(s => ({ rooms: s.rooms.map(r => r.id === id ? { ...r, ...fn(r) } : r) })); }
+  reveal(id, lines) {
+    clearInterval(this.rv); let li = 0, n = 0;
+    this.patch(id, r => ({ tx: [...r.tx, { ...lines[0], shown: 0 }] })); this.setState({ speaking: lines[0].who }); this.voice(lines[0].who, lines[0].text);
+    this.rv = setInterval(() => {
+      n += 2; if (n % 4 === 0) this.click();
+      const cur = lines[li];
+      this.patch(id, r => { const tx = r.tx.slice(); tx[tx.length - 1] = { ...tx[tx.length - 1], shown: n }; return { tx }; });
+      if (n >= cur.text.length) {
+        li++; n = 0;
+        if (li >= lines.length) { clearInterval(this.rv); this.setState({ busy: false, speaking: null }); return; }
+        this.patch(id, r => ({ tx: [...r.tx, { ...lines[li], shown: 0 }] })); this.setState({ speaking: lines[li].who }); this.voice(lines[li].who, lines[li].text);
+      }
+    }, 20);
+  }
+  async talk(id, userLine) {
+    const r = this.state.rooms.find(x => x.id === id); if (this.state.busy) return;
+    const names = r.att.map(a => `${AGENTS[a][0]} (${AGENTS[a][1]})`).join(', ');
+    const history = r.tx.map(m => `${m.who}: ${m.text}`).join('\n');
+    if (userLine) this.patch(id, x => ({ tx: [...x.tx, { who: 'TUMELO', text: userLine, shown: 9999, t: now(), me: true }] }));
+    this.setState({ busy: true, draft: '' });
+    const prompt = userLine
+      ? `Meeting "${r.topic}" in the ${r.name} of the Studex war room. Attendees: ${names}. Transcript so far:\n${history}\nTUMELO (the founder): ${userLine}\n\nWrite the next 2 or 3 lines where attendees respond to Tumelo directly. Format each line exactly as NAME: text. Under 30 words per line. Plain text.`
+      : `Write the ${r.tx.length ? 'next' : 'opening'} 4 lines of a working meeting in the ${r.name} of the Studex war room. Topic: "${r.topic}". Attendees: ${names}. Studex sells Halaal Wagyu beef, Biltong Gold and runs Agents Nest Cloud VMs. ${history ? 'Transcript so far:\n' + history + '\n' : ''}Be concrete: numbers to check, owners, next steps. Anything that sends, spends or deploys needs Tumelo's approval. Format each line exactly as NAME: text. Under 30 words per line. Plain text.`;
+    let out;
+    try { out = await window.claude.complete({ messages: [{ role: 'user', content: prompt }], max_tokens: 400 }); }
+    catch (e) { out = `${AGENTS[r.att[0]][0]}: Link to the core is unstable. Holding the agenda until the tunnel is back.`; }
+    const lines = out.split('\n').map(l => l.match(/^\s*\**([A-Za-z]+)\**\s*:\s*(.+)/)).filter(Boolean).map(m => ({ who: m[1].toUpperCase(), text: m[2].trim(), t: now() }));
+    if (!lines.length) lines.push({ who: AGENTS[r.att[0]][0], text: out.trim().slice(0, 240), t: now() });
+    this.reveal(id, lines);
+  }
+
+  renderVals() {
+    const s = this.state, open = s.rooms.find(r => r.id === s.open);
+    const ST = { live: ['IN SESSION', GRN], open: ['OPEN', MUTE], scheduled: ['SCHEDULED', SAND] };
+    const rooms = s.rooms.map(r => {
+      const [status, col] = ST[r.status], sel = s.open === r.id;
+      return { name: r.name, x: r.x + '%', y: r.y + '%', w: r.w + '%', status, stateColor: col, topic: r.topic || 'No meeting. Convene one.',
+        stateLine: r.status === 'live' ? `● ${r.att.length} agents · ${r.mins}m` : r.status === 'scheduled' ? `◷ ${r.at}` : '○ room free',
+        window: r.status === 'live' ? 'linear-gradient(90deg,#9fdcff,#e8fbff,#9fdcff)' : r.status === 'scheduled' ? '#ffd27a' : '#4a3020',
+        glow: r.status === 'live' ? 'rgba(143,211,255,.8)' : r.status === 'scheduled' ? 'rgba(255,210,122,.6)' : 'transparent',
+        beacon: r.status === 'live' ? GRN : r.status === 'scheduled' ? SAND : '#5e4f3a', border: sel ? SAND : 'rgba(233,197,143,.3)', outline: sel ? `1px solid ${SAND}` : 'none',
+        chips: r.att.map(a => AGENTS[a][0]), onClick: () => { this.click(); this.setState({ open: r.id }); } };
+    });
+    const live = s.rooms.filter(r => r.status === 'live');
+    const links = React.createElement('svg', { viewBox: '0 0 100 56.25', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2 } },
+      s.rooms.map(r => { const on = r.status === 'live', y2 = r.y * .5625 - 2;
+        return React.createElement('g', { key: r.id },
+          React.createElement('line', { x1: 50, y1: 37, x2: r.x, y2, stroke: on ? 'rgba(143,211,255,.55)' : 'rgba(233,197,143,.22)', strokeWidth: .18, strokeDasharray: on ? '1.2 1.2' : '.4 1', style: on ? { animation: 'wr-dash 3s linear infinite' } : {} }),
+          on && React.createElement('circle', { r: .45, fill: HOLO }, React.createElement('animateMotion', { dur: `${2.4 + r.x / 40}s`, repeatCount: 'indefinite', path: `M50 37 L${r.x} ${y2}` })));
+      }));
+    const sky = React.createElement('canvas', { ref: this.skyRef, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 } });
+
+    let p = { tx: [], att: [] };
+    if (open) {
+      const [status, col] = ST[open.status], isOpen = open.status === 'open';
+      const pool = isOpen ? Object.keys(AGENTS) : open.att;
+      p = { name: open.name, kind: open.kind, status, stateColor: col, topic: open.topic || 'Room is free', isOpen, isLive: open.status === 'live', busy: s.busy,
+        meta: open.status === 'live' ? `Started ${open.mins} min ago · chaired by ${AGENTS[open.att[0]][0]} · minutes saved to the vault` : open.status === 'scheduled' ? `Starts ${open.at} · ${open.att.length} agents invited` : 'Pick who attends, set the agenda, convene.',
+        attLabel: isOpen ? 'INVITE (TAP TO TOGGLE)' : 'AT THE TABLE',
+        att: pool.map(a => { const inv = open.att.includes(a); return { ini: AGENTS[a][0].slice(0, 2), name: AGENTS[a][0], role: AGENTS[a][1], border: inv ? SAND : 'rgba(233,197,143,.2)', bg: inv ? 'rgba(233,197,143,.1)' : 'transparent', color: inv ? '#E9DCC4' : MUTE,
+          onClick: () => isOpen && this.patch(open.id, r => ({ att: r.att.includes(a) ? r.att.filter(x => x !== a) : [...r.att, a] })) }; }),
+        draftTopic: open.draftTopic, onTopic: e => { const v = e.target.value; this.patch(open.id, () => ({ draftTopic: v })); },
+        convene: () => { const topic = open.draftTopic.trim() || 'Open strategy session'; if (!open.att.length) return; this.patch(open.id, () => ({ status: 'live', topic, mins: 0, tx: [] })); this.log(`${open.name}: meeting convened · "${topic}"`, GRN); setTimeout(() => this.talk(open.id), 50); },
+        tx: open.tx.map(m => { const streaming = m.shown < m.text.length;
+          return { who: m.who, t: m.t, color: m.me ? '#E9DCC4' : SAND, text: streaming ? m.text.slice(0, m.shown) : m.text,
+            caret: streaming ? React.createElement('span', { style: { display: 'inline-block', width: 7, height: 13, marginLeft: 2, verticalAlign: '-2px', background: SAND, animation: 'wr-blink 1s steps(1) infinite' } }) : null }; }),
+        empty: !open.tx.length && !s.busy, emptyText: open.status === 'live' ? 'Press LISTEN IN to hear where the meeting is at, or speak to the room below.' : open.status === 'scheduled' ? 'This meeting has not started yet. Agents will gather at the scheduled time.' : 'No meeting in this room.',
+        runLabel: open.tx.length ? 'CONTINUE' : 'LISTEN IN', run: () => this.talk(open.id),
+        width: open.call ? 'min(100%,760px)' : 'min(100%,480px)',
+        tabs: [['chat', 'ROOM CHAT', open.tx.length], ['people', 'PEOPLE', open.guests.length + open.att.length]].map(([k, label, n]) => ({ label, n, bar: s.ptab === k ? SAND : 'transparent', color: s.ptab === k ? SAND : MUTE, onClick: () => this.setState({ ptab: k }) })),
+        tabTalk: s.ptab === 'chat', tabPeople: s.ptab === 'people',
+        inCall: open.call, callTime: (() => { const sec = Math.floor((Date.now() - open.callAt) / 1000); return `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`; })(),
+        callCount: 1 + open.att.length + open.guests.filter(g => g.state === 'joined').length + (open.conf ? 1 : 0),
+        tiles: [
+          { name: 'TUMELO (YOU)', ini: 'TU', state: s.listening ? 'TALKING' : 'HOST', stateColor: s.listening ? GRN : SAND, isCam: s.cam, noCam: !s.cam, avatar: '#E9C58F', bg: '#1a1210', border: s.listening ? GRN : 'rgba(233,197,143,.3)', glow: s.listening ? `0 0 18px ${GRN}` : 'none' },
+          ...open.att.map(a => { const talk = s.speaking === AGENTS[a][0]; return { name: AGENTS[a][0], ini: AGENTS[a][0].slice(0, 2), state: talk ? 'SPEAKING' : 'AGENT', stateColor: talk ? HOLO : MUTE, isCam: false, noCam: true, avatar: talk ? HOLO : '#b98a57', bg: talk ? '#0c1418' : '#140e0c', border: talk ? HOLO : 'rgba(233,197,143,.18)', glow: talk ? `0 0 20px rgba(143,211,255,.55)` : 'none' }; }),
+          ...open.guests.map(g => ({ name: g.name.toUpperCase(), ini: g.name.slice(0, 2).toUpperCase(), state: g.state === 'joined' ? 'GUEST' : 'JOINING…', stateColor: g.state === 'joined' ? '#E9DCC4' : MUTE, isCam: false, noCam: true, avatar: '#c9a06a', bg: '#140e0c', border: 'rgba(233,197,143,.18)', glow: 'none' })),
+          ...(open.conf ? [{ name: 'JHB BOARDROOM', ini: 'CR', state: 'ROOM', stateColor: SAND, isCam: false, noCam: true, avatar: '#8a5a30', bg: '#140e0c', border: 'rgba(233,197,143,.3)', glow: 'none' }] : []),
+        ],
+        controls: [
+          [s.listening ? 'STOP' : 'TALK', s.listening, () => this.listen(open.id)], [s.cam ? 'CAM ON' : 'CAM OFF', s.cam, () => this.toggleCam()],
+          [s.vox ? 'VOICES ON' : 'VOICES OFF', s.vox, () => { if (s.vox && window.speechSynthesis) speechSynthesis.cancel(); this.setState({ vox: !s.vox }); }],
+          ['INVITE', false, () => this.setState({ ptab: 'people' })], ['ASK ROOM', false, () => this.talk(open.id)],
+          ['LEAVE', false, () => { this.patch(open.id, () => ({ call: false })); if (this.stream) this.toggleCam(); this.log(`${open.name}: call ended`, SAND); }],
+        ].map(([label, on, onClick]) => ({ label, onClick, bg: on ? SAND : 'transparent', color: on ? '#120a08' : label === 'LEAVE' ? RED : SAND, border: on ? SAND : label === 'LEAVE' ? 'rgba(232,93,93,.6)' : 'rgba(233,197,143,.3)' })),
+        callLabel: open.call ? 'IN CALL' : 'START CALL', callBg: open.call ? 'transparent' : SAND, callColor: open.call ? GRN : '#120a08', callBorder: open.call ? GRN : SAND,
+        callBtn: () => { if (open.call) return; if (open.status === 'open') this.patch(open.id, r => ({ status: 'live', topic: r.draftTopic.trim() || 'Open call', mins: 0 })); this.patch(open.id, () => ({ call: true, callAt: Date.now() })); this.log(`${open.name}: call started · ${open.att.length} agents joined`, GRN); clearInterval(this.ct); this.ct = setInterval(() => this.forceUpdate(), 1000); },
+        inviteDraft: s.inviteDraft, onInvite: e => this.setState({ inviteDraft: e.target.value }),
+        onInviteKey: e => { if (e.key === 'Enter') this.inviteGuest(open.id); }, invite: () => this.inviteGuest(open.id),
+        link: `meet.studex.global/${open.id}`, copyLabel: s.copied ? 'COPIED' : 'COPY LINK',
+        copyLink: () => { try { navigator.clipboard.writeText(`https://meet.studex.global/${open.id}`); } catch (e) {} this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1500); },
+        people: [{ name: 'Tumelo (you)', ini: 'TU', meta: 'host', state: 'HOST', color: SAND }, ...open.guests.map(g => ({ name: g.name, ini: g.name.slice(0, 2).toUpperCase(), meta: g.email, state: g.state.toUpperCase(), color: g.state === 'joined' ? GRN : MUTE })),
+          ...open.att.map(a => ({ name: AGENTS[a][0], ini: AGENTS[a][0].slice(0, 2), meta: AGENTS[a][1], state: 'AGENT', color: HOLO }))],
+        toggleConf: () => { this.patch(open.id, r => ({ conf: !r.conf })); this.log(`${open.name}: JHB Boardroom ${open.conf ? 'disconnected' : 'connected'}`, SAND); },
+        confLabel: open.conf ? 'CONNECTED' : 'CONNECT', confColor: open.conf ? GRN : SAND, confBorder: open.conf ? GRN : 'rgba(233,197,143,.25)',
+        end: () => { this.log(`${open.name}: ended · ${open.tx.length} lines → vault/Meetings/${open.id}-${new Date().toISOString().slice(0, 10)}.md`, SAND); this.patch(open.id, () => ({ status: 'open', topic: '', tx: [], draftTopic: '' })); },
+      };
+    }
+    return {
+      clock: now(), liveCount: live.length, rooms, links, sky, logs: s.logs, logRef: this.logRef, txRef: this.txRef,
+      coreLine: `${Object.keys(AGENTS).length} agents · tunnel ok`,
+      openCore: () => { this.click(); this.log('herdr core: 6 agents · 3 rooms live · task chain healthy', HOLO); },
+      chain: CHAIN.map(([step, a], i) => ({ step, agent: AGENTS[a][0].toLowerCase(), arrow: i < CHAIN.length - 1 ? '→' : '' })),
+      panelOpen: !!open, p, camRef: this.camRef, closePanel: () => this.setState({ open: null }),
+      draft: s.draft, onDraft: e => this.setState({ draft: e.target.value }),
+      onKey: e => { this.click(); if (e.key === 'Enter' && s.draft.trim()) this.talk(open.id, s.draft.trim()); },
+      say: () => s.draft.trim() && this.talk(open.id, s.draft.trim()),
+      sndLabel: s.snd ? 'ON' : 'OFF', sndColor: s.snd ? SAND : MUTE, toggleSnd: () => this.setState({ snd: !s.snd }),
+      windLabel: s.wind ? 'ON' : 'OFF', windColor: s.wind ? SAND : MUTE, windBorder: s.wind ? SAND : 'rgba(233,197,143,.25)',
+      toggleWind: () => { if (s.wind) this.stopWind(); else this.startWind(); this.setState({ wind: !s.wind }); },
+    };
+  }
+}
+</script>
+</body>
+</html>
