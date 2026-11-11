@@ -1,0 +1,16 @@
+{
+  "_comment": "EXAMPLE ONLY. Fragment for ~/.openclaw/openclaw.json. Verify keys against the @openclaw/voice-call plugin docs before use. Mock provider: no carrier, no credentials. Real providers read credentials from a secret store / env, never from this file.",
+  "plugins": {
+    "entries": {
+      "voice-call": {
+        "enabled": true,
+        "config": {
+          "provider": "mock",
+          "fromNumber": "+15550001234",
+          "serve": { "bind": "127.0.0.1", "port": 3334 },
+          "outbound": { "requireApproval": true }
+        }
+      }
+    }
+  }
+}

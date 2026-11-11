@@ -40,12 +40,19 @@ open mission-control/index.html
 
 | Path | What's in it |
 |------|--------------|
+| `docs/COMMAND-CENTRE.md` | **Start here for alignment** — Notion Command Centre ↔ this repo ↔ [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-) |
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
+| `agents/schpielberg/` | **SCHPIELBERG** — content & film director pack: memory, scripts, plans, dry-run pipeline runner, skills ([start](agents/schpielberg/README.md)) |
+| `agents/nozi-corp/` | **Nozi-Corp-Coffee** — cadence, approval queue, Afrique Noir strategy brief (public-safe), launch checklist |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |
 | `scripts/` | Automation, including the 30-minute auto-push |
+| `operating-system/` | Grok Bot OS / Agent OS notes, Stud-Bot tier sheet (draft), Voice Desk plan, Hermes intake code, Red-DOT plan |
+| `voice-desk/` | Runnable mock of the Voice Desk: Dark Factory page, local bridge, OpenClaw voice-call example config |
+| `dark-factory-knowledge/` | Sanitized Dark Factory knowledge summaries for agents |
+| `clients/` | Generic client offers, call playbooks and outreach templates (no client data) |
 
 ---
 
