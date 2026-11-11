@@ -43,6 +43,7 @@ open mission-control/index.html
 | `docs/COMMAND-CENTRE.md` | **Start here for alignment** — Notion Command Centre ↔ this repo ↔ [Linux-Studex-](https://github.com/TumeloRamaphosa/Linux-Studex-) |
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
 | `agents/schpielberg/` | **SCHPIELBERG** — content & film director pack: memory, scripts, plans, dry-run pipeline runner, skills ([start](agents/schpielberg/README.md)) |
+| `agents/nozi-corp/` | **Nozi-Corp-Coffee** — cadence, approval queue, Afrique Noir strategy brief (public-safe), launch checklist |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |

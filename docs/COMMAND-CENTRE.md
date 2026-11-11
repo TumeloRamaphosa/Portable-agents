@@ -79,6 +79,8 @@ Intake code in `operating-system/hermes-intake/` is reference only—no deploy w
 
 - **Group:** [Studex Command Centre](https://app.notion.com/p/Studex-Command-Centre-3f53ef07399281548222f765b9cac2f9)
 - **Coffee vertical:** daily command log rows + `clients/playbooks/coffee-intake-script.md` in this repo
+- **Afrique Noir strategy (public-safe):** `agents/nozi-corp/afrique-noir-strategy-brief.md` (full memo private; marketplace/settlement phases 0–2; phase 3 ON HOLD)
+- **Nozi desk:** `agents/nozi-corp/` — cadence, approval queue, launch checklist
 - Coffee **launch gates** live in Notion evidence pages—not overridden by marketing drafts here
 
 ---

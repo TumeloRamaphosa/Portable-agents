@@ -5,3 +5,4 @@ Studex agent memory and workflows that other agents can load from this repo with
 | Agent | Entry |
 |-------|--------|
 | Schpielberg (content & film director) | [`schpielberg/README.md`](schpielberg/README.md) |
+| Nozi-Corp-Coffee (operations & approvals) | [`nozi-corp/README.md`](nozi-corp/README.md) |
