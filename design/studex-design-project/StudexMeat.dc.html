@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #FAF6EF; }
+    a { color: #6E1818; } a:hover { color: #B33A2A; }
+    @keyframes sm-dot { 0%,80%,100% { opacity: .2 } 40% { opacity: 1 } }
+  </style>
+</helmet>
+<div style="min-height:100%;background:#FAF6EF;color:#1A1411;font-family:'DM Sans',sans-serif;display:flex;flex-direction:column">
+  <div style="background:#1A1411;color:#E8DFC9;font-size:12px;letter-spacing:.14em;text-align:center;padding:8px 16px">HOME OF PREMIUM WAGYU 🥩 · HALAAL CERTIFIED · 3–7 DAY DELIVERY</div>
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,48px);border-bottom:1px solid #E8DFC9;flex-wrap:wrap">
+    <img src="assets/studex-meat-logo.svg" alt="Studex Meat" style="height:34px;width:auto">
+    <nav style="display:flex;gap:clamp(12px,2.5vw,28px);font-size:14px;flex-wrap:wrap">
+      <span style="color:#1A1411">Steaks</span><span style="color:#6B5D52">Boerewors</span><span style="color:#6B5D52">Biltong Gold</span><span style="color:#6B5D52">Black Box</span>
+    </nav>
+    <button onClick="{{ toggleCart }}" style="all:unset;box-sizing:border-box;cursor:pointer;font-size:14px;padding:8px 14px;border:1px solid #1A1411;border-radius:999px;white-space:nowrap">Cart · {{ cartCount }}</button>
+  </header>
+
+  <section style="padding:clamp(28px,5vw,56px) clamp(16px,4vw,48px) 20px;max-width:1320px;width:100%;box-sizing:border-box;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+    <span style="font-size:12px;letter-spacing:.16em;color:#B8924E">YOUR BUTCHER, ON CALL</span>
+    <h1 style="margin:0;font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(34px,5.5vw,64px);line-height:1.04;letter-spacing:-.01em;max-width:16ch;text-wrap:balance">Tell us about the braai. We'll build the box.</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;color:#6B5D52;max-width:56ch">Chat with the Studex butcher agent. It recommends cuts by marble score, guest count and budget, then fills your cart. You check out when you're happy.</p>
+  </section>
+
+  
+</x-dc>
+</body>
+</html>

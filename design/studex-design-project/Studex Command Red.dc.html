@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#1E1A18;}
+a{color:#E8433A;}a:hover{color:#FF6B5E;}
+::selection{background:#E8433A;color:#1E1A18;}
+@keyframes cr-ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+@keyframes cr-dash{to{stroke-dashoffset:-30}}
+@keyframes cr-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#1E1A18;color:#F2A39A;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.45;display:flex;flex-direction:column">
+
+  <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid #3d302b;background:#191513">
+    <div style="display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 360px">
+      <img src="assets/studex-seal.png" alt="Studex" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid #E8433A;flex:none">
+      <span style="font-family:'VT323',monospace;font-size:24px;line-height:1;color:#E8433A;white-space:nowrap">STUDEX · {{ pageTitle }}</span>
+      <span style="font-size:10px;letter-spacing:.14em;color:#D0756A;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:1 1 120px">{{ subline }}</span>
+    </div>
+    <sc-if value="{{ pCommand }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+        <button onClick="{{ f.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:4px 10px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};font-size:10px;letter-spacing:.12em">{{ f.label }}</button>
+      </sc-for>
+    </div></sc-if>
+    <div style="display:flex;align-items:center;gap:14px;font-size:11px;white-space:nowrap;flex:none">
+      <span style="color:#FF8A7A">● {{ workingCount }} WORKING</span>
+      <span style="display:flex;flex-direction:column;align-items:flex-end;line-height:1.15"><span style="color:#E8433A">{{ clock }}</span><span style="font-size:9px;color:#D0756A">JHB · SAST</span></span>
+    </div>
+  </header>
+
+  <nav style="display:flex;overflow-x:auto;border-bottom:1px solid #3d302b;background:#191513;padding:0 8px">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+      <button onClick="{{ t.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;white-space:nowrap;min-height:38px;padding:0 16px;display:flex;align-items:center;gap:8px;border-bottom:2px solid {{ t.bar }};color:{{ t.color }};font-size:11px;letter-spacing:.14em" style-hover="color:#FF6B5E"><span style="color:#A8574D">[{{ t.key }}]</span>{{ t.label }}</button>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ pCommand }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:14px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:#D0756A;letter-spacing:.14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">&gt; studex ls --companies · every room is a machine</span><span style="font-family:'VT323',monospace;font-size:34px;line-height:1;color:#E8433A">ALL COMPANIES</span></div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#D0756A"><sc-for list="{{ ovStats }}" as="k" hint-placeholder-count="4"><span style="white-space:nowrap">{{ k.label }} <span style="color:{{ k.color }}">{{ k.val }}</span></span></sc-for></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:12px">
+          <sc-for list="{{ vms }}" as="v" hint-placeholder-count="10">
+            <button onClick="{{ v.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;border:1px solid {{ v.border }};background:#191513;display:flex;flex-direction:column;min-width:0;transition:border-color 200ms" style-hover="border-color:#E8433A">
+              <span style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid #3d302b;background:#221d1a;white-space:nowrap">
+                <span style="width:7px;height:7px;border-radius:50%;background:#E8433A"></span><span style="width:7px;height:7px;border-radius:50%;background:#A8574D"></span><span style="width:7px;height:7px;border-radius:50%;background:#7a3a33"></span>
+                <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10px;color:#D0756A;margin-left:4px">{{ v.host }}</span>
+                <span style="font-size:9px;color:{{ v.stateColor }}">● {{ v.state }}</span>
+              </span>
+              <canvas ref="{{ v.ref }}" width="576" height="324" style="display:block;width:100%;aspect-ratio:16 / 9;image-rendering:pixelated;background:#120f0e"></canvas>
+              <span style="padding:8px 10px;display:flex;flex-direction:column;gap:5px;border-top:1px solid #3d302b">
+                <span style="display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="font-family:'VT323',monospace;font-size:21px;line-height:1;color:#E8433A;overflow:hidden;text-overflow:ellipsis">{{ v.num }} {{ v.name }}</span><span style="display:flex;gap:2px;align-items:center;flex:none"><sc-for list="{{ v.dots }}" as="d" hint-placeholder-count="3"><span style="width:6px;height:6px;background:{{ d }}"></span></sc-for></span></span>
+                <span style="font-size:10px;color:#D0756A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.kind }}</span>
+                <span style="display:grid;grid-template-columns:30px 1fr 34px;gap:6px;align-items:center;font-size:9px"><span style="color:#D0756A">CPU</span><span style="height:4px;background:#2a2320;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ v.cpuW }};background:#E8433A;transition:width 800ms"></span></span><span style="text-align:right;color:#F2A39A">{{ v.cpu }}</span></span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start">
+          <div style="flex:1 1 320px;min-width:0;border:1px solid #3d302b;background:#1b1715">
+            <div style="padding:8px 12px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="color:#E8433A;letter-spacing:.12em">OPENRIG ASSEMBLY</span><span style="color:#D0756A;font-size:10px">one rig per company</span></div>
+            <sc-for list="{{ rigs }}" as="r" hint-placeholder-count="10">
+              <button onClick="{{ r.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid #2a2320;flex-wrap:wrap" style-hover="background:#2A2421">
+                <span style="color:#A8574D;white-space:nowrap;flex:none;font-size:11px">rig</span><span style="color:#E8433A;white-space:nowrap;flex:none;font-size:11px;min-width:150px">{{ r.rig }}</span>
+                <span style="display:flex;gap:4px;flex-wrap:wrap;flex:1;min-width:0"><sc-for list="{{ r.seats }}" as="x" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:4px;padding:1px 6px;border:1px solid #3d302b;font-size:10px;color:#F2A39A;white-space:nowrap"><span style="width:5px;height:5px;background:{{ x.dot }}"></span>{{ x.pod }}/{{ x.name }}</span></sc-for></span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="flex:1.4 1 420px;min-width:0;border:1px solid #3d302b;background:#1b1715">
+            <div style="padding:8px 12px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="color:#E8433A;letter-spacing:.12em">HERDR · ALL PANES</span><span style="color:#D0756A;font-size:10px">{{ paneCount }} panes · running on their own</span></div>
+            <div style="overflow-x:auto"><div style="min-width:540px">
+              <div style="display:grid;grid-template-columns:54px 92px minmax(0,1fr) minmax(0,1.3fr) 66px 80px;gap:8px;padding:6px 12px;font-size:9px;letter-spacing:.14em;color:#D0756A;border-bottom:1px solid #2e2622"><span>PANE</span><span>AGENT</span><span>COMPANY</span><span>COMMAND</span><span>UP</span><span style="text-align:right">STATE</span></div>
+              <sc-for list="{{ panes }}" as="p" hint-placeholder-count="10">
+                <button onClick="{{ p.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:54px 92px minmax(0,1fr) minmax(0,1.3fr) 66px 80px;gap:8px;padding:5px 12px;font-size:11px;border-bottom:1px solid #2a2320;white-space:nowrap;background:{{ p.bg }}" style-hover="background:#2A2421">
+                  <span style="color:#A8574D">{{ p.pane }}</span><span style="color:#E8433A">{{ p.name }}</span><span style="color:#D0756A;overflow:hidden;text-overflow:ellipsis">{{ p.co }}</span><span style="color:#F2A39A;overflow:hidden;text-overflow:ellipsis">$ {{ p.cmd }}</span><span style="color:#D0756A">{{ p.up }}</span><span style="text-align:right;color:{{ p.color }}">{{ p.state }}</span>
+                </button>
+              </sc-for>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCompany }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #3d302b;background:#1b1715">
+          <button onClick="{{ showAll }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:6px 12px;border:1px solid #E8433A;color:#E8433A;font-size:10px;letter-spacing:.12em" style-hover="background:rgba(232,67,58,.1)">← ALL COMPANIES</button>
+          <span style="display:flex;flex-direction:column;min-width:0;flex:1"><span style="font-family:'VT323',monospace;font-size:32px;line-height:1;color:#E8433A">{{ co.num }} {{ co.name }}</span><span style="font-size:10px;color:#D0756A">{{ co.kind }}</span></span>
+          <span style="display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:#D0756A"><sc-for list="{{ co.specs }}" as="k" hint-placeholder-count="5"><span style="white-space:nowrap">{{ k.label }} <span style="color:#F2A39A">{{ k.val }}</span></span></sc-for></span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap">
+          <div style="flex:999 1 520px;min-width:0;border-right:1px solid #3d302b;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-bottom:1px solid #3d302b;background:#221d1a;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#E8433A"></span><span style="width:8px;height:8px;border-radius:50%;background:#A8574D"></span><span style="width:8px;height:8px;border-radius:50%;background:#7a3a33"></span><span style="font-size:10px;color:#D0756A;margin-left:6px">{{ co.host }} · live room view</span></div>
+            <canvas ref="{{ coRef }}" width="960" height="540" style="display:block;width:100%;aspect-ratio:16 / 9;image-rendering:pixelated;background:#120f0e"></canvas>
+          </div>
+          <div style="flex:1 1 300px;max-width:min(100%,380px);display:flex;flex-direction:column;background:#1b1715">
+            <div style="display:grid;grid-template-columns:1fr 1fr">
+              <sc-for list="{{ co.kpis }}" as="k" hint-placeholder-count="4"><div style="padding:10px 14px;display:flex;flex-direction:column;border-bottom:1px solid #2a2320;border-right:1px solid #2a2320"><span style="font-size:9px;letter-spacing:.14em;color:#D0756A">{{ k.label }}</span><span style="font-family:'VT323',monospace;font-size:28px;line-height:1;color:{{ k.color }}">{{ k.val }}</span></div></sc-for>
+            </div>
+            <div style="padding:10px 14px 6px;font-size:10px;letter-spacing:.16em;color:#D0756A">OPERATING SYSTEM · TOOLS</div>
+            <div style="padding:0 14px 12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ co.tools }}" as="t" hint-placeholder-count="6">
+                <button onClick="{{ t.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid #3d302b;background:#221d1a;min-width:0" style-hover="border-color:#E8433A">
+                  <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:#E8433A;color:#1E1A18;font-family:'VT323',monospace;font-size:18px">{{ t.ini }}</span>
+                  <span style="font-size:9.5px;color:#F2A39A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%">{{ t.name }}</span>
+                  <span style="font-size:8.5px;color:{{ t.color }}">{{ t.state }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:6px;padding:12px 14px;border-top:1px solid #3d302b;margin-top:auto">
+              <button onClick="{{ co.dispatch }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:40px;display:flex;align-items:center;justify-content:center;background:#E8433A;color:#1E1A18;font-weight:600;font-size:10px;letter-spacing:.12em;white-space:nowrap" style-hover="background:#FF6B5E">ISSUE AN AGENT</button>
+              <button onClick="{{ co.brain }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:40px;display:flex;align-items:center;justify-content:center;border:1px solid #E8433A;color:#E8433A;font-size:10px;letter-spacing:.12em;white-space:nowrap" style-hover="background:rgba(232,67,58,.1)">OPEN BRAIN</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;border-top:1px solid #3d302b">
+          <div style="flex:999 1 480px;min-width:0;border-right:1px solid #3d302b">
+            <div style="padding:8px 14px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;white-space:nowrap"><span style="color:#E8433A;letter-spacing:.12em">AGENTS ON THIS MACHINE</span><span style="color:#D0756A;font-size:10px">rig {{ co.rig }}</span></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:10px;padding:12px 14px">
+              <sc-for list="{{ co.agents }}" as="a" hint-placeholder-count="3">
+                <div style="border:1px solid {{ a.border }};padding:10px;display:flex;flex-direction:column;gap:6px;min-width:0;background:#191513">
+                  <span style="display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="font-family:'VT323',monospace;font-size:22px;line-height:1;color:#E8433A">{{ a.name }}</span><span style="font-size:10px;color:{{ a.color }}">● {{ a.state }}</span></span>
+                  <span style="font-size:10px;color:#D0756A">{{ a.role }} · pod {{ a.pod }}</span>
+                  <span style="font-size:11px;color:#F2A39A;line-height:1.4">{{ a.task }}</span>
+                  <span style="font-size:10px;color:#A8574D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">$ {{ a.cmd }}</span>
+                  <span style="display:flex;gap:4px;margin-top:2px">
+                    <button onClick="{{ a.onMain }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:30px;display:flex;align-items:center;justify-content:center;background:{{ a.mainBg }};color:{{ a.mainColor }};border:1px solid {{ a.mainBorder }};font-size:9.5px;letter-spacing:.1em;white-space:nowrap">{{ a.mainLabel }}</button>
+                    <button onClick="{{ a.onAttach }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:30px;display:flex;align-items:center;justify-content:center;border:1px solid #3d302b;color:#E8433A;font-size:9.5px;letter-spacing:.1em;white-space:nowrap" style-hover="border-color:#E8433A">ATTACH PANE</button>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1 1 300px;max-width:min(100%,380px);background:#1b1715;display:flex;flex-direction:column">
+            <div style="padding:8px 14px;border-bottom:1px solid #3d302b;color:#E8433A;letter-spacing:.12em;white-space:nowrap">MACHINE LOG</div>
+            <div ref="{{ feedRef }}" style="height:220px;overflow-y:auto;padding:6px 14px 10px;display:flex;flex-direction:column;gap:2px;font-size:10.5px">
+              <sc-for list="{{ coFeed }}" as="l" hint-placeholder-count="5"><div style="display:flex;gap:8px;min-width:0"><span style="color:#A8574D;flex:none">{{ l.t }}</span><span style="color:{{ l.color }};min-width:0;word-break:break-word">{{ l.text }}</span></div></sc-for>
+              <span style="display:inline-block;width:7px;height:12px;background:#E8433A;animation:cr-blink 1s steps(1) infinite"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{ pBrain }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;flex-wrap:wrap;border-bottom:1px solid #3d302b">
+        <div style="flex:999 1 520px;min-width:0;position:relative;aspect-ratio:16 / 8;min-height:340px;background:radial-gradient(circle at 50% 50%,#2a1512 0%,#161210 55%,#120f0e 100%);overflow:hidden">
+          <canvas ref="{{ brainRef }}" onClick="{{ onBrainClick }}" style="position:absolute;inset:0;width:100%;height:100%;cursor:pointer"></canvas>
+          <div style="position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:2px;pointer-events:none">
+            <span style="font-family:'VT323',monospace;font-size:28px;line-height:1;color:#E8433A">BUSINESS BRAIN</span>
+            <span style="font-size:10px;letter-spacing:.14em;color:#D0756A">obsidian://studex-brain · drag to spin · click a node</span>
+          </div>
+          <div style="position:absolute;left:14px;bottom:12px;display:flex;gap:12px;flex-wrap:wrap;padding:4px 8px;background:rgba(25,21,19,.85);border:1px solid #3d302b;font-size:9px;letter-spacing:.1em;color:#D0756A;pointer-events:none">
+            <span style="white-space:nowrap"><span style="color:#E8433A">●</span> wiki</span><span style="white-space:nowrap"><span style="color:#FF8A7A">●</span> projects</span><span style="white-space:nowrap"><span style="color:#A8574D">●</span> raw</span><span style="white-space:nowrap"><span style="color:#FF6B5E">◆</span> CLAUDE.md</span><span style="color:#FF6B5E;white-space:nowrap">◌ unlinked</span>
+          </div>
+        </div>
+        <div style="flex:1 1 260px;max-width:min(100%,330px);border-left:1px solid #3d302b;display:flex;flex-direction:column;background:#1b1715">
+          <div style="display:grid;grid-template-columns:1fr 1fr">
+            <sc-for list="{{ brainKpis }}" as="k" hint-placeholder-count="4">
+              <div style="padding:10px 14px;display:flex;flex-direction:column;border-bottom:1px solid #2a2320;border-right:1px solid #2a2320"><span style="font-size:9px;letter-spacing:.14em;color:#D0756A">{{ k.label }}</span><span style="font-family:'VT323',monospace;font-size:28px;line-height:1;color:{{ k.color }}">{{ k.val }}</span></div>
+            </sc-for>
+          </div>
+          <div style="padding:10px 14px 4px;font-size:10px;letter-spacing:.16em;color:#D0756A">VAULT HYGIENE</div>
+          <sc-for list="{{ hygiene }}" as="g" hint-placeholder-count="4">
+            <div style="display:flex;gap:8px;padding:5px 14px;font-size:11px;align-items:flex-start"><span style="color:{{ g.color }};flex:none">{{ g.mark }}</span><span style="color:#F2A39A;line-height:1.4">{{ g.text }}</span></div>
+          </sc-for>
+          <div style="display:flex;gap:6px;padding:12px 14px;margin-top:auto">
+            <button onClick="{{ runLint }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:38px;display:flex;align-items:center;justify-content:center;background:#E8433A;color:#1E1A18;font-weight:600;font-size:10px;letter-spacing:.06em;padding:0 6px;text-align:center" style-hover="background:#FF6B5E">RUN LINT PASS</button>
+            <button onClick="{{ linkOrphans }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:38px;display:flex;align-items:center;justify-content:center;border:1px solid #E8433A;color:#E8433A;font-size:10px;letter-spacing:.06em;padding:0 6px;text-align:center" style-hover="background:rgba(232,67,58,.1)">LINKER: FIX ORPHANS</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:stretch">
+        <div style="flex:1 1 210px;max-width:min(100%,250px);border-right:1px solid #3d302b;background:#1b1715;display:flex;flex-direction:column">
+          <div style="padding:8px 12px;font-size:10px;letter-spacing:.16em;color:#D0756A;border-bottom:1px solid #3d302b">VAULT · YOUR MARKDOWN</div>
+          <sc-for list="{{ tree }}" as="n" hint-placeholder-count="10">
+            <button onClick="{{ n.onClick }}" style="all:unset;box-sizing:border-box;cursor:{{ n.cursor }};display:flex;gap:6px;padding:4px 12px;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:{{ n.bg }};color:{{ n.color }}" style-hover="background:#2A2421"><span style="color:#A8574D;flex:none">{{ n.pre }}</span>{{ n.label }}<span style="color:#FF6B5E">{{ n.flag }}</span></button>
+          </sc-for>
+          <div style="padding:10px 12px;margin-top:auto;border-top:1px solid #3d302b"><button onClick="{{ newNote }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;min-height:34px;display:flex;align-items:center;justify-content:center;border:1px solid #E8433A;color:#E8433A;font-size:10px;letter-spacing:.12em">+ NEW NOTE IN RAW/</button></div>
+        </div>
+        <div style="flex:999 1 420px;min-width:0;display:flex;flex-direction:column">
+          <div style="padding:8px 12px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <span style="color:#F2A39A;min-width:0;word-break:break-all">{{ notePath }}</span>
+            <span style="display:flex;gap:6px;align-items:center;font-size:10px">
+              <sc-for list="{{ modes }}" as="m" hint-placeholder-count="3"><button onClick="{{ m.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;padding:3px 8px;border:1px solid {{ m.border }};background:{{ m.bg }};color:{{ m.color }};white-space:nowrap">{{ m.label }}</button></sc-for>
+              <span style="color:{{ syncColor }};white-space:nowrap">● {{ syncLabel }}</span>
+            </span>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ editorCols }};min-height:420px;flex:1">
+            <sc-if value="{{ showEditor }}" hint-placeholder-val="{{ true }}">
+              <textarea value="{{ noteBody }}" onChange="{{ onEdit }}" spellcheck="false" style="resize:none;border:none;border-right:1px solid #3d302b;outline:none;background:#191513;color:#F2A39A;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.65;padding:14px;min-height:420px;min-width:0;caret-color:#E8433A"></textarea>
+            </sc-if>
+            <sc-if value="{{ showPreview }}" hint-placeholder-val="{{ true }}">
+              <div ref="{{ previewRef }}" onClick="{{ onPreviewClick }}" style="padding:14px 18px;min-width:0;overflow-wrap:anywhere;color:#F2A39A;font-size:12.5px;line-height:1.65"></div>
+            </sc-if>
+          </div>
+          <div style="padding:6px 12px;border-top:1px solid #3d302b;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:10px;color:#D0756A"><span>LINKS OUT: {{ linksOut }} · BACKLINKS: {{ backlinks }}</span><span>{{ wordCount }} words</span></div>
+        </div>
+        <div style="flex:1 1 260px;max-width:min(100%,330px);border-left:1px solid #3d302b;background:#1b1715;display:flex;flex-direction:column">
+          <div style="padding:8px 14px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;white-space:nowrap"><span style="color:#E8433A;letter-spacing:.12em">GOOGLE DRIVE</span><span style="color:{{ driveColor }};font-size:10px">● {{ driveLabel }}</span></div>
+          <div style="padding:8px 14px;font-size:10px;color:#D0756A;line-height:1.5">My Drive / Studex Brain ↔ vault. New Drive files land in raw/ and wait for the ingestor.</div>
+          <sc-for list="{{ driveFiles }}" as="f" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;font-size:11px;border-bottom:1px solid #2a2320">
+              <span style="color:#A8574D;flex:none;font-size:9px">{{ f.kind }}</span>
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="color:#F2A39A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.name }}</span><span style="font-size:9px;color:#D0756A">{{ f.meta }}</span></span>
+              <button onClick="{{ f.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:none;padding:3px 8px;border:1px solid {{ f.border }};color:{{ f.color }};font-size:9px;letter-spacing:.1em;white-space:nowrap">{{ f.btn }}</button>
+            </div>
+          </sc-for>
+          <div style="padding:12px 14px 4px;font-size:10px;letter-spacing:.16em;color:#D0756A">AGENT WRITE ACCESS</div>
+          <sc-for list="{{ perms }}" as="p" hint-placeholder-count="6">
+            <div style="display:flex;justify-content:space-between;gap:8px;padding:4px 14px;font-size:11px;white-space:nowrap"><span style="color:#F2A39A">{{ p.role }}</span><span style="color:{{ p.color }}">{{ p.writes }}</span></div>
+          </sc-for>
+          <div style="padding:10px 14px;font-size:10px;color:#D0756A;line-height:1.5;margin-top:auto;border-top:1px solid #3d302b">No credential ever passes through a chat, note or repo. Password manager only, referenced by name.</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ pMetal }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:14px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:#D0756A;letter-spacing:.14em;white-space:nowrap">&gt; bare-metal ls --all</span><span style="font-family:'VT323',monospace;font-size:34px;line-height:1;color:#E8433A">OUR 5 MACHINES</span></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#D0756A"><sc-for list="{{ metalStats }}" as="k" hint-placeholder-count="4"><span style="white-space:nowrap">{{ k.label }} <span style="color:#E8433A">{{ k.val }}</span></span></sc-for></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px">
+        <sc-for list="{{ machines }}" as="m" hint-placeholder-count="5">
+          <div style="border:1px solid {{ m.border }};background:#1b1715;display:flex;flex-direction:column;min-width:0">
+            <div style="padding:10px 12px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+              <span style="display:flex;flex-direction:column;min-width:0"><span style="font-family:'VT323',monospace;font-size:24px;line-height:1;color:#E8433A">{{ m.name }}</span><span style="font-size:10px;color:#D0756A">{{ m.spec }}</span></span>
+              <span style="font-size:10px;color:{{ m.stateColor }};white-space:nowrap">● {{ m.state }}</span>
+            </div>
+            <div style="padding:8px 12px;display:flex;flex-direction:column;gap:5px;border-bottom:1px solid #2a2320">
+              <sc-for list="{{ m.gauges }}" as="g" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:40px 1fr 40px;gap:8px;align-items:center;font-size:10px"><span style="color:#D0756A">{{ g.label }}</span><span style="height:6px;background:#2a2320;position:relative"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ g.w }};background:{{ g.color }};transition:width 600ms"></span></span><span style="text-align:right;color:{{ g.color }}">{{ g.pct }}</span></div>
+              </sc-for>
+            </div>
+            <div style="padding:8px 12px 2px;font-size:9px;letter-spacing:.14em;color:#D0756A">VMS + SERVICES</div>
+            <sc-for list="{{ m.vms }}" as="v" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:8px;padding:3px 12px;font-size:11px;white-space:nowrap"><span style="width:5px;height:5px;flex:none;background:{{ v.dot }}"></span><span style="color:#F2A39A;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">{{ v.name }}</span><span style="color:#D0756A;font-size:10px">{{ v.meta }}</span></div>
+            </sc-for>
+            <div style="padding:8px 12px 2px;font-size:9px;letter-spacing:.14em;color:#D0756A">AGENTS ON THIS MACHINE</div>
+            <div style="padding:2px 12px 8px;display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ m.agents }}" as="a" hint-placeholder-count="2"><span style="padding:1px 6px;border:1px solid rgba(232,67,58,.4);font-size:10px;color:#F2A39A">{{ a }}</span></sc-for></div>
+            <sc-if value="{{ m.hasAlert }}" hint-placeholder-val="{{ false }}"><div style="margin:0 12px 8px;padding:6px 8px;border:1px solid rgba(255,107,94,.5);font-size:10px;color:#FF6B5E;line-height:1.4">{{ m.alert }}</div></sc-if>
+            <div style="display:flex;gap:6px;padding:10px 12px;margin-top:auto;border-top:1px solid #3d302b">
+              <button onClick="{{ m.onHealth }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:34px;display:flex;align-items:center;justify-content:center;border:1px solid #3d302b;color:#E8433A;font-size:10px;letter-spacing:.1em;white-space:nowrap" style-hover="border-color:#E8433A">HEALTH</button>
+              <button onClick="{{ m.onVm }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:34px;display:flex;align-items:center;justify-content:center;border:1px solid #3d302b;color:#E8433A;font-size:10px;letter-spacing:.1em;white-space:nowrap" style-hover="border-color:#E8433A">+ VM</button>
+              <button onClick="{{ m.onSend }}" style="all:unset;box-sizing:border-box;cursor:pointer;flex:1;min-height:34px;display:flex;align-items:center;justify-content:center;background:#E8433A;color:#1E1A18;font-weight:600;font-size:10px;letter-spacing:.1em;white-space:nowrap" style-hover="background:#FF6B5E">SEND AGENT</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ pRome }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:14px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10px;color:#D0756A;letter-spacing:.14em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%">&gt; rome sandbox ls · tunnel studex-edge</span><span style="font-family:'VT323',monospace;font-size:34px;line-height:1;color:#E8433A">ROME CLOUD</span></div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#D0756A"><sc-for list="{{ romeStats }}" as="k" hint-placeholder-count="4"><span style="white-space:nowrap">{{ k.label }} <span style="color:#E8433A">{{ k.val }}</span></span></sc-for></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start">
+        <div style="flex:999 1 520px;min-width:0;border:1px solid #3d302b;background:#1b1715">
+          <div style="padding:8px 12px;border-bottom:1px solid #3d302b;color:#E8433A;letter-spacing:.12em">SANDBOXES + CLOUD BOXERS</div>
+          <div style="overflow-x:auto;overflow-y:hidden"><div style="min-width:520px">
+            <div style="display:grid;grid-template-columns:66px minmax(0,1.3fr) 68px 82px 34px 58px 78px;gap:8px;padding:6px 12px;font-size:9px;letter-spacing:.14em;color:#D0756A;border-bottom:1px solid #2e2622"><span>ID</span><span>OWNER · MISSION</span><span>AGENT</span><span>SIZE</span><span>TTL</span><span>COST</span><span style="text-align:right">STATE</span></div>
+            <sc-for list="{{ sandboxes }}" as="b" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:66px minmax(0,1.3fr) 68px 82px 34px 58px 78px;gap:8px;padding:7px 12px;font-size:11px;border-bottom:1px solid #2a2320;align-items:center;white-space:nowrap;background:{{ b.bg }}">
+                <span style="color:#D0756A">{{ b.id }}</span>
+                <span style="min-width:0;display:flex;flex-direction:column"><span style="color:#F2A39A;overflow:hidden;text-overflow:ellipsis">{{ b.owner }}</span><span style="font-size:9.5px;color:#D0756A;overflow:hidden;text-overflow:ellipsis">{{ b.mission }}</span></span>
+                <span style="color:#E8433A">{{ b.agent }}</span><span style="color:#F2A39A">{{ b.size }}</span><span style="color:#F2A39A">{{ b.ttl }}</span><span style="color:#F2A39A">{{ b.cost }}</span>
+                <button onClick="{{ b.onClick }}" style="all:unset;cursor:pointer;text-align:right;color:{{ b.color }}">{{ b.state }}</button>
+              </div>
+            </sc-for>
+          </div></div>
+        </div>
+        <div id="dispatch" style="flex:1 1 300px;max-width:min(100%,380px);border:1px solid #E8433A;background:#1b1715;display:flex;flex-direction:column">
+          <div style="padding:8px 12px;border-bottom:1px solid #3d302b;display:flex;justify-content:space-between;gap:8px;white-space:nowrap"><span style="color:#E8433A;letter-spacing:.12em">ISSUE AN AGENT</span><span style="color:#D0756A;font-size:10px">rome → tunnel → herdr</span></div>
+          <div style="padding:10px 12px;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ dGroups }}" as="g" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;gap:5px"><span style="font-size:9px;letter-spacing:.16em;color:#D0756A">{{ g.label }}</span>
+                <div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ g.opts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;white-space:nowrap;padding:3px 8px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font-size:10px">{{ o.name }}</button></sc-for></div>
+              </div>
+            </sc-for>
+            <div style="display:flex;align-items:center;gap:6px;border:1px solid #3d302b;padding:0 8px"><span style="color:#E8433A">&gt;</span><input value="{{ dMission }}" onChange="{{ onDMission }}" onKeyDown="{{ onDKey }}" placeholder="what should the agent do?" style="flex:1;min-width:0;min-height:40px;border:none;outline:none;background:transparent;color:#F2A39A;font-family:inherit;font-size:12px"></div>
+            <button onClick="{{ launch }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;background:#E8433A;color:#1E1A18;font-weight:600;font-size:11px;letter-spacing:.14em;white-space:nowrap" style-hover="background:#FF6B5E">{{ launchLabel }}</button>
+            <sc-if value="{{ provOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:3px;border-top:1px dashed #3d302b;padding-top:8px">
+                <sc-for list="{{ provSteps }}" as="p" hint-placeholder-count="5"><span style="font-size:11px;color:{{ p.color }}">{{ p.mark }} {{ p.text }}</span></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9;padding:10px 14px;background:#1E1A18;border:1px solid #E8433A;color:#F2A39A;font-size:11px;max-width:90vw">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const RED = '#E8433A', HOT = '#FF6B5E', BODY = '#F2A39A', MUTE = '#D0756A', OK = '#FF8A7A', IDLE = '#A8574D';
+const CO = [
+  { id: 'hq', name: 'STUDEX GROUP HQ', kind: 'Holding company · orchestration core', x: 50, y: 40, fleet: [['HERMES', 'Orchestrator', 'Routing 14 missions across the group'], ['ROBUSCA', 'Chief of Staff', 'Weekly report and handoffs']] },
+  { id: 'meat', name: 'STUDEX MEAT', kind: 'Halaal Wagyu, direct to consumer', x: 13, y: 20, fleet: [['NALEDI', 'CMO agent', 'Q4 Wagyu launch calendar'], ['EDDIE', 'Ad engine', 'Meta + Google ad spend review'], ['CHARLIE', 'Voice agent', 'Repeat-buyer call script']] },
+  { id: 'biltong', name: 'BILTONG GOLD', kind: 'Wagyu biltong · sport sponsorships', x: 30, y: 11, fleet: [['NALEDI', 'CMO agent', 'Boxing sponsorship content'], ['BASE44', 'Storefront', 'Bundle landing page']] },
+  { id: 'studbot', name: 'STUDBOT', kind: 'Orchestra agent suites', x: 31, y: 31, fleet: [['CLAUDE', 'Builder', 'Orchestra pricing tiers page'], ['RALF', 'Scheduler', 'Client onboarding calendar']] },
+  { id: 'super', name: 'STUDEX SUPER AGENTS', kind: 'Agent subscriptions from R1,599/mo', x: 68, y: 14, fleet: [['CODEX', 'Reviewer', 'Subscription flow QA'], ['CLAUDE', 'Builder', 'Agent marketplace cards']] },
+  { id: 'ghost', name: 'BUSINESS GHOST', kind: 'Client vaults + first agents', x: 86, y: 25, fleet: [['HERMES', 'Onboarding lead', 'Week-one sequence for new client'], ['BASE44', 'App builder', 'Client portal preview']] },
+  { id: 'nest', name: 'AGENTS NEST CLOUD', kind: 'Agent VMs · $499/mo per client', x: 14, y: 62, fleet: [['OPENCLAW', 'Gateway', 'Gitea auth fix'], ['CLAUDE', 'Builder', 'Client VM dashboard'], ['CODEX', 'QA', 'Sandbox teardown tests']] },
+  { id: 'auto', name: 'STUDEX AUTO MEAT', kind: 'Naledi AI operations', x: 30, y: 77, fleet: [['NALEDI', 'Ops', 'Order routing rules'], ['RALF', 'Scheduler', 'Weekly slaughter dispatch']] },
+  { id: 'markets', name: 'STUDEX GLOBAL MARKETS', kind: 'Trade, deals, 5–10% facilitation', x: 70, y: 62, fleet: [['GROKBOT', 'Research', 'SA VM host competitor brief'], ['ROBUSCA', 'Deals desk', 'Partner outreach list']] },
+  { id: 'alliance', name: 'SOVEREIGN ALLIANCE', kind: 'JHB · Cape Town · Kigali · Eswatini · Rwanda', x: 86, y: 79, fleet: [['HERMES', 'Liaison', 'Alliance sync agenda'], ['GROKBOT', 'Intel', 'Regional market scan']] },
+];
+const VAULT0 = {
+  'CLAUDE.md': '# Studex Group · CLAUDE.md\n\nWritten from an interview with Tumelo, not by hand.\n\n## The job that keeps him up latest\n> Knowing every company is moving without checking each one myself.\n\n## Rules\n- One agent doing one job, visible on day two\n- No send, publish, deploy or spend without written approval\n- Quote prices from [[Pricing]], never from memory\n\nSee [[Studex Meat]], [[Agents Nest Cloud]], [[Business Ghost Onboarding]].\n',
+  'wiki/Studex Meat.md': '# Studex Meat\n\nHalaal-certified **Wagyu**, direct to consumer. 5 Main Ave, Riviera Gardens, Johannesburg.\n\n- Range: steaks, Boerewors, Biltong Gold, Black Box\n- Delivery 3–7 days, no weekend dispatch\n- Fleet: NALEDI, EDDIE, CHARLIE\n\nCampaign: [[Q4 Wagyu Launch]]\n',
+  'wiki/Agents Nest Cloud.md': '# Agents Nest Cloud\n\nAgent VMs as a service. One Cloud Boxer per client, no shared floor.\n\n- Client VM: see [[Pricing]]\n- Blocked: Daytona token invalid\n- Fleet: OPENCLAW, CLAUDE, CODEX\n\nRuns on [[Machines]].\n',
+  'wiki/Pricing.md': '# Pricing · live source\n\n- Agents Nest client VM: **$499/month**\n- Strategic advisory retainer: $2,500/month\n- Deal facilitation: 5–10% of deal value\n- Super Agents: from R1,599/month\n\n> Prices have drifted across documents before. This page wins.\n',
+  'wiki/Machines.md': '# Machines\n\nFive bare-metal machines plus Rome cloud sandboxes.\n\n- MAC-MINI-01 runs Hermes, OpenClaw, Ollama, Gitea\n- Cloud Boxers are created per client and destroyed after\n\nTunnel: `studex-edge`\n',
+  'projects/Business Ghost Onboarding.md': '# Business Ghost Onboarding\n\n1. Hour 1: reply personally, quote from [[Pricing]]\n2. Day 1: demo a real failure the Command Center caught\n3. Day 2: provision Cloud Boxer, copy vault, write CLAUDE.md, build one agent\n4. Day 3: they watch it run\n5. Week 1: second and third agents, human-reviewed report\n6. Week 2: "This is your business memory. Plain text, your folder, yours to take if you leave."\n7. Week 4: "What would make you cancel?"\n',
+  'projects/Q4 Wagyu Launch.md': '# Q4 Wagyu Launch\n\nOwner: NALEDI · Ads: EDDIE\n\n- [ ] Subject lines for launch email\n- [ ] December braai bundle\n- [ ] Spend cap approved by Tumelo\n\nCompany: [[Studex Meat]]\n',
+  'raw/drive-import-2026-10-21.md': '# Drive import · 2026-10-21\n\nUnprocessed notes from Google Drive.\n\nBiltong Gold sponsorship deck mentions a boxing event in November. Budget not confirmed.\n',
+};
+const DRIVE0 = [
+  ['DOC', 'Biltong Gold sponsorship deck', 'edited 2h ago · Tumelo', 'new'], ['SHEET', 'Agents Nest client VMs.xlsx', 'edited yesterday', 'new'],
+  ['DOC', 'Q4 Wagyu launch brief', 'synced → projects/', 'synced'], ['PDF', 'Halaal certificate 2026.pdf', 'synced → raw/', 'synced'],
+];
+const PERMS = [['ingestor', 'writes · narrow', true], ['linker', 'links only', true], ['reviewer', 'read only', false], ['researcher', 'read only', false], ['graph-analyst', 'read only', false], ['curator', 'read only', false]];
+const MACH0 = [
+  { id: 'm1', name: 'MAC-MINI-01', spec: 'Apple M2 · 16 GB · JHB HQ', cpu: 62, ram: 78, disk: 94, vms: [['ollama', ':11434 · ~40 GB models', 'ok'], ['gitea', ':3030 · auth failing', 'warn'], ['hermes', ':8787 container', 'ok'], ['openclaw', ':18789 gateway', 'ok']], agents: ['HERMES', 'OPENCLAW', 'ROBUSCA'], alert: 'Data disk nearly full. ~5–10 GB can be freed.' },
+  { id: 'm2', name: 'MAC-STUDIO-02', spec: 'Apple M2 Max · 64 GB · JHB HQ', cpu: 41, ram: 55, disk: 48, vms: [['orbstack', 'docker runtime · needs repair', 'warn'], ['buzz-katya', 'comms · degraded', 'warn']], agents: ['NALEDI', 'CHARLIE'], alert: 'OrbStack helper processes stuck after stop.' },
+  { id: 'm3', name: 'RIG-03', spec: 'Linux · RTX GPU · 128 GB', cpu: 28, ram: 34, disk: 52, vms: [['vm-llm-01', 'local inference', 'ok'], ['vm-render-02', 'image + video jobs', 'ok']], agents: ['GROKBOT'] },
+  { id: 'm4', name: 'NUC-04', spec: 'Intel NUC · 32 GB · office', cpu: 18, ram: 40, disk: 36, vms: [['vm-ci-01', 'test runner', 'ok']], agents: ['CODEX'] },
+  { id: 'm5', name: 'NAS-05', spec: 'Storage · 8 TB · backups', cpu: 9, ram: 22, disk: 61, vms: [['vault-backup', 'nightly snapshot 02:00', 'ok'], ['drive-mirror', 'Google Drive mirror', 'ok']], agents: [] },
+];
+const SBX0 = [
+  ['cb-01', 'Studex · cloud-boxer-01', 'Agents Nest pricing page', 'CLAUDE', '8 vCPU · 16 GB', '2h', 0.42, 'running'],
+  ['cb-02', 'Studex · cloud-boxer-02', 'SA VM host competitor brief', 'GROKBOT', '4 vCPU · 8 GB', '1h', 0.21, 'running'],
+  ['cbx-acme', 'Client · Business Ghost (week 1)', 'Fulfilment exception watcher', 'HERMES', '4 vCPU · 8 GB', '∞', 0.21, 'running'],
+  ['sbx-7f2a', 'Studex Meat', 'Launch email subject lines', 'BASE44', '2 vCPU · 4 GB', '30m', 0.09, 'idle'],
+];
+const md = src => {
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const inl = s => esc(s).replace(/`([^`]+)`/g, '<code style="padding:0 4px;border:1px solid #3d302b;color:#E8433A">$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#E8433A">$1</strong>').replace(/\[\[([^\]]+)\]\]/g, '<a data-link="$1" style="color:#E8433A;text-decoration:underline;cursor:pointer">$1</a>');
+  let out = '', list = null; const close = () => { if (list) { out += `</${list}>`; list = null; } };
+  src.split('\n').forEach(line => { let m;
+    if ((m = line.match(/^(#{1,3})\s+(.*)/))) { close(); out += `<div style="font-family:VT323,monospace;font-size:${[0, 30, 22, 18][m[1].length]}px;line-height:1.1;color:#E8433A;margin:${m[1].length === 1 ? '0 0 8px' : '14px 0 4px'}">${inl(m[2])}</div>`; return; }
+    if ((m = line.match(/^\s*[-*]\s+(.*)/))) { if (list !== 'ul') { close(); out += '<ul style="margin:4px 0;padding-left:18px">'; list = 'ul'; } out += `<li>${inl(m[1].replace(/^\[ \]\s*/, '☐ ').replace(/^\[x\]\s*/i, '☑ '))}</li>`; return; }
+    if ((m = line.match(/^\s*\d+\.\s+(.*)/))) { if (list !== 'ol') { close(); out += '<ol style="margin:4px 0;padding-left:20px">'; list = 'ol'; } out += `<li>${inl(m[1])}</li>`; return; }
+    if ((m = line.match(/^>\s?(.*)/))) { close(); out += `<div style="margin:8px 0;padding:4px 10px;border-left:2px solid #E8433A;color:#E8433A">${inl(m[1])}</div>`; return; }
+    close(); if (line.trim()) out += `<p style="margin:6px 0">${inl(line)}</p>`; });
+  close(); return out;
+};
+const now = () => new Date().toTimeString().slice(0, 8);
+const STATES = ['working', 'working', 'working', 'idle', 'blocked'];
+
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const seats = []; CO.forEach(c => c.fleet.forEach(([name, role, task], i) => seats.push({ co: c.id, name, role, task, state: c.id === 'nest' && name === 'OPENCLAW' ? 'blocked' : (i === 2 || (c.id === 'super' && name === 'CLAUDE')) ? 'idle' : 'working' })));
+    this.state = { seats, sel: 'all', filter: 'ALL', toast: null,
+      feed: [['station online · 10 companies · ' + seats.length + ' seats', OK], ['tunnel studex-edge connected', OK], ['AGENTS NEST CLOUD · OPENCLAW blocked: Gitea auth', HOT]].map(([text, color]) => ({ t: now(), text, color })) };
+    this.feedRef = React.createRef(); this.brainRef = React.createRef(); this.previewRef = React.createRef();
+    let saved = null; try { saved = JSON.parse(localStorage.getItem('studex-brain-v1') || 'null'); } catch (e) {}
+    Object.assign(this.state, { tab: 'command', vault: saved || VAULT0, open: 'CLAUDE.md', mode: 'split', sync: 'SYNCED', drive: DRIVE0.map(([kind, name, meta, st]) => ({ kind, name, meta, st })), lintAt: '06:00',
+      machines: MACH0.map(m => ({ ...m, vms: m.vms.map(v => [...v]) })), sbx: SBX0.map(([id, owner, mission, agent, size, ttl, cost, st]) => ({ id, owner, mission, agent, size, ttl, cost, st })),
+      dAgent: 'CLAUDE', dTarget: 'rome', dCo: 'STUDEX MEAT', dSize: '4 vCPU · 8 GB', dMission: '', prov: null });
+    this.rot = 0; this.drag = null;
+  }
+  componentDidMount() {
+    this.iv = setInterval(() => this.tick(), 2200);
+    this.initRooms(); let lastT = performance.now();
+    const loop = t => { this.fr = requestAnimationFrame(loop); const dt = Math.min(.05, (t - lastT) / 1000); lastT = t; this.drawBrain(t); this.stepRooms(dt);
+      if (this.state.tab === 'command') { if (this.state.sel === 'all') CO.forEach(c => this.drawRoom(this.vmRefs[c.id].current, c, t)); else this.drawRoom(this.coRef.current, CO.find(c => c.id === this.state.sel), t); } };
+    this.fr = requestAnimationFrame(loop);
+    this.logo = new Image(); this.logo.src = 'assets/studex-seal.png';
+    this.onKey = e => { const tg = (e.target.tagName || '').toLowerCase(); if (tg === 'input' || tg === 'textarea') return; const m = { 1: 'command', 2: 'brain', 3: 'metal', 4: 'rome' }; if (m[e.key]) this.setState({ tab: m[e.key] }); };
+    window.addEventListener('keydown', this.onKey);
+    this.paint();
+  }
+  componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.tt); clearTimeout(this.sv); clearInterval(this.pv); cancelAnimationFrame(this.fr); window.removeEventListener('keydown', this.onKey); }
+  paint() { const p = this.previewRef.current; if (p && p._h !== this._html) { p.innerHTML = this._html; p._h = this._html; } }
+  notes() { const s = this.state, title = p => p.split('/').pop().replace(/\.md$/, ''); const paths = Object.keys(s.vault);
+    const links = {}; paths.forEach(p => { links[p] = [...s.vault[p].matchAll(/\[\[([^\]]+)\]\]/g)].map(m => paths.find(q => title(q).toLowerCase() === m[1].toLowerCase())).filter(Boolean); });
+    const inbound = {}; paths.forEach(p => inbound[p] = paths.filter(q => links[q].includes(p)));
+    return { paths, links, inbound, title, orphans: paths.filter(p => p !== 'CLAUDE.md' && !links[p].length && !inbound[p].length) }; }
+  drawBrain(t) {
+    const cv = this.brainRef.current; if (!cv) return;
+    const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+    if (!this.drag) this.rot += .0035;
+    const cx = w / 2, cy = h / 2, rad = Math.min(w, h) * .38, N = this.notes(), n = N.paths.length;
+    for (let i = 0; i < 5; i++) { const ry = rad * Math.cos((i - 2) * .5) , yy = cy + rad * Math.sin((i - 2) * .5); g.strokeStyle = 'rgba(232,67,58,.12)'; g.beginPath(); g.ellipse(cx, yy, ry, ry * .22, 0, 0, Math.PI * 2); g.stroke(); }
+    g.strokeStyle = 'rgba(232,67,58,.25)'; g.beginPath(); g.arc(cx, cy, rad, 0, Math.PI * 2); g.stroke();
+    const glow = g.createRadialGradient(cx, cy, 0, cx, cy, rad * .55); glow.addColorStop(0, `rgba(232,67,58,${.28 + .08 * Math.sin(t / 600)})`); glow.addColorStop(1, 'rgba(232,67,58,0)'); g.fillStyle = glow; g.beginPath(); g.arc(cx, cy, rad * .55, 0, Math.PI * 2); g.fill();
+    const P = N.paths.map((p, i) => { const y = 1 - (i + .5) / n * 2, r = Math.sqrt(1 - y * y), th = i * 2.39996 + this.rot, x = Math.cos(th) * r, z = Math.sin(th) * r, s = 1 / (1.6 - z * .5);
+      return { p, X: cx + x * rad * s * 1.15, Y: cy + y * rad * s * .95, z, s }; });
+    this.proj = P;
+    const byP = Object.fromEntries(P.map(q => [q.p, q]));
+    N.paths.forEach(p => N.links[p].forEach(q => { const a = byP[p], b = byP[q]; g.strokeStyle = `rgba(242,163,154,${.12 + (a.z + b.z + 2) * .08})`; g.lineWidth = 1; g.beginPath(); g.moveTo(a.X, a.Y); g.lineTo(b.X, b.Y); g.stroke(); }));
+    if (this.logo && this.logo.complete) { const lr = rad * .26; g.save(); g.beginPath(); g.arc(cx, cy, lr, 0, Math.PI * 2); g.clip(); g.drawImage(this.logo, cx - lr, cy - lr, lr * 2, lr * 2); g.restore(); g.strokeStyle = '#E8433A'; g.lineWidth = 1.5; g.beginPath(); g.arc(cx, cy, lr + 2, 0, Math.PI * 2); g.stroke(); }
+    P.slice().sort((a, b) => a.z - b.z).forEach(q => {
+      const folder = q.p.includes('/') ? q.p.split('/')[0] : 'root', orphan = N.orphans.includes(q.p), sel = q.p === this.state.open;
+      const c = folder === 'wiki' ? RED : folder === 'projects' ? OK : folder === 'raw' ? IDLE : HOT, deg = N.links[q.p].length + N.inbound[q.p].length, r = (3 + deg * 1.1) * q.s;
+      g.globalAlpha = .45 + (q.z + 1) * .28;
+      if (orphan) { g.setLineDash([2, 2]); g.strokeStyle = HOT; g.beginPath(); g.arc(q.X, q.Y, r + 3, 0, Math.PI * 2); g.stroke(); g.setLineDash([]); }
+      g.fillStyle = c; g.beginPath(); if (folder === 'root') { g.moveTo(q.X, q.Y - r - 2); g.lineTo(q.X + r + 2, q.Y); g.lineTo(q.X, q.Y + r + 2); g.lineTo(q.X - r - 2, q.Y); g.closePath(); } else g.arc(q.X, q.Y, r, 0, Math.PI * 2); g.fill();
+      if (sel) { g.strokeStyle = '#F2A39A'; g.lineWidth = 1.5; g.beginPath(); g.arc(q.X, q.Y, r + 5 + Math.sin(t / 200) * 1.5, 0, Math.PI * 2); g.stroke(); }
+      if (q.z > -.2 || sel) { g.font = `${sel ? 600 : 400} 11px "IBM Plex Mono", monospace`; g.fillStyle = sel ? '#F2A39A' : 'rgba(242,163,154,.85)'; g.fillText(N.title(q.p), q.X + r + 5, q.Y + 4); }
+      g.globalAlpha = 1;
+    });
+  }
+  brainClick(e) { const cv = this.brainRef.current; if (!cv || !this.proj) return; const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    const hit = this.proj.map(q => ({ q, d: Math.hypot(q.X - x, q.Y - y) })).sort((a, b) => a.d - b.d)[0]; if (hit && hit.d < 22) this.setState({ open: hit.q.p }); }
+  saveVault(vault) { this.setState({ vault, sync: 'UNSAVED' }); clearTimeout(this.sv); this.sv = setTimeout(() => { this.setState({ sync: 'SYNCING → DRIVE' }); setTimeout(() => { this.setState({ sync: 'SYNCED' }); try { localStorage.setItem('studex-brain-v1', JSON.stringify(vault)); } catch (e) {} }, 600); }, 700); }
+  ingest(i) { const f = this.state.drive[i], slug = 'raw/' + f.name.replace(/\.[a-z]+$/i, '') + '.md';
+    const vault = { ...this.state.vault, [slug]: `# ${f.name}\n\nImported from Google Drive by the ingestor. Not yet linked.\n\n${f.meta}\n` };
+    this.setState({ drive: this.state.drive.map((d, j) => j === i ? { ...d, st: 'synced', meta: 'synced → raw/' } : d), open: slug }); this.saveVault(vault);
+    this.push(`ingestor: ${f.name} → ${slug} · waiting for linker`, OK); }
+  linkOrphans() { const N = this.notes(); if (!N.orphans.length) { this.toastMsg('No unlinked pages. Vault is clean.'); return; }
+    const v = { ...this.state.vault }; N.orphans.forEach(p => { const t = N.title(p), target = /meat|wagyu|biltong|halaal/i.test(v[p]) ? 'Studex Meat' : /vm|agent|nest/i.test(v[p]) ? 'Agents Nest Cloud' : 'Machines';
+      v[p] = v[p].trimEnd() + `\n\nLinked to [[${target}]] by linker.\n`; });
+    this.saveVault(v); this.push(`linker: ${N.orphans.length} orphan page(s) linked`, OK); }
+  launch() {
+    const s = this.state, mission = s.dMission.trim() || 'Untitled mission', id = s.dTarget === 'rome' ? 'sbx-' + Math.random().toString(36).slice(2, 6) : 'vm-' + Math.random().toString(36).slice(2, 5);
+    const host = s.dTarget === 'rome' ? 'Rome cloud' : s.machines.find(m => m.id === s.dTarget).name;
+    const steps = s.dTarget === 'rome' ? [`rome sandbox create ${id} · ${s.dSize}`, 'tunnel studex-edge attached · outbound only', `vault mounted read-only · ${s.dCo.toLowerCase()}`, `herdr pane opened · ${s.dAgent}`, `${s.dAgent} running · cap $5 · 2h TTL`]
+      : [`orbstack vm create ${id} on ${host}`, 'tunnel studex-edge attached', `vault mounted read-only · ${s.dCo.toLowerCase()}`, `herdr pane opened · ${s.dAgent}`, `${s.dAgent} running on ${host}`];
+    this.setState({ prov: { steps, n: 0 }, dMission: '' }); clearInterval(this.pv);
+    this.pv = setInterval(() => { const pr = this.state.prov; if (!pr) return clearInterval(this.pv);
+      if (pr.n >= steps.length) { clearInterval(this.pv);
+        if (s.dTarget === 'rome') this.setState(st => ({ sbx: [{ id, owner: s.dCo, mission, agent: s.dAgent, size: s.dSize, ttl: '2h', cost: s.dSize.startsWith('8') ? .42 : s.dSize.startsWith('4') ? .21 : .09, st: 'running' }, ...st.sbx] }));
+        else this.setState(st => ({ machines: st.machines.map(m => m.id === s.dTarget ? { ...m, vms: [[id, `${s.dAgent} · ${mission.slice(0, 24)}`, 'ok'], ...m.vms], agents: m.agents.includes(s.dAgent) ? m.agents : [...m.agents, s.dAgent], cpu: Math.min(97, m.cpu + 8) } : m) }));
+        this.push(`${s.dAgent} issued to ${host} · ${mission}`, OK); this.toastMsg(`${s.dAgent} is out on ${host}`); return; }
+      this.push(steps[pr.n], BODY); this.setState({ prov: { steps, n: pr.n + 1 } }); }, 650);
+  }
+  initRooms() {
+    const L = src => { const i = new Image(); i.src = src; return i; }, P = 'assets/pixel/';
+    this.px = { ch: [0, 1, 2, 3, 4, 5].map(i => L(`${P}char_${i}.png`)), pc: [1, 2, 3].map(i => L(`${P}pc_on_${i}.png`)), desk: L(P + 'desk_front.png'), plant: L(P + 'plant.png'), board: L(P + 'whiteboard.png'), floor: L(P + 'floor_0.png') };
+    const sheetOf = n => [...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 6;
+    this.sim = {};
+    CO.forEach(c => { this.sim[c.id] = c.fleet.map(([name], i) => { const dx = 20 + i * 54, seat = { x: dx + 16, y: 40 };
+      return { name, sheet: sheetOf(name), desk: { x: dx, y: 30 }, seat, x: seat.x, y: seat.y, dir: 'up', mode: 'type', frame: 0, ft: Math.random(), path: [], wait: Math.random() * 3 }; }); });
+    this.vmRefs = Object.fromEntries(CO.map(c => [c.id, React.createRef()])); this.coRef = React.createRef();
+  }
+  stepRooms(dt) {
+    CO.forEach(c => this.sim[c.id].forEach((ch, i) => {
+      const seat = this.state.seats.find(x => x.co === c.id && x.name === ch.name), st = seat ? seat.state : 'idle', want = st !== 'idle';
+      ch.ft += dt;
+      if (ch.path.length) { const p = ch.path[0], dx = p.x - ch.x, dy = p.y - ch.y, d = Math.hypot(dx, dy);
+        if (d < 1) { ch.x = p.x; ch.y = p.y; ch.path.shift(); } else { const k = Math.min(1, 30 * dt / d); ch.x += dx * k; ch.y += dy * k; ch.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); }
+        ch.mode = 'walk'; if (ch.ft > .14) { ch.ft = 0; ch.frame = (ch.frame + 1) % 4; } return; }
+      const atSeat = Math.abs(ch.x - ch.seat.x) < 1 && Math.abs(ch.y - ch.seat.y) < 1;
+      if (want) { if (atSeat) { ch.mode = st === 'blocked' ? 'stuck' : 'type'; ch.dir = 'up'; if (ch.ft > .3) { ch.ft = 0; ch.frame = (ch.frame + 1) % 2; } }
+        else ch.path = [{ x: ch.x, y: 74 }, { x: ch.seat.x, y: 74 }, { x: ch.seat.x, y: ch.seat.y }]; return; }
+      ch.mode = 'idle'; ch.frame = 1; ch.wait -= dt;
+      if (ch.wait <= 0) { ch.wait = 1.5 + Math.random() * 3; const tx = 8 + Math.random() * 160, ty = 66 + Math.random() * 10; ch.path = atSeat ? [{ x: ch.x, y: 74 }, { x: tx, y: 74 }, { x: tx, y: ty }] : [{ x: tx, y: ch.y }, { x: tx, y: ty }]; }
+    }));
+  }
+  drawRoom(cv, c, t) {
+    if (!cv || !this.px) return; const I = this.px, g = cv.getContext('2d'), S = cv.width / 192; g.setTransform(S, 0, 0, S, 0, 0); g.imageSmoothingEnabled = false;
+    g.fillStyle = '#120f0e'; g.fillRect(0, 0, 192, 108);
+    if (I.floor.complete) for (let y = 24; y < 108; y += 16) for (let x = 0; x < 192; x += 16) g.drawImage(I.floor, x, y);
+    g.fillStyle = 'rgba(30,26,24,.42)'; g.fillRect(0, 24, 192, 84);
+    g.fillStyle = '#221d1a'; g.fillRect(0, 0, 192, 24); g.fillStyle = '#E8433A'; g.fillRect(0, 23, 192, 1);
+    g.font = '600 6px "IBM Plex Mono", monospace'; g.fillStyle = '#E8433A'; g.fillText(c.name, 6, 10);
+    g.fillStyle = '#D0756A'; g.font = '4.5px "IBM Plex Mono", monospace'; g.fillText(`vm-${c.id}.studex · ${c.fleet.length} agents`, 6, 18);
+    if (I.board.complete) g.drawImage(I.board, 150, -6);
+    if (I.plant.complete) { g.drawImage(I.plant, 176, 74); g.drawImage(I.plant, 2, 74); }
+    const items = [], sims = this.sim[c.id];
+    sims.forEach((ch, i) => { const d = ch.desk, busy = ch.mode === 'type';
+      items.push({ k: d.y + 32, draw: () => { if (I.desk.complete) g.drawImage(I.desk, d.x, d.y); const pc = I.pc[busy ? Math.floor(t / 180 + i) % 3 : 0]; if (pc.complete) g.drawImage(pc, d.x + 16, d.y - 14); } }); });
+    sims.forEach(ch => items.push({ k: ch.y + 32.5, draw: () => { const im = I.ch[ch.sheet]; if (!im.complete) return;
+      const row = ch.dir === 'down' ? 0 : ch.dir === 'up' ? 1 : 2, col = ch.mode === 'walk' ? [0, 1, 2, 1][ch.frame] : ch.mode === 'type' ? 3 + ch.frame : ch.mode === 'stuck' ? 5 : 1, x = Math.round(ch.x), y = Math.round(ch.y);
+      if (ch.dir === 'left') { g.save(); g.translate(x + 16, y); g.scale(-1, 1); g.drawImage(im, col * 16, row * 32, 16, 32, 0, 0, 16, 32); g.restore(); } else g.drawImage(im, col * 16, row * 32, 16, 32, x, y, 16, 32);
+      g.font = '600 4.5px "IBM Plex Mono", monospace'; const w = g.measureText(ch.name).width + 4; g.fillStyle = 'rgba(25,21,19,.88)'; g.fillRect(x + 8 - w / 2, y - 6, w, 6);
+      g.fillStyle = ch.mode === 'stuck' ? '#FF6B5E' : ch.mode === 'type' ? '#E8433A' : '#F2A39A'; g.fillText(ch.name, x + 10 - w / 2, y - 1.6);
+      if (ch.mode === 'stuck' && Math.floor(t / 400) % 2) { g.fillStyle = '#FF6B5E'; g.fillRect(x + 12, y - 15, 6, 7); g.fillStyle = '#1E1A18'; g.fillRect(x + 14.5, y - 14, 1, 3.5); g.fillRect(x + 14.5, y - 9.8, 1, 1); }
+    } }));
+    items.sort((a, b) => a.k - b.k).forEach(it => it.draw());
+  }
+  extraVals(s) {
+    const N = this.notes(), body = s.vault[s.open] || '', t = N.title(s.open);
+    this._html = md(body);
+    const chip = (name, on, onClick) => ({ name, onClick, border: on ? RED : '#3d302b', bg: on ? RED : 'transparent', color: on ? '#1E1A18' : RED });
+    const tree = []; let last = null;
+    N.paths.slice().sort((a, b) => (a.includes('/') ? 1 : 0) - (b.includes('/') ? 1 : 0) || a.localeCompare(b)).forEach(p => { const f = p.includes('/') ? p.split('/')[0] + '/' : '';
+      if (f && f !== last) { tree.push({ pre: '▾', label: f, color: MUTE, bg: 'transparent', cursor: 'default', flag: '', onClick: () => {} }); last = f; }
+      const on = p === s.open; tree.push({ pre: f ? '  ├' : '◆', label: N.title(p), color: on ? '#1E1A18' : BODY, bg: on ? RED : 'transparent', cursor: 'pointer', flag: N.orphans.includes(p) ? ' ◌' : '', onClick: () => this.setState({ open: p }) }); });
+    const linkCount = Object.values(N.links).reduce((a, l) => a + l.length, 0);
+    const contradictions = N.paths.filter(p => /\$\d+/.test(s.vault[p]) && p !== 'wiki/Pricing.md' && !s.vault[p].includes('[[Pricing]]')).length;
+    const rome = s.sbx.filter(b => b.st !== 'destroyed');
+    const col = st => st === 'blocked' ? HOT : st === 'working' ? OK : IDLE;
+    const POD = { Orchestrator: 'lead', 'Chief of Staff': 'ops', Builder: 'build', QA: 'qa', Reviewer: 'qa', Research: 'research', Intel: 'research' };
+    const podOf = role => POD[role] || role.split(' ')[0].toLowerCase();
+    const cpuOf = id => { const sts = s.seats.filter(x => x.co === id); return Math.min(96, 12 + sts.filter(x => x.state === 'working').length * 22 + sts.filter(x => x.state === 'blocked').length * 8 + (s.tick || 0) % 7); };
+    const TOOLS = { hq: ['Brain Vault', 'Herdr', 'OpenRig', 'Orca', 'Gitea', 'WhatsApp'], meat: ['Shopify', 'Meta Ads', 'Google Ads', 'WhatsApp', 'Drive', 'Brain Vault'], biltong: ['Shopify', 'Instagram', 'TikTok', 'Drive', 'Brain Vault', 'Herdr'],
+      studbot: ['Gitea', 'Orca', 'Vite', 'Brain Vault', 'Herdr', 'OpenRig'], super: ['Gitea', 'Orca', 'Billing', 'Brain Vault', 'Herdr', 'WhatsApp'], ghost: ['Cloud Boxer', 'Brain Vault', 'Drive', 'CLAUDE.md', 'Herdr', 'Mail'],
+      nest: ['Rome', 'Daytona', 'Gitea', 'Tunnel', 'Herdr', 'Orca'], auto: ['Shopify', 'WhatsApp', 'Scheduler', 'Brain Vault', 'Herdr', 'Drive'], markets: ['Research', 'Drive', 'Mail', 'Brain Vault', 'Herdr', 'Meet'], alliance: ['Drive', 'Meet', 'Mail', 'Brain Vault', 'Herdr', 'Translate'] };
+    const BAD = { Daytona: 'TOKEN INVALID', Gitea: 'AUTH 401' };
+    const allSeats = s.seats.map((x, i) => ({ ...x, pane: 'p' + String(i + 1).padStart(2, '0'), cmd: `${x.name.toLowerCase()} run --rig ${x.co} --pod ${podOf(x.role)}`, up: `${(i * 37) % 9 + 1}h${String((i * 13) % 60).padStart(2, '0')}m` }));
+    const ovWorking = s.seats.filter(x => x.state === 'working').length, ovBlocked = s.seats.filter(x => x.state === 'blocked').length;
+    const vms = CO.map((c, i) => { const sts = s.seats.filter(x => x.co === c.id), b = sts.some(x => x.state === 'blocked'), cpu = cpuOf(c.id);
+      return { num: String(i).padStart(2, '0'), name: c.name, kind: c.kind, host: `vm-${c.id}.studex · ${sts.length * 2} vCPU`, ref: this.vmRefs ? this.vmRefs[c.id] : null, state: b ? 'NEEDS YOU' : 'RUNNING', stateColor: b ? HOT : OK,
+        border: b ? 'rgba(255,107,94,.6)' : '#3d302b', dots: sts.map(x => col(x.state)), cpu: cpu + '%', cpuW: cpu + '%', onClick: () => this.setState({ sel: c.id }) }; });
+    const cur = CO.find(c => c.id === s.sel);
+    let co = { specs: [], kpis: [], tools: [], agents: [] }, coFeed = [];
+    if (cur) {
+      const sts = allSeats.filter(x => x.co === cur.id), idx = CO.indexOf(cur), b = sts.filter(x => x.state === 'blocked').length;
+      co = { num: String(idx).padStart(2, '0'), name: cur.name, kind: cur.kind, host: `vm-${cur.id}.studex`, rig: cur.id,
+        specs: [['HOST', `vm-${cur.id}.studex`], ['vCPU', sts.length * 2], ['RAM', `${sts.length * 4} GB`], ['UPTIME', '6d 4h'], ['TUNNEL', 'studex-edge']].map(([label, val]) => ({ label, val })),
+        kpis: [['AGENTS', sts.length, RED], ['WORKING', sts.filter(x => x.state === 'working').length, OK], ['BLOCKED', b, b ? HOT : IDLE], ['CPU', cpuOf(cur.id) + '%', RED]].map(([label, val, color]) => ({ label, val, color })),
+        tools: (TOOLS[cur.id] || []).map(n => ({ name: n, ini: n[0], state: BAD[n] || 'CONNECTED', color: BAD[n] ? HOT : OK, onClick: () => n === 'Brain Vault' || n === 'CLAUDE.md' ? this.setState({ tab: 'brain' }) : n === 'Rome' ? this.setState({ tab: 'rome' }) : this.toastMsg(`${n} opens inside vm-${cur.id}.studex`) })),
+        agents: sts.map(x => ({ name: x.name, role: x.role, pod: podOf(x.role), task: x.task, cmd: x.cmd, state: x.state.toUpperCase(), color: col(x.state), border: x.state === 'blocked' ? 'rgba(255,107,94,.6)' : '#3d302b',
+          mainLabel: x.state === 'blocked' ? 'APPROVE' : 'CHAT', mainBg: x.state === 'blocked' ? HOT : 'transparent', mainColor: x.state === 'blocked' ? '#1E1A18' : RED, mainBorder: x.state === 'blocked' ? HOT : '#3d302b',
+          onMain: () => x.state === 'blocked' ? this.unblock(x.co, x.name) : this.toastMsg(`Opens comms with ${x.name} on vm-${cur.id}`), onAttach: () => this.push(`herdr attach ${x.pane} · ${x.name}@${cur.id}`, BODY) })),
+        dispatch: () => this.setState({ tab: 'rome', dCo: cur.name }), brain: () => this.setState({ tab: 'brain' }) };
+      coFeed = s.feed.filter(l => l.text.includes(cur.name) || co.agents.some(a => l.text.includes(a.name)));
+      if (!coFeed.length) coFeed = [{ t: now(), text: `vm-${cur.id}.studex online · ${sts.length} agents`, color: OK }];
+    }
+    const totVm = s.machines.reduce((a, m) => a + m.vms.length, 0);
+    return {
+      tabs: [['1', 'COMMAND', 'command'], ['2', 'BUSINESS BRAIN', 'brain'], ['3', 'BARE METAL', 'metal'], ['4', 'ROME CLOUD', 'rome']].map(([key, label, id]) => ({ key, label, bar: s.tab === id ? RED : 'transparent', color: s.tab === id ? RED : MUTE, onClick: () => this.setState({ tab: id }) })),
+      pageTitle: { command: 'GROUP COMMAND', brain: 'BUSINESS BRAIN', metal: 'BARE METAL', rome: 'ROME CLOUD' }[s.tab],
+      isOverview: s.sel === 'all', isCompany: s.sel !== 'all', vms, co, coFeed, coRef: this.coRef,
+      ovStats: [['COMPANIES', CO.length, RED], ['AGENTS', s.seats.length, RED], ['WORKING', ovWorking, OK], ['BLOCKED', ovBlocked, ovBlocked ? HOT : IDLE]].map(([label, val, color]) => ({ label, val, color })),
+      rigs: CO.map(c => ({ rig: `studex-${c.id}`, seats: allSeats.filter(x => x.co === c.id).map(x => ({ pod: podOf(x.role), name: x.name, dot: col(x.state) })), onClick: () => this.setState({ sel: c.id }) })),
+      panes: allSeats.map(x => ({ pane: x.pane, name: x.name, co: CO.find(c => c.id === x.co).name, cmd: x.cmd, up: x.up, state: x.state.toUpperCase(), color: col(x.state), bg: x.state === 'blocked' ? 'rgba(255,107,94,.06)' : 'transparent', onClick: () => this.setState({ sel: x.co }) })),
+      paneCount: allSeats.length,
+      pCommand: s.tab === 'command', pBrain: s.tab === 'brain', pMetal: s.tab === 'metal', pRome: s.tab === 'rome',
+      brainRef: this.brainRef, onBrainClick: e => this.brainClick(e), previewRef: this.previewRef,
+      brainKpis: [['NOTES', N.paths.length, RED], ['LINKS', linkCount, RED], ['UNLINKED', N.orphans.length, N.orphans.length ? HOT : IDLE], ['PRICE DRIFT', contradictions, contradictions ? HOT : IDLE]].map(([label, val, color]) => ({ label, val, color })),
+      hygiene: [
+        [N.orphans.length ? '✕' : '✓', N.orphans.length ? `${N.orphans.length} page(s) not linked. Nothing counts as ingested until it is linked.` : 'Every page is linked.', N.orphans.length ? HOT : OK],
+        ['✓', 'New sources update existing pages, not pile up beside them.', OK],
+        [contradictions ? '!' : '✓', contradictions ? `${contradictions} page(s) quote a price without linking [[Pricing]].` : 'Prices quoted only from the live Pricing page.', contradictions ? HOT : OK],
+        ['·', `Last lint ${s.lintAt} · graph pass monthly`, MUTE],
+      ].map(([mark, text, color]) => ({ mark, text, color })),
+      runLint: () => { this.setState({ lintAt: now().slice(0, 5) }); this.push(`reviewer lint: ${N.orphans.length} unlinked · ${contradictions} price drift`, N.orphans.length || contradictions ? HOT : OK); },
+      linkOrphans: () => this.linkOrphans(), tree,
+      newNote: () => { const p = `raw/Untitled ${N.paths.length + 1}.md`; this.saveVault({ ...s.vault, [p]: '# Untitled\n\n' }); this.setState({ open: p, mode: 'edit' }); },
+      notePath: `obsidian://studex-brain/${s.open}`,
+      modes: [['EDIT', 'edit'], ['SPLIT', 'split'], ['VIEW', 'view']].map(([label, m]) => ({ label, border: s.mode === m ? RED : '#3d302b', bg: s.mode === m ? RED : 'transparent', color: s.mode === m ? '#1E1A18' : RED, onClick: () => this.setState({ mode: m }) })),
+      syncLabel: s.sync, syncColor: s.sync === 'SYNCED' ? OK : HOT,
+      editorCols: s.mode === 'split' ? 'repeat(auto-fit,minmax(min(100%,300px),1fr))' : '1fr', showEditor: s.mode !== 'view', showPreview: s.mode !== 'edit',
+      noteBody: body, onEdit: e => this.saveVault({ ...s.vault, [s.open]: e.target.value }),
+      onPreviewClick: e => { const l = e.target.closest && e.target.closest('[data-link]'); if (!l) return; const p = N.paths.find(x => N.title(x).toLowerCase() === l.dataset.link.toLowerCase()); if (p) this.setState({ open: p }); else this.toastMsg(`No note "${l.dataset.link}" yet`); },
+      linksOut: N.links[s.open] ? N.links[s.open].length : 0, backlinks: (N.inbound[s.open] || []).map(N.title).join(' · ') || 'none', wordCount: (body.match(/\S+/g) || []).length,
+      driveLabel: s.drive.some(d => d.st === 'new') ? `${s.drive.filter(d => d.st === 'new').length} NEW` : 'IN SYNC', driveColor: s.drive.some(d => d.st === 'new') ? HOT : OK,
+      driveFiles: s.drive.map((d, i) => ({ kind: d.kind, name: d.name, meta: d.meta, btn: d.st === 'new' ? 'INGEST' : 'SYNCED', border: d.st === 'new' ? RED : '#3d302b', color: d.st === 'new' ? RED : MUTE, onClick: () => d.st === 'new' && this.ingest(i) })),
+      perms: PERMS.map(([role, writes, w]) => ({ role, writes, color: w ? HOT : MUTE })),
+      metalStats: [['MACHINES', s.machines.length], ['VMS + SERVICES', totVm], ['AGENTS', s.machines.reduce((a, m) => a + m.agents.length, 0)], ['ALERTS', s.machines.filter(m => m.alert).length]].map(([label, val]) => ({ label, val })),
+      machines: s.machines.map(m => { const gc = v => v > 90 ? HOT : v > 70 ? RED : OK;
+        return { name: m.name, spec: m.spec, state: m.alert ? 'ATTENTION' : 'ONLINE', stateColor: m.alert ? HOT : OK, border: m.alert ? 'rgba(255,107,94,.5)' : '#3d302b',
+          gauges: [['CPU', m.cpu], ['RAM', m.ram], ['DISK', m.disk]].map(([label, v]) => ({ label, w: v + '%', pct: v + '%', color: gc(v) })),
+          vms: m.vms.map(([name, meta, st]) => ({ name, meta, dot: st === 'ok' ? OK : HOT })), agents: m.agents.length ? m.agents : ['none'], hasAlert: !!m.alert, alert: m.alert || '',
+          onHealth: () => { this.push(`${m.name}: cpu ${m.cpu}% · ram ${m.ram}% · disk ${m.disk}%${m.alert ? ' · ' + m.alert : ' · ok'}`, m.alert ? HOT : OK); this.toastMsg(`Health check sent to ${m.name}`); },
+          onVm: () => { const id = 'vm-' + Math.random().toString(36).slice(2, 5); this.setState(st => ({ machines: st.machines.map(x => x.id === m.id ? { ...x, vms: [[id, 'new · 2 vCPU · 4 GB', 'ok'], ...x.vms], ram: Math.min(97, x.ram + 6) } : x) })); this.push(`${m.name}: ${id} created`, OK); },
+          onSend: () => { this.setState({ tab: 'rome', dTarget: m.id }); } }; }),
+      romeStats: [['SANDBOXES', rome.length], ['RUNNING', rome.filter(b => b.st === 'running').length], ['COST / HR', '$' + rome.filter(b => b.st === 'running').reduce((a, b) => a + b.cost, 0).toFixed(2)], ['TUNNEL', 'OK']].map(([label, val]) => ({ label, val })),
+      sandboxes: s.sbx.map((b, i) => ({ id: b.id, owner: b.owner, mission: b.mission, agent: b.agent, size: b.size, ttl: b.ttl, cost: b.st === 'destroyed' ? '—' : `$${b.cost.toFixed(2)}/h`, state: b.st === 'destroyed' ? 'DESTROYED' : b.st === 'running' ? 'RUNNING ✕' : 'IDLE ✕', color: b.st === 'running' ? OK : b.st === 'idle' ? IDLE : '#7a3a33', bg: b.st === 'destroyed' ? 'transparent' : 'transparent',
+        onClick: () => { if (b.st === 'destroyed') return; this.setState(st => ({ sbx: st.sbx.map((x, j) => j === i ? { ...x, st: 'destroyed' } : x) })); this.push(`rome: ${b.id} destroyed · keys revoked`, IDLE); } })),
+      dGroups: [
+        ['AGENT', ['HERMES', 'CLAUDE', 'CODEX', 'OPENCLAW', 'GROKBOT', 'BASE44', 'NALEDI', 'EDDIE', 'RALF', 'CHARLIE', 'ROBUSCA'].map(a => chip(a, s.dAgent === a, () => this.setState({ dAgent: a })))],
+        ['WHERE', [chip('ROME CLOUD', s.dTarget === 'rome', () => this.setState({ dTarget: 'rome' })), ...s.machines.map(m => chip(m.name, s.dTarget === m.id, () => this.setState({ dTarget: m.id })))]],
+        ['FOR COMPANY', CO.map(c => chip(c.name.replace('STUDEX ', ''), s.dCo === c.name, () => this.setState({ dCo: c.name })))],
+        ['SIZE', ['2 vCPU · 4 GB', '4 vCPU · 8 GB', '8 vCPU · 16 GB'].map(z => chip(z, s.dSize === z, () => this.setState({ dSize: z })))],
+      ].map(([label, opts]) => ({ label, opts })),
+      dMission: s.dMission, onDMission: e => this.setState({ dMission: e.target.value }), onDKey: e => { if (e.key === 'Enter') this.launch(); },
+      launch: () => this.launch(), launchLabel: `ISSUE ${s.dAgent} → ${s.dTarget === 'rome' ? 'ROME CLOUD' : s.machines.find(m => m.id === s.dTarget).name}`,
+      provOn: !!s.prov, provSteps: s.prov ? s.prov.steps.map((text, i) => ({ text, mark: i < s.prov.n ? '[ok]' : i === s.prov.n ? '[..]' : '[  ]', color: i < s.prov.n ? OK : i === s.prov.n ? RED : '#7a3a33' })) : [],
+    };
+  }
+  componentDidUpdate() {
+    this.paint(); const el = this.feedRef.current; if (el && el._n !== el.scrollHeight) { el.scrollTop = el.scrollHeight; el._n = el.scrollHeight; } }
+  push(text, color = BODY) { this.setState(s => ({ feed: [...s.feed, { t: now(), text, color }].slice(-40) })); }
+  tick() {
+    const s = this.state, i = Math.floor(Math.random() * s.seats.length), seat = s.seats[i];
+    if (seat.state === 'blocked') return;
+    const next = seat.state === 'working' ? (Math.random() < .25 ? 'idle' : 'working') : 'working';
+    if (next === seat.state) { this.push(`${CO.find(c => c.id === seat.co).name} · ${seat.name}: ${seat.task.toLowerCase()} · step done`, BODY); return; }
+    this.setState({ seats: s.seats.map((x, j) => j === i ? { ...x, state: next } : x), tick: (s.tick || 0) + 1 });
+    this.push(`${CO.find(c => c.id === seat.co).name} · ${seat.name} → ${next}`, next === 'working' ? OK : IDLE);
+  }
+  toastMsg(m) { clearTimeout(this.tt); this.setState({ toast: m }); this.tt = setTimeout(() => this.setState({ toast: null }), 2400); }
+  unblock(co, name) { this.setState(s => ({ seats: s.seats.map(x => x.co === co && x.name === name ? { ...x, state: 'working' } : x) })); this.push(`${CO.find(c => c.id === co).name} · ${name} approved by tumelo → working`, OK); }
+
+  renderVals() {
+    const s = this.state, col = st => st === 'blocked' ? HOT : st === 'working' ? OK : IDLE;
+    const of = id => s.seats.filter(x => x.co === id);
+    const hq = CO[0];
+    const routes = React.createElement('svg', { viewBox: '0 0 100 56.25', preserveAspectRatio: 'none', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 3, pointerEvents: 'none' } },
+      CO.slice(1).map(c => { const live = of(c.id).some(x => x.state === 'working'), on = s.sel === c.id || s.sel === 'all';
+        const x1 = hq.x, y1 = hq.y * .5625, x2 = c.x, y2 = c.y * .5625, mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - 3, d = `M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}`;
+        return React.createElement('g', { key: c.id, opacity: on ? 1 : .25 },
+          React.createElement('path', { d, fill: 'none', stroke: 'rgba(232,67,58,.85)', strokeWidth: s.sel === c.id ? .4 : .22, strokeDasharray: '1.2 .8', style: { animation: 'cr-dash 4s linear infinite' } }),
+          live && React.createElement('circle', { r: .55, fill: OK }, React.createElement('animateMotion', { dur: `${2.6 + (c.x % 7) / 3}s`, repeatCount: 'indefinite', path: d })));
+      }));
+    const pins = CO.map((c, i) => { const seats = of(c.id), w = seats.filter(x => x.state === 'working').length, b = seats.filter(x => x.state === 'blocked').length, on = s.sel === c.id;
+      return { num: String(i).padStart(2, '0'), name: c.name, x: c.x + '%', y: c.y + '%', z: on ? 6 : 4, color: b ? HOT : on ? HOT : RED, border: on ? HOT : 'rgba(232,67,58,.5)',
+        meta: `${seats.length} agents · ${w} working${b ? ` · ${b} blocked` : ''}`,
+        ring: React.createElement('span', { style: { position: 'absolute', inset: -4, borderRadius: '50%', border: `1px solid ${b ? HOT : RED}`, animation: `cr-ping 2.2s ${i * .2}s ease-out infinite` } }),
+        onClick: () => this.setState({ sel: c.id }) }; });
+    const coList = CO.map((c, i) => ({ num: String(i).padStart(2, '0'), name: c.name, dots: of(c.id).map(x => col(x.state)), bg: s.sel === c.id ? '#2A2421' : 'transparent', bar: s.sel === c.id ? RED : 'transparent', color: s.sel === c.id ? RED : BODY, onClick: () => this.setState({ sel: c.id }) }));
+    const pool = (s.sel === 'all' ? s.seats : of(s.sel)).filter(x => s.filter === 'ALL' || x.state === s.filter.toLowerCase());
+    const roster = pool.map(x => ({ co: CO.find(c => c.id === x.co).name, name: x.name, role: x.role, task: x.task, state: x.state.toUpperCase(), color: col(x.state), bg: x.state === 'blocked' ? 'rgba(255,107,94,.06)' : 'transparent',
+      onClick: () => x.state === 'blocked' ? this.unblock(x.co, x.name) : this.setState({ sel: x.co }) }));
+    const working = s.seats.filter(x => x.state === 'working').length, blocked = s.seats.filter(x => x.state === 'blocked').length, unique = new Set(s.seats.map(x => x.name)).size;
+    let side;
+    if (s.sel === 'all') {
+      side = { eyebrow: 'OVERVIEW · STUDEX GROUP', name: 'ALL FLEETS', desc: `${CO.length} companies share ${unique} agents across ${s.seats.length} seats. HERMES routes work from HQ to every company.`,
+        kpis: [['COMPANIES', CO.length, RED], ['SEATS', s.seats.length, RED], ['WORKING', working, OK], ['BLOCKED', blocked, blocked ? HOT : IDLE]].map(([label, val, color]) => ({ label, val, color })),
+        listTitle: 'AGENTS · SEATS ACROSS COMPANIES',
+        rows: [...new Set(s.seats.map(x => x.name))].map(n => { const mine = s.seats.filter(x => x.name === n), st = mine.some(x => x.state === 'blocked') ? 'blocked' : mine.some(x => x.state === 'working') ? 'working' : 'idle';
+          return { name: n, meta: mine.map(x => CO.find(c => c.id === x.co).name.replace('STUDEX ', '')).join(' · '), dot: col(st), state: `${mine.length} SEAT${mine.length > 1 ? 'S' : ''}`, stateColor: MUTE, onClick: () => this.toastMsg(`${n} works in ${mine.length} companies`) }; }),
+        primaryLabel: blocked ? `APPROVE ${blocked} BLOCKED` : 'ALL CLEAR', primary: () => s.seats.filter(x => x.state === 'blocked').forEach(x => this.unblock(x.co, x.name)),
+        secondaryLabel: 'BROADCAST TO ALL', secondary: () => { this.push('broadcast from tumelo → all 10 companies', RED); this.toastMsg('Message sent to every fleet lead'); } };
+    } else {
+      const c = CO.find(x => x.id === s.sel), seats = of(c.id), b = seats.filter(x => x.state === 'blocked').length, idx = CO.indexOf(c);
+      side = { eyebrow: `COMPANY ${String(idx).padStart(2, '0')} · FLEET`, name: c.name, desc: c.kind,
+        kpis: [['AGENTS', seats.length, RED], ['WORKING', seats.filter(x => x.state === 'working').length, OK], ['IDLE', seats.filter(x => x.state === 'idle').length, IDLE], ['BLOCKED', b, b ? HOT : IDLE]].map(([label, val, color]) => ({ label, val, color })),
+        listTitle: 'FLEET',
+        rows: seats.map(x => ({ name: x.name, meta: `${x.role} · ${x.task}`, dot: col(x.state), state: x.state.toUpperCase(), stateColor: col(x.state), onClick: () => x.state === 'blocked' ? this.unblock(x.co, x.name) : this.toastMsg(`Opens comms with ${x.name} for ${c.name}`) })),
+        primaryLabel: b ? `APPROVE ${b} BLOCKED` : 'DISPATCH MISSION', primary: () => b ? seats.filter(x => x.state === 'blocked').forEach(x => this.unblock(x.co, x.name)) : (this.push(`${c.name}: new mission dispatched to ${seats[0].name}`, RED), this.toastMsg(`Mission sent to ${c.name} fleet`)),
+        secondaryLabel: 'BACK TO ALL', secondary: () => this.setState({ sel: 'all' }) };
+    }
+    return {
+      clock: now(), subline: `${CO.length} COMPANIES · ${s.seats.length} SEATS · ${unique} AGENTS`, workingCount: working, blockedCount: blocked, uniqueCount: unique, seatCount: s.seats.length,
+      filters: ['ALL', 'WORKING', 'IDLE', 'BLOCKED'].map(f => ({ label: f, onClick: () => this.setState({ filter: f }), border: s.filter === f ? RED : '#3d302b', bg: s.filter === f ? RED : 'transparent', color: s.filter === f ? '#1E1A18' : RED })),
+      showAll: () => this.setState({ sel: 'all' }), allBg: s.sel === 'all' ? '#2A2421' : 'transparent', allBar: s.sel === 'all' ? RED : 'transparent',
+      coList, routes, pins, roster, rosterTitle: s.sel === 'all' ? 'ALL AGENTS · EVERY COMPANY' : `${CO.find(c => c.id === s.sel).name} · FLEET`, rosterCount: `${roster.length} rows`,
+      side, feed: s.feed, feedRef: this.feedRef, toast: s.toast, ...this.extraVals(s),
+    };
+  }
+}
+</script>
+</body>
+</html>

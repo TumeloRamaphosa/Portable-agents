@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudEx Global Markets — Investment Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: #8a7f4a;
+      --amber: #FFB000;
+      --obsidian: #050505;
+      --char: #14110c;
+      --cream: #E8DDBA;
+      --mute: #6a6250;
+      --ok: #6BCF7F;
+      --warn: #FFB000;
+      --err: #E85D5D;
+      --red-accent: #D62828;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: var(--obsidian);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(201, 168, 76, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 70%, rgba(214, 40, 40, 0.08) 0%, transparent 40%);
+      pointer-events: none; z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 1;
+    }
+
+    header {
+      position: relative; z-index: 10;
+      padding: 40px 60px;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+      background: linear-gradient(180deg, rgba(20, 17, 12, 0.95) 0%, rgba(8, 6, 4, 0.9) 100%);
+      backdrop-filter: blur(8px);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .header-left { display: flex; gap: 50px; align-items: flex-start; }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      letter-spacing: 14px;
+      color: var(--gold);
+      line-height: 1;
+      text-shadow: 0 0 30px rgba(201, 168, 76, 0.3), 0 0 60px rgba(214, 40, 40, 0.15);
+    }
+
+    .logo-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--mute);
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    .header-stats { display: flex; gap: 30px; }
+    .stat { text-align: right; }
+    .stat-label { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--mute); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); letter-spacing: 2px; line-height: 1; }
+
+    main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 50px 60px;
+      position: relative; z-index: 3;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(201, 168, 76, 0.3);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 28px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(20, 17, 12, 0.85) 0%, rgba(8, 6, 4, 0.85) 100%);
+      border: 1.5px solid rgba(201, 168, 76, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), 0 0 80px rgba(201, 168, 76, 0.1);
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(201, 168, 76, 0.8);
+      box-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .card-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 12px var(--ok);
+    }
+
+    .card-status.warning { background: var(--warn); box-shadow: 0 0 12px var(--warn); }
+    .card-status.opportunity { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+
+    .card-body {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      line-height: 1.8;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(201, 168, 76, 0.1);
+      color: var(--mute);
+    }
+
+    .metric:last-child { border-bottom: none; }
+    .metric-value { color: var(--cream); font-weight: bold; }
+
+    .agents-section {
+      background: linear-gradient(180deg, rgba(20, 17, 12, 0.9) 0%, rgba(8, 6, 4, 0.9) 100%);
+      border: 2px solid rgba(201, 168, 76, 0.4);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 40px 0;
+      box-shadow: 0 0 60px rgba(201, 168, 76, 0.15);
+    }
+
+    .agents-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 5px;
+      color: var(--gold);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .agent-card {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1.5px solid rgba(201, 168, 76, 0.25);
+      border-radius: 10px;
+      padding: 20px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .agent-card:hover {
+      border-color: rgba(201, 168, 76, 0.8);
+      box-shadow: 0 0 30px rgba(201, 168, 76, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .agent-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .agent-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .agent-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--mute);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .agent-focus {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--cream);
+      line-height: 1.6;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      background: rgba(201, 168, 76, 0.15);
+      border-left: 2px solid var(--gold);
+      font-size: 7px;
+      margin: 4px 4px 4px 0;
+      color: var(--gold);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+    }
+
+    .tag.revenue { border-left-color: var(--ok); color: var(--ok); }
+    .tag.opportunity { border-left-color: var(--amber); color: var(--amber); }
+    .tag.investment { border-left-color: var(--err); color: var(--err); }
+
+    .pipeline {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(201, 168, 76, 0.2);
+    }
+
+    .pipeline-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .pipeline-item {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-left: 3px solid var(--amber);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--cream);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 6px;
+      background: rgba(255, 176, 0, 0.2);
+      border: 1px solid var(--amber);
+      border-radius: 3px;
+      font-size: 7px;
+      color: var(--amber);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    footer {
+      position: relative; z-index: 3;
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid rgba(201, 168, 76, 0.1);
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: #4a4638;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div>
+      <div class="logo">STUDEX</div>
+      <div class="logo-sub">Global Markets · Sovereign AI · v2.0</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-label">Target Markets</div>
+      <div class="stat-value">5</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Launch Window</div>
+      <div class="stat-value">3 DAYS</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Sponsor Levels</div>
+      <div class="stat-value">R250K / R500K</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- TEN-YEAR STORY -->
+  <section>
+    <div class="section-title">◆ Ten Years: From Enterprise to Sovereign AI</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header"><div class="card-title">01 · The Beginning</div><div class="card-status"></div></div>
+        <div class="card-body">
+          <span class="tag revenue">Founder Story</span>
+          <div class="metric"><span>Chapter</span><span class="metric-value">From the farm to global markets</span></div>
+          <div class="metric"><span>Message</span><span class="metric-value">Build a bigger way to work</span></div>
+          <div class="metric"><span>Visuals</span><span class="metric-value">Founder, land, first products</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">02 · Blockchain</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Trust Layer</span>
+          <div class="metric"><span>Chapter</span><span class="metric-value">Traceability and ownership</span></div>
+          <div class="metric"><span>Message</span><span class="metric-value">Make trade more trusted</span></div>
+          <div class="metric"><span>Visuals</span><span class="metric-value">Early systems, ledgers, products</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">03 · Cloud</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Execution Layer</span>
+          <div class="metric"><span>Chapter</span><span class="metric-value">VMs, infrastructure and scale</span></div>
+          <div class="metric"><span>Message</span><span class="metric-value">Give businesses a place to build</span></div>
+          <div class="metric"><span>Visuals</span><span class="metric-value">Servers, dashboards, teams</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">04 · AI and Agents</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag investment">Operating System</span>
+          <div class="metric"><span>Chapter</span><span class="metric-value">Agentic Rise and Black Cloud</span></div>
+          <div class="metric"><span>Message</span><span class="metric-value">Technology gives time back</span></div>
+          <div class="metric"><span>Visuals</span><span class="metric-value">Agents, products, demonstrations</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">05 · The Next Ten</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Rwanda Anchor</span>
+          <div class="metric"><span>Chapter</span><span class="metric-value">Sovereign AI and global supply</span></div>
+          <div class="metric"><span>Message</span><span class="metric-value">African execution, global reach</span></div>
+          <div class="metric"><span>Visuals</span><span class="metric-value">Lake Kivu, learning hubs, partners</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pipeline" style="margin-top:24px">
+      <div class="pipeline-title">Image Storyboard</div>
+      <div class="pipeline-item">📸 Add approved images in sequence: 01 origin · 02 blockchain · 03 cloud · 04 AI/agents · 05 Rwanda/global markets.</div>
+      <div class="pipeline-item">🎬 The final gallery and video should use only supplied or approved images, captions, dates and partner names.</div>
+    </div>
+  </section>
+
+  <!-- OPERATING VERTICALS -->
+  <section>
+    <div class="section-title">◆ Operating Verticals (Fuel Layer)</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Studex Meat</div>
+          <div class="card-status"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag revenue">Premium Brand</span>
+          <span class="tag revenue">Live</span>
+          <div class="metric">
+            <span>Business</span>
+            <span class="metric-value">Halaal Wagyu & Ankole</span>
+          </div>
+          <div class="metric">
+            <span>Brand</span>
+            <span class="metric-value">Obsidian-Gold Luxury</span>
+          </div>
+          <div class="metric">
+            <span>AI Personas</span>
+            <span class="metric-value">Emily, Naledi</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Active, Scaling</span>
+          </div>
+          <div class="metric">
+            <span>Revenue Role</span>
+            <span class="metric-value">Cashflow Base</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Studex Coffee</div>
+          <div class="card-status warning"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag revenue">Commodity Trading</span>
+          <span class="tag opportunity">Development</span>
+          <div class="metric">
+            <span>Business</span>
+            <span class="metric-value">Premium + Commodity</span>
+          </div>
+          <div class="metric">
+            <span>Growth Axis</span>
+            <span class="metric-value">Rwanda Corridor</span>
+          </div>
+          <div class="metric">
+            <span>Target</span>
+            <span class="metric-value">$150M+ by 2025</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">In Development</span>
+          </div>
+          <div class="metric">
+            <span>Supply Chain</span>
+            <span class="metric-value">Shared w/ Meat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Studex Global Markets</div>
+          <div class="card-status"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag revenue">B2B Platform</span>
+          <span class="tag revenue">Live</span>
+          <div class="metric">
+            <span>Platform</span>
+            <span class="metric-value">Bloomberg-Style</span>
+          </div>
+          <div class="metric">
+            <span>Access Tiers</span>
+            <span class="metric-value">Aspire → Ghost ($7.5K)</span>
+          </div>
+          <div class="metric">
+            <span>Verticals</span>
+            <span class="metric-value">Metals, Agri, Energy</span>
+          </div>
+          <div class="metric">
+            <span>Key Role</span>
+            <span class="metric-value">Reference Customer (AI Ops)</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Active, Reference Deploy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CURRENT PROGRAMME -->
+  <section>
+    <div class="section-title">◆ Current StudEx Programme</div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Agentic Rise</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Execution Layer</span><span class="tag revenue">Active Programme</span>
+          <div class="metric"><span>Purpose</span><span class="metric-value">AI skills, startups, gaming</span></div>
+          <div class="metric"><span>Offer</span><span class="metric-value">VMs + agents + mentorship</span></div>
+          <div class="metric"><span>Scale plan</span><span class="metric-value">Rwanda → 5 countries</span></div>
+          <div class="metric"><span>Approval</span><span class="metric-value">Tumelo / Katlego</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Black Cloud</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Sovereign AI</span><span class="tag investment">Pilot</span>
+          <div class="metric"><span>Role</span><span class="metric-value">Secure compute + agent OS</span></div>
+          <div class="metric"><span>Anchor</span><span class="metric-value">Lake Kivu proposal</span></div>
+          <div class="metric"><span>Control node</span><span class="metric-value">Mac mini + private gateway</span></div>
+          <div class="metric"><span>Gate</span><span class="metric-value">Feasibility before build</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Rwanda Corridor</div><div class="card-status opportunity"></div></div>
+        <div class="card-body">
+          <span class="tag opportunity">Government Discussion</span><span class="tag investment">Proposal</span>
+          <div class="metric"><span>Concept</span><span class="metric-value">Small modular AI sites</span></div>
+          <div class="metric"><span>Hubs</span><span class="metric-value">AI, gaming, education</span></div>
+          <div class="metric"><span>Partners</span><span class="metric-value">ART + global partners</span></div>
+          <div class="metric"><span>Evidence</span><span class="metric-value">Site/power/customer checks</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Launch Week</div><div class="card-status"></div></div>
+        <div class="card-body">
+          <span class="tag revenue">17–19 Oct 2026</span><span class="tag opportunity">Sponsor Intake</span>
+          <div class="metric"><span>Saturday</span><span class="metric-value">Conference + premieres</span></div>
+          <div class="metric"><span>Sunday</span><span class="metric-value">Golf day + sponsors</span></div>
+          <div class="metric"><span>Monday</span><span class="metric-value">Open office + demos</span></div>
+          <div class="metric"><span>Ask</span><span class="metric-value">R250K / R500K</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTMENT OPPORTUNITIES -->
+  <section>
+    <div class="section-title">◆ Architecture & Build Factory</div>
+    <div class="pipeline-item" style="margin-bottom:18px"><strong>MiniMax / Dark Factory:</strong> live product reference for the proposed four-layer StudEx operating platform, VM ecosystem and agent roster. Product status, commercial figures, partner labels and compliance claims remain subject to evidence review. <a href="https://z0bb2ty8nz04.space.minimax.io/" target="_blank" rel="noopener">Open live reference</a> · <a href="https://github.com/TumeloRamaphosa/N" target="_blank" rel="noopener">Architecture repository</a></div>
+    <div class="section-title">◆ Partnership Pipeline (Verify Before Publication)</div>
+    <div class="pipeline-item" style="margin-bottom:18px">🛡️ <strong>ART diligence gate:</strong> the current Drive brief places Russian Stud-Bot hosting on hold. Africa-bound ART supply remains exploratory pending UBO screening, written sanctions/export-control advice, lawful components and payment routes, and signed terms. <a href="https://drive.google.com/file/d/1QTo9ykpsMTSD9KXp1Mvv1wDLtSjsjWWb/view" target="_blank" rel="noopener">Source brief</a></div><div class="pipeline-item" style="margin-bottom:18px">⚠️ Older cards below are retained as leads only. Confirm legal entity, funding, customer, partner and contract evidence before using them publicly.</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">PwC Middle East</div>
+          <div class="card-status opportunity"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag investment">$60M ceiling</span>
+          <span class="tag opportunity">White-Label AI Ops</span>
+          <div class="metric">
+            <span>Capital Required</span>
+            <span class="metric-value">< $60K to anchor</span>
+          </div>
+          <div class="metric">
+            <span>Time to Cash</span>
+            <span class="metric-value">30 days</span>
+          </div>
+          <div class="metric">
+            <span>5-Year Ceiling</span>
+            <span class="metric-value">$60M</span>
+          </div>
+          <div class="metric">
+            <span>Regions</span>
+            <span class="metric-value">UAE, KSA</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Deliverables Requested</span>
+          </div>
+          <div class="status-badge">⏰ 7-day deliverable</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Wesco Data Centre</div>
+          <div class="card-status opportunity"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag investment">$35M ceiling</span>
+          <span class="tag investment">Physical Layer</span>
+          <div class="metric">
+            <span>Capital Required</span>
+            <span class="metric-value">$200K+ pilot</span>
+          </div>
+          <div class="metric">
+            <span>Time to Cash</span>
+            <span class="metric-value">120 days</span>
+          </div>
+          <div class="metric">
+            <span>5-Year Ceiling</span>
+            <span class="metric-value">$35M</span>
+          </div>
+          <div class="metric">
+            <span>Role</span>
+            <span class="metric-value">Modular DC Supply</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Qualification Stage</span>
+          </div>
+          <div class="status-badge">⏸️ Wait for PwC MSA</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Rwanda Innovation City</div>
+          <div class="card-status opportunity"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag opportunity">Africa50 Partnership</span>
+          <span class="tag investment">$400M ecosystem</span>
+          <div class="metric">
+            <span>Partner</span>
+            <span class="metric-value">Africa50 Investment</span>
+          </div>
+          <div class="metric">
+            <span>Infrastructure Play</span>
+            <span class="metric-value">Kigali Data Centre Hub</span>
+          </div>
+          <div class="metric">
+            <span>Adjacency</span>
+            <span class="metric-value">Dual Hub Launch (Oct 31)</span>
+          </div>
+          <div class="metric">
+            <span>Role</span>
+            <span class="metric-value">Sovereign Compute Hub</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">In Negotiation</span>
+          </div>
+          <div class="status-badge">📅 Oct 31 launch</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Alibaba Cloud</div>
+          <div class="card-status opportunity"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag investment">Compute Partnership</span>
+          <span class="tag opportunity">Regional Access</span>
+          <div class="metric">
+            <span>Role</span>
+            <span class="metric-value">Cloud Infrastructure</span>
+          </div>
+          <div class="metric">
+            <span>Regions</span>
+            <span class="metric-value">South Africa, Rwanda</span>
+          </div>
+          <div class="metric">
+            <span>Integration</span>
+            <span class="metric-value">KGOSI + NVIDIA NIM</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Account Optimization</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">NVIDIA NPN</div>
+          <div class="card-status"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag revenue">Technology Stack</span>
+          <span class="tag revenue">Active</span>
+          <div class="metric">
+            <span>Role</span>
+            <span class="metric-value">GPU Inference Layer</span>
+          </div>
+          <div class="metric">
+            <span>Integration</span>
+            <span class="metric-value">Models House Gateway</span>
+          </div>
+          <div class="metric">
+            <span>Partnership</span>
+            <span class="metric-value">NVIDIA NIM Platform</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Deployed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Bitfury Series A</div>
+          <div class="card-status"></div>
+        </div>
+        <div class="card-body">
+          <span class="tag investment">$3.15M Series A</span>
+          <span class="tag investment">Infrastructure</span>
+          <div class="metric">
+            <span>Investment</span>
+            <span class="metric-value">$3.15M Series A</span>
+          </div>
+          <div class="metric">
+            <span>Focus</span>
+            <span class="metric-value">Pharma Ops (SA/Eswatini)</span>
+          </div>
+          <div class="metric">
+            <span>Year 1 Revenue</span>
+            <span class="metric-value">$72M potential</span>
+          </div>
+          <div class="metric">
+            <span>Exit Target</span>
+            <span class="metric-value">$500M by 2028</span>
+          </div>
+          <div class="metric">
+            <span>Status</span>
+            <span class="metric-value">Active Deployment</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INVESTMENT COMPANY AGENTS -->
+  <div class="agents-section">
+    <div class="agents-title">◆ Investment Company Agent Tier</div>
+    <div class="agents-grid">
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">💼</div>
+        <div class="agent-name">Capital</div>
+        <div class="agent-role">Portfolio Manager</div>
+        <div class="agent-focus">
+          • Deal sourcing & evaluation
+          • Capital allocation strategy
+          • Portfolio rebalancing
+          • Risk assessment
+          • Growth forecasting
+        </div>
+        <div class="tag revenue">Strategic</div>
+        <div class="tag revenue">Finance</div>
+      </div>
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">📊</div>
+        <div class="agent-name">Analyst</div>
+        <div class="agent-role">Investment Analyst</div>
+        <div class="agent-focus">
+          • Financial modeling
+          • Due diligence reports
+          • Market research
+          • Valuation analysis
+          • Performance tracking
+        </div>
+        <div class="tag revenue">Research</div>
+        <div class="tag revenue">Analytics</div>
+      </div>
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">🤝</div>
+        <div class="agent-name">Closer</div>
+        <div class="agent-role">Deal Negotiator</div>
+        <div class="agent-focus">
+          • Term sheet drafting
+          • MSA negotiation
+          • Partner relationship
+          • Closing coordination
+          • Contract review
+        </div>
+        <div class="tag investment">Operations</div>
+        <div class="tag investment">Legal</div>
+      </div>
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">⚙️</div>
+        <div class="agent-name">Operations</div>
+        <div class="agent-role">Ops Manager</div>
+        <div class="agent-focus">
+          • Deal lifecycle mgmt
+          • Milestone tracking
+          • Vendor coordination
+          • Compliance / audit
+          • Document management
+        </div>
+        <div class="tag revenue">Operations</div>
+        <div class="tag revenue">Admin</div>
+      </div>
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">🎯</div>
+        <div class="agent-name">Vision</div>
+        <div class="agent-role">Strategy Officer</div>
+        <div class="agent-focus">
+          • Long-term strategy
+          • Market positioning
+          • Competitive analysis
+          • Ecosystem mapping
+          • Thesis validation
+        </div>
+        <div class="tag opportunity">Strategy</div>
+        <div class="tag opportunity">Planning</div>
+      </div>
+
+      <div class="agent-card" onclick="selectAgent(this)">
+        <div class="agent-icon">📡</div>
+        <div class="agent-name">Scout</div>
+        <div class="agent-role">Deal Scout</div>
+        <div class="agent-focus">
+          • Pipeline development
+          • Opportunity screening
+          • Network expansion
+          • Trend monitoring
+          • Lead qualification
+        </div>
+        <div class="tag opportunity">Business Dev</div>
+        <div class="tag opportunity">Sourcing</div>
+      </div>
+
+    </div>
+
+    <div class="pipeline">
+      <div class="pipeline-title">Priority Actions</div>
+      <div class="pipeline-item">
+        🔴 <strong>ART proposal:</strong> complete diligence and secure written sponsorship or cooperation terms before any Friday announcement
+      </div>
+      <div class="pipeline-item">
+        🟡 <strong>Zimbabwe:</strong> meet officials, identify counterpart and record next steps
+      </div>
+      <div class="pipeline-item">
+        🟢 <strong>Rwanda:</strong> prepare Agentic Rise sovereign-AI delegation and feasibility workshop
+      </div>
+      <div class="pipeline-item">
+        🟢 <strong>Five-country plan:</strong> Rwanda, Zimbabwe, Eswatini, South Africa and Kenya — pilots subject to evidence gates
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCIAL SUMMARY -->
+  <section>
+    <div class="section-title">◆ Current Programme Snapshot</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Revenue by Vertical</div>
+        </div>
+        <div class="card-body">
+          <div class="metric">
+            <span>Studex Meat + Coffee</span>
+            <span class="metric-value">$18M</span>
+          </div>
+          <div class="metric">
+            <span>Studex Global Markets</span>
+            <span class="metric-value">~$6M</span>
+          </div>
+          <div class="metric">
+            <span>PwC AI Ops</span>
+            <span class="metric-value">$60M</span>
+          </div>
+          <div class="metric">
+            <span>Wesco/Infra</span>
+            <span class="metric-value">$35M</span>
+          </div>
+          <div class="metric">
+            <span>Bitfury/Pharma</span>
+            <span class="metric-value">$72M</span>
+          </div>
+          <div class="metric" style="border: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(201, 168, 76, 0.3);">
+            <span style="color: var(--gold); font-weight: bold;">TOTAL PROJECTION</span>
+            <span class="metric-value" style="color: var(--ok); font-size: 11px;">$191M potential</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Deal Stage Distribution</div>
+        </div>
+        <div class="card-body">
+          <div class="metric">
+            <span>Active (Live)</span>
+            <span class="metric-value">3 verticals</span>
+          </div>
+          <div class="metric">
+            <span>In Negotiation</span>
+            <span class="metric-value">2 deals</span>
+          </div>
+          <div class="metric">
+            <span>Qualification</span>
+            <span class="metric-value">1 deal</span>
+          </div>
+          <div class="metric">
+            <span>Development</span>
+            <span class="metric-value">1 vertical</span>
+          </div>
+          <div class="metric">
+            <span>Total Pipeline</span>
+            <span class="metric-value">$113M in deals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Capital Required</div>
+        </div>
+        <div class="card-body">
+          <div class="metric">
+            <span>PwC Anchor (near-term)</span>
+            <span class="metric-value">< $60K</span>
+          </div>
+          <div class="metric">
+            <span>Wesco Pilot (medium)</span>
+            <span class="metric-value">$200K+</span>
+          </div>
+          <div class="metric">
+            <span>Bitfury Series A</span>
+            <span class="metric-value">$3.15M</span>
+          </div>
+          <div class="metric">
+            <span>Rwanda Hub Infrastructure</span>
+            <span class="metric-value">$88K setup</span>
+          </div>
+          <div class="metric">
+            <span>Total Deployable</span>
+            <span class="metric-value">~$3.5M+</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  STUDEX GLOBAL MARKETS — Sovereign AI · Agentic Rise · Launch Week 17–19 October 2026
+</footer>
+
+<script>
+  function selectAgent(card) {
+    document.querySelectorAll('.agent-card').forEach(c => c.style.borderColor = '');
+    card.style.borderColor = 'rgba(201, 168, 76, 0.8)';
+    card.style.boxShadow = '0 0 40px rgba(201, 168, 76, 0.3)';
+    const agentName = card.querySelector('.agent-name').textContent;
+    console.log(`Selected: ${agentName}`);
+  }
+
+  // Animate on load
+  document.querySelectorAll('.card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      card.style.transition = 'all 0.6s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, i * 100);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#070605;}
+a{color:#ECE6D6;}a:hover{color:#FFB000;}
+@keyframes sx-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes sx-scan{0%{transform:translateY(-30vh)}100%{transform:translateY(130vh)}}
+@keyframes sx-pulse{0%,100%{opacity:1}50%{opacity:.25}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#070605;color:#ECE6D6;font-family:'Geist',sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column">
+  {{ fx }}
+
+  <header style="position:relative;z-index:2;padding:18px clamp(18px,4vw,48px) 0">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;color:#7d766a;opacity:{{ aHead.o }};transform:{{ aHead.tf }}">
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <span style="color:#ECE6D6;letter-spacing:.32em">STUDEX</span>
+        <span>STATION 07</span>
+        <span>JOHANNESBURG</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px">
+        <span>{{ clock }}</span>
+        <span style="display:flex;align-items:center;gap:8px;color:{{ modeColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ modeColor }}"></span>{{ modeLabel }}</span>
+      </div>
+    </div>
+    <div style="height:1px;margin-top:16px;background:rgba(236,230,214,.14);transform-origin:left;transform:{{ barScale }}"></div>
+  </header>
+
+  <main style="flex:1;width:100%;max-width:1280px;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,4vw,48px) 40px;box-sizing:border-box;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(32px,5vw,72px);position:relative;z-index:2">
+
+    <section style="display:flex;flex-direction:column;gap:clamp(22px,3vw,32px);min-width:0">
+      <div style="font-family:'Geist Mono',monospace;font-size:11px;line-height:2;color:#7d766a;display:flex;flex-direction:column">
+        <sc-for list="{{ bootLines }}" as="l" hint-placeholder-count="4">
+          <div style="display:flex;gap:16px;opacity:{{ l.o }};transform:{{ l.tf }}"><span style="width:44px;flex:none;color:{{ l.color }}">{{ l.tag }}</span><span style="min-width:0">{{ l.text }}</span></div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.24em;color:{{ accent }};opacity:{{ aEyebrow.o }};transform:{{ aEyebrow.tf }}">{{ eyebrow }}</span>
+        <h1 style="margin:0;font-weight:300;font-size:clamp(40px,7.4vw,96px);line-height:.98;letter-spacing:-.035em;color:#ECE6D6">
+          <span style="display:block;overflow:hidden;padding-bottom:.06em"><span style="display:block;transform:{{ t1 }}">{{ titleA }}</span></span>
+          <span style="display:block;overflow:hidden;padding-bottom:.06em"><span style="display:block;transform:{{ t2 }};color:#7d766a">{{ titleB }}</span></span>
+        </h1>
+        <p style="margin:0;max-width:52ch;font-size:clamp(15px,1.4vw,17px);line-height:1.6;font-weight:300;color:#b8b1a3;text-wrap:pretty;opacity:{{ aBody.o }};transform:{{ aBody.tf }};filter:{{ aBody.blur }}">{{ body }}</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid rgba(236,230,214,.12);border-bottom:1px solid rgba(236,230,214,.12)">
+        <sc-for list="{{ stats }}" as="k" hint-placeholder-count="4">
+          <div style="padding:16px 0 14px;display:flex;flex-direction:column;gap:6px;opacity:{{ k.o }};transform:{{ k.tf }}">
+            <span style="font-weight:300;font-size:clamp(22px,2.6vw,32px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#ECE6D6">{{ k.val }}</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;color:#7d766a">{{ k.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;gap:12px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;color:#7d766a;padding-bottom:10px;opacity:{{ aFilesHead.o }}"><span>~/STUDEX.OS/WORKSPACES</span><span>READ ONLY</span></div>
+        <sc-for list="{{ files }}" as="f" hint-placeholder-count="3">
+          <div style="position:relative;display:flex;align-items:center;gap:14px;padding:12px 0;font-family:'Geist Mono',monospace;font-size:12px;opacity:{{ f.o }};transform:{{ f.tf }}">
+            <span style="position:absolute;left:0;right:0;top:0;height:1px;background:rgba(236,230,214,.1);transform-origin:left;transform:{{ f.line }}"></span>
+            <span style="width:6px;height:6px;flex:none;background:{{ f.dot }}"></span>
+            <span style="flex:1;min-width:0;color:#ECE6D6">{{ f.name }}</span>
+            <span style="color:{{ f.metaColor }}">{{ f.meta }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:clamp(22px,3vw,32px);min-width:0">
+      <sc-if value="{{ showCrew }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;gap:12px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.18em;color:#7d766a;opacity:{{ aCrewHead.o }}"><span>CREW MANIFEST</span><span>{{ crewNote }}</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:rgba(236,230,214,.1);border:1px solid rgba(236,230,214,.1)">
+            <sc-for list="{{ crew }}" as="c" hint-placeholder-count="6">
+              <div style="background:#0b0a08;padding:14px 12px 12px;display:flex;flex-direction:column;gap:12px;opacity:{{ c.o }};transform:{{ c.tf }}">
+                <div style="height:clamp(64px,8vw,92px);display:flex;align-items:flex-end;justify-content:center;background:linear-gradient(180deg,transparent 60%,rgba(236,230,214,.04))">
+                  <div style="height:100%;aspect-ratio:106 / 144;background-image:url('assets/pixel-characters.png');background-size:600% 100%;background-position:{{ c.pos }} 0;background-repeat:no-repeat;image-rendering:pixelated;filter:{{ c.filter }}"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#ECE6D6">{{ c.name }}</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;color:{{ c.color }}"><span style="width:5px;height:5px;border-radius:50%;background:{{ c.color }}"></span>{{ c.state }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showProgress }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;gap:12px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em"><span style="color:#ECE6D6">{{ progLabel }}</span><span style="color:{{ accent }};font-variant-numeric:tabular-nums">{{ progPct }}</span></div>
+          <div style="height:1px;background:rgba(236,230,214,.14);position:relative"><div style="position:absolute;left:0;top:-1px;height:3px;width:{{ progWidth }};background:{{ accent }}"></div></div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ progSteps }}" as="p" hint-placeholder-count="5">
+              <div style="display:flex;gap:14px;padding:8px 0;border-bottom:1px solid rgba(236,230,214,.06);font-family:'Geist Mono',monospace;font-size:11px;color:{{ p.color }}"><span style="width:28px;flex:none">{{ p.mark }}</span><span>{{ p.text }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showActions }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button onClick="{{ primary.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:68px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#ECE6D6;color:#070605;opacity:{{ primary.o }};transform:{{ primary.tf }};transition:background 240ms" style-hover="background:#FFB000" style-active="transform:scale(.99)">
+            <span style="display:flex;flex-direction:column;gap:3px;text-align:left"><span style="font-size:17px;font-weight:500;letter-spacing:-.01em">{{ primary.label }}</span><span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;opacity:.6">{{ primary.sub }}</span></span>
+            <span style="font-family:'Geist Mono',monospace;font-size:12px">↵</span>
+          </button>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+            <sc-for list="{{ secondary }}" as="a" hint-placeholder-count="3">
+              <button onClick="{{ a.onClick }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid {{ a.border }};color:{{ a.color }};font-size:13px;opacity:{{ a.o }};transform:{{ a.tf }};transition:border-color 240ms,color 240ms" style-hover="border-color:#ECE6D6;color:#ECE6D6">
+                <span>{{ a.label }}</span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#7d766a">{{ a.key }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showDone }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="Studex Agent OS.dc.html" style="min-height:52px;padding:0 22px;display:flex;align-items:center;background:#ECE6D6;color:#070605;text-decoration:none;font-size:14px;font-weight:500">Enter station</a>
+          <button onClick="{{ replay }}" style="all:unset;box-sizing:border-box;cursor:pointer;min-height:52px;padding:0 22px;display:flex;align-items:center;border:1px solid rgba(236,230,214,.25);font-size:14px" style-hover="border-color:#ECE6D6">Replay sequence</button>
+        </div>
+      </sc-if>
+    </section>
+  </main>
+
+  <footer style="position:relative;z-index:2;padding:0 clamp(18px,4vw,48px) 18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;color:#4f4a41;opacity:{{ aHead.o }}">
+    <span>NOTHING HAS BEEN ERASED</span><span>{{ frame }}</span>
+  </footer>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:5;padding:12px 16px;background:#ECE6D6;color:#070605;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.06em;max-width:90vw">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;speed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.5,&quot;max&quot;:2,&quot;step&quot;:0.25,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;scanline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#FFB000&quot;,&quot;options&quot;:[&quot;#FFB000&quot;,&quot;#E85D5D&quot;,&quot;#ECE6D6&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;showCrew&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Look&quot;}}">
+const BOOT = [['SYS', 'studex.os 2.6 · station loader'], ['SCAN', 'reading workspaces'], ['FAULT', '.station.json · checksum mismatch'], ['FOUND', 'prior station · 2 rooms · 6 agents']];
+const BODY = 'Studex OS could not read the active save, but it found evidence of an earlier station. Recovery Mode keeps a new station from being written over it.';
+const FILES = [['.station.json', 'corrupt · 5.9 GB', true], ['.station.json.bak', '2026-10-21 23:40', false], ['.rooms.yaml', '2 rooms', false]];
+const CREW = [['GROKBOT', 'war room'], ['OPENCLAW', 'war room'], ['CLAUDE', 'war room'], ['CODEX', 'war room'], ['HERMES', 'boardroom'], ['BASE44', 'boardroom']];
+const STATS = [[278, 'AGENTS'], [399, 'SESSIONS'], [2, 'ROOMS'], [5.9, 'GB STATE']];
+const STEPS = ['Lock workspace, read only', 'Verify .station.json.bak', 'Rebuild War Room and Boardroom', 'Reattach herdr sessions', 'Reconnect tunnel'];
+
+const clamp = x => Math.max(0, Math.min(1, x));
+const ease = x => 1 - Math.pow(1 - clamp(x), 4);
+const spring = x => { x = clamp(x); return 1 - Math.exp(-6 * x) * Math.cos(8 * x); };
+
+class Component extends DCLogic {
+  state = { t: 0, phase: 'intro', p: 0, toast: null, mode: null, confirm: false };
+  componentDidMount() { this.play(); this.clk = setInterval(() => this.state.phase !== 'intro' && this.forceUpdate(), 1000); }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.clk); clearTimeout(this.tt); }
+  loop(key, dur, done) {
+    cancelAnimationFrame(this.raf);
+    const sp = this.props.speed ?? 1, t0 = performance.now();
+    const step = now => {
+      const v = (now - t0) * sp;
+      if (v >= dur) { this.setState({ [key]: dur }); done && done(); return; }
+      this.setState({ [key]: v }); this.raf = requestAnimationFrame(step);
+    };
+    this.raf = requestAnimationFrame(step);
+  }
+  play() { this.setState({ t: 0, p: 0, phase: 'intro', mode: null, confirm: false }); this.loop('t', 5200, () => this.setState({ phase: 'idle' })); }
+  recover(mode) { this.setState({ phase: 'progress', mode, p: 0 }); this.loop('p', 3400, () => this.setState({ phase: 'done' })); }
+  toastMsg(m) { clearTimeout(this.tt); this.setState({ toast: m }); this.tt = setTimeout(() => this.setState({ toast: null }), 2600); }
+
+  renderVals() {
+    const s = this.state, t = s.t, done = s.phase === 'done', prog = s.phase === 'progress';
+    const ACC = this.props.accent ?? '#FFB000', RED = '#E85D5D', OK = '#9BC48A', MUTE = '#7d766a';
+    const A = (start, dur = 700, dy = 14) => { const k = ease((t - start) / dur); return { o: k, tf: `translateY(${(1 - k) * dy}px)` }; };
+    const fileAt = 3000, crewAt = 3200, actAt = 4000;
+
+    const COL = { SYS: MUTE, SCAN: '#ECE6D6', FAULT: RED, FOUND: ACC };
+    const bootLines = BOOT.map(([tag, text], i) => ({ tag, text, color: COL[tag], ...A(500 + i * 180, 500, 8) }));
+    const k1 = spring((t - 1700) / 900), k2 = spring((t - 1840) / 900);
+    const bodyA = A(2350, 900, 10);
+    const statK = ease((t - 2700) / 1300);
+    const stats = STATS.map(([v, label], i) => ({ label, val: v % 1 ? (v * statK).toFixed(1) : Math.round(v * statK), ...A(2700 + i * 80, 600, 8) }));
+    const files = FILES.map(([name, meta, bad], i) => {
+      const a = A(fileAt + i * 130, 600, 6);
+      return { name, meta, dot: bad ? RED : done ? OK : ACC, metaColor: bad ? RED : MUTE, line: `scaleX(${ease((t - fileAt - i * 130) / 800)})`, ...a };
+    });
+    const live = prog ? Math.floor((s.p / 3400) * CREW.length) : done ? CREW.length : -1;
+    const crew = CREW.map(([name, room], i) => {
+      const back = i < live;
+      return { name, pos: `${i * 20}%`, state: back ? 'reattached' : room, color: back ? OK : MUTE,
+        filter: back ? 'none' : 'grayscale(1) brightness(.55) contrast(1.1)', ...A(crewAt + i * 90, 700, 12) };
+    });
+
+    const caret = React.createElement('span', { key: 'c', style: { display: 'inline-block', width: '.5em', height: '1em', marginLeft: 3, verticalAlign: '-.12em', background: ACC, animation: 'sx-blink 1s steps(1) infinite' } });
+    const fx = [
+      React.createElement('div', { key: 'g', style: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, opacity: .5, backgroundImage: 'repeating-linear-gradient(0deg, rgba(236,230,214,.022) 0 1px, transparent 1px 4px)' } }),
+      React.createElement('div', { key: 'v', style: { position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, background: 'radial-gradient(120% 90% at 30% 20%, transparent 50%, rgba(0,0,0,.55) 100%)' } }),
+      (this.props.scanline ?? true) && React.createElement('div', { key: 's', style: { position: 'absolute', left: 0, right: 0, top: 0, height: '18vh', pointerEvents: 'none', zIndex: 1, background: 'linear-gradient(180deg, transparent, rgba(255,176,0,.035), transparent)', animation: 'sx-scan 9s linear infinite' } }),
+    ];
+
+    const busy = prog || done;
+    const sec = [
+      ['Restore backup', 'B', () => this.recover('backup')],
+      ['Export report', 'E', () => this.toastMsg('Saved · station-recovery-2026-10-22.txt')],
+      [s.confirm ? 'Confirm start fresh' : 'Start fresh', 'F', () => s.confirm ? this.recover('fresh') : (this.setState({ confirm: true }), this.toastMsg('Press again to confirm. Old files are archived, not deleted.'))],
+    ].map(([label, key, fn], i) => ({ label, key, onClick: busy ? () => {} : fn, border: s.confirm && key === 'F' ? RED : 'rgba(236,230,214,.18)', color: s.confirm && key === 'F' ? RED : '#b8b1a3', ...A(actAt + 120 + i * 90, 600, 10) }));
+
+    const pk = clamp(s.p / 3400), doneIdx = Math.floor(pk * STEPS.length);
+    const MODE = { retry: 'Retrying state recovery', backup: 'Restoring from backup', fresh: 'Archiving · starting fresh' };
+    const d = new Date();
+    return {
+      fx, accent: ACC, clock: d.toTimeString().slice(0, 8),
+      aHead: A(0, 800, 0), barScale: `scaleX(${ease(t / 1400)})`,
+      modeLabel: done ? 'ONLINE' : 'RECOVERY · READ ONLY', modeColor: done ? OK : RED,
+      bootLines, eyebrow: done ? '— RECOVERY COMPLETE' : '— RECOVERY MODE', aEyebrow: A(1500, 600, 6),
+      titleA: done ? (s.mode === 'fresh' ? 'New station' : 'Station') : 'Prior station', titleB: done ? (s.mode === 'fresh' ? 'created.' : 'restored.') : 'data found.',
+      t1: `translateY(${(1 - k1) * 105}%)`, t2: `translateY(${(1 - k2) * 105}%)`,
+      body: done ? (s.mode === 'fresh' ? 'Old files were moved to workspaces/archive. Rooms are empty and ready to set up.' : 'Two rooms, six agents and 399 sessions are back. Last good state 2026-10-21 23:40.') : BODY,
+      caretBody: done ? null : caret,
+      aBody: { ...bodyA, blur: `blur(${(1 - bodyA.o) * 6}px)` },
+      stats, files, aFilesHead: A(fileAt - 100, 500, 0),
+      showCrew: this.props.showCrew ?? true, crew, aCrewHead: A(crewAt - 100, 500, 0), crewNote: done ? '6 / 6 ONLINE' : prog ? `${Math.max(0, live)} / 6` : 'DORMANT',
+      showActions: !busy, primary: { label: 'Retry state recovery', sub: 'RECOMMENDED · READS .BAK IF NEEDED', onClick: busy ? () => {} : () => this.recover('retry'), ...A(actAt, 700, 12) },
+      secondary: sec,
+      showProgress: prog, progLabel: MODE[s.mode] || '', progPct: `${String(Math.floor(pk * 100)).padStart(3, '0')}%`, progWidth: `${pk * 100}%`,
+      progSteps: STEPS.map((text, i) => ({ text, mark: i < doneIdx ? 'OK' : i === doneIdx ? '··' : '—', color: i < doneIdx ? OK : i === doneIdx ? '#ECE6D6' : '#4f4a41' })),
+      showDone: done, replay: () => this.play(),
+      frame: `F ${String(Math.floor(t / (1000 / 30))).padStart(4, '0')} · 30 FPS`,
+      toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
