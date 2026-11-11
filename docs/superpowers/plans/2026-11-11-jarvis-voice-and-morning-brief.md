@@ -224,7 +224,8 @@ def direct_command(jarvis,model,query):
     return [jarvis,"ask","-m",model,"-e","ollama","-t","0","--max-tokens","256","--json","--no-stream","--no-context","-a","","--tools","","--persona","none",query]
 
 def run_owned(command,timeout=180):
-    process=subprocess.Popen(command,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+    try: process=subprocess.Popen(command,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+    except OSError: return {"ok":False,"answer":"","reason":"model_unavailable"}
     try: stdout,stderr=process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
         os.killpg(process.pid,signal.SIGTERM)
@@ -252,7 +253,7 @@ def research_worker(model,query,db_path):
     finally: store.close()
 ```
 
-- [ ] Unit-test `direct_command` exactly; research must use the owned worker and contain no ignored `-t`/`--max-tokens` CLI flags. Patch `ResearchAgent` in a worker test and assert constructor kwargs above, five-search ceiling from the installed constructor, BM25-only retrieval, and store closure. Patch `subprocess.Popen` to assert `stdin=DEVNULL`, `start_new_session=True`, timeout 180, and `os.killpg(process.pid, SIGTERM)` only for that child; test SIGKILL escalation. Add an installed-source precondition test using `inspect.signature(ResearchAgent.__init__)` to assert parameters/defaults `max_iterations == 5`; fail closed with `interface_changed` rather than silently assuming future behavior. Test JSON errors as `invalid_response`, process failures/timeouts as `model_unavailable`, and never return captured stderr/stdout on failure.
+- [ ] Unit-test `direct_command` exactly; research must use the owned worker and contain no ignored `-t`/`--max-tokens` CLI flags. Patch `ResearchAgent` in a worker test and assert constructor kwargs above, five-search ceiling from the installed constructor, BM25-only retrieval, and store closure. Patch `subprocess.Popen` to assert `stdin=DEVNULL`, `start_new_session=True`, timeout 180, and `os.killpg(process.pid, SIGTERM)` only for that child; test SIGKILL escalation. Add `@patch("jarvis_foundation.openjarvis.subprocess.Popen",side_effect=OSError("secret executable path"))` and assert `run_owned(["missing"]) == {"ok":False,"answer":"","reason":"model_unavailable"}`; assert the fixture secret/path is absent from the serialized result. Keep early success and both timeout cleanup tests unchanged. Add an installed-source precondition test using `inspect.signature(ResearchAgent.__init__)` to assert parameters/defaults `max_iterations == 5`; fail closed with `interface_changed` rather than silently assuming future behavior. Test JSON errors as `invalid_response`, process failures/timeouts/startup `OSError` as `model_unavailable`, and never return captured stderr/stdout or underlying exception text on failure. Real acceptance uses no mock.
 
 - [ ] Implement exact retrieval/export conversion. The private query must include the actual local calendar date and source-state instruction, for example `For 2026-11-11, distinguish reviewed receipts, accepted work, unreviewed reports, proposals, blockers and missing check-ins. Input docs=%storedschema; cite only supplied [N] passages.` Here `%storedschema` is the literal envelope key replaced with the selected hit fields (`ref`, `title`, `content_snippet`, `timestamp`, `document_id`, `chunk_idx`, `url`), not a nonexistent API. Do not infer today's date from an old report. Export can run in deterministic source-extraction mode (`--mode source`) or model mode (`--mode model`); model output must be JSON claims with citations and passes through `model_items`.
 
@@ -285,35 +286,105 @@ def export_brief(db_path,query,local_date,mode="source",model_answer=None,clock=
 
 - [ ] Test source prefixes `verified:`, `accepted:`, `proposed:`, `blocked:`, `missing:` and default `reported`; same text cannot become completed merely because it is in `Daily R`. Test retrieval envelope uses actual `SearchHit` attributes and the supplied date, model claims cite only selected hits, malformed claims/JSON return `invalid_response` through CLI, generated time uses the injected clock exactly once, and top-level `sources` matches selected items. Model text stays labelled on cards and in speech.
 
-- [ ] Implement create-only audit with all path checks before opening. Root comes only from validated private config `Obsidian Vault`, never CLI raw root or public data. `request_id` is restricted and final path must be new, non-symlink, relative to the resolved approved session directory and outer root. Use `os.open(..., O_CREAT|O_EXCL|O_WRONLY|O_NOFOLLOW,0o600)`; never append or overwrite another agent's file.
+- [ ] Implement the shared deterministic audit schema before `write_audit`. Root comes only from validated private config `Obsidian Vault`, never CLI raw root/public data. This is explicitly macOS-only: missing `os.getuid`, `os.O_NOFOLLOW`, `Path.lstat`, or POSIX ownership semantics fails closed with `invalid_audit_field:platform`; no fake Windows fallback. Every existing root/destination-parent component from the authorized root downward must be a non-symlink directory owned by `os.getuid()`, checked with `lstat()` before creation and again at the resolved parent. `request_id` comes only from `new_audit()`'s `uuid4().hex`; unsanitized labels are rejected. Sources are canonical Obsidian URIs with exact `id`, `uri`, `observed_at` keys (maximum 10); relative `file=` cannot be absolute, contain `..` or backslashes. Total JSON is at most 32 KiB. Unknown fields and recursive `transcript`, `reply`, credential/secret/token/password keys are rejected rather than silently stripped. Every validation failure raises `AuditError(key)` whose string is exactly `invalid_audit_field:<key>`.
 
 ```python
 # jarvis_foundation/audit.py
-import json,os,re
-from pathlib import Path
+import json,os,re,stat,uuid
+from datetime import datetime
+from pathlib import Path,PurePosixPath
+from urllib.parse import parse_qs,urlparse
+
+FIELDS={"request_id","started_at","finished_at","sources","outcome","tools","evidence_reconciliation"}
+OUTCOMES={"grounded","model_failure","voice_failed","voice_succeeded"}
+TOOLS={"obsidian_search","voicebox.transcribe","voicebox.speak"}
+PRIVATE={"transcript","reply","credential","credentials","secret","secrets","token","password","raw_text"}
+
+class AuditError(ValueError):
+    def __init__(self,key): self.key=key; super().__init__(f"invalid_audit_field:{key}")
+def reject(key): raise AuditError(key)
+def z_time(value,key):
+    if not isinstance(value,str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",value): reject(key)
+    try: return datetime.strptime(value,"%Y-%m-%dT%H:%M:%SZ")
+    except ValueError: reject(key)
+def assert_no_private_fields(value):
+    if isinstance(value,dict):
+        for key,child in value.items():
+            if not isinstance(key,str) or key.lower() in PRIVATE: reject(str(key))
+            assert_no_private_fields(child)
+    elif isinstance(value,list):
+        for child in value: assert_no_private_fields(child)
+    elif not isinstance(value,(str,int,float,bool,type(None))): reject("types")
+def validate_audit(record):
+    if not isinstance(record,dict): reject("record")
+    for key in FIELDS-set(record): reject(key)
+    for key in set(record)-FIELDS: reject(key)
+    assert_no_private_fields(record)
+    if not isinstance(record["request_id"],str) or not re.fullmatch(r"[0-9a-f]{32}",record["request_id"]): reject("request_id")
+    started=z_time(record["started_at"],"started_at"); finished=z_time(record["finished_at"],"finished_at")
+    if started>finished: reject("finished_at")
+    if record["outcome"] not in OUTCOMES: reject("outcome")
+    sources=record["sources"]
+    if not isinstance(sources,list) or len(sources)>10: reject("sources")
+    ids=set()
+    for source in sources:
+        if not isinstance(source,dict) or set(source)!={"id","uri","observed_at"}: reject("sources")
+        if not isinstance(source["id"],str) or not 1<=len(source["id"])<=192: reject("sources.id")
+        if not isinstance(source["uri"],str) or not 1<=len(source["uri"])<=512: reject("sources.uri")
+        z_time(source["observed_at"],"sources.observed_at")
+        parsed=urlparse(source["uri"]); query=parse_qs(parsed.query)
+        if parsed.scheme!="obsidian" or parsed.netloc!="open" or set(query)!={"vault","file"}: reject("sources.uri")
+        relative=PurePosixPath(query["file"][0])
+        if relative.is_absolute() or ".." in relative.parts or "\\" in query["file"][0]: reject("sources.uri")
+        if source["id"] in ids: reject("sources.id")
+        ids.add(source["id"])
+    tools=record["tools"]
+    if not isinstance(tools,list) or len(tools)>12: reject("tools")
+    if any(not isinstance(x,str) or not x or len(x)>100 or not x.isascii() or x not in TOOLS for x in tools): reject("tools")
+    evidence=record["evidence_reconciliation"]
+    if not isinstance(evidence,dict) or set(evidence)!={"used_source_ids","receipt_status","note"}: reject("evidence_reconciliation")
+    used=evidence["used_source_ids"]
+    if not isinstance(used,list) or len(used)>10 or any(not isinstance(x,str) or len(x)>192 or x not in ids for x in used): reject("evidence_reconciliation.used_source_ids")
+    if evidence["receipt_status"] not in {"not_applicable","pending","verified","rejected"}: reject("evidence_reconciliation.receipt_status")
+    if not isinstance(evidence["note"],str) or len(evidence["note"])>300: reject("evidence_reconciliation.note")
+    if len(json.dumps(record,ensure_ascii=False).encode("utf-8"))>32768: reject("size")
+    return record
+
+def new_audit(started_at,finished_at,sources,outcome,tools,evidence_reconciliation):
+    return validate_audit({"request_id":uuid.uuid4().hex,"started_at":started_at,"finished_at":finished_at,"sources":sources,"outcome":outcome,"tools":tools,"evidence_reconciliation":evidence_reconciliation})
+
+def owned_nosymlink(path,uid,key):
+    try: info=path.lstat()
+    except OSError: reject(key)
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode) or info.st_uid!=uid: reject(key)
 
 def write_audit(vault_root,record):
-    required={"request_id","started_at","finished_at","sources","outcome","tools","evidence_reconciliation"}
-    if set(record)!=required or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}",record["request_id"]): raise ValueError("invalid audit")
-    if record["outcome"] not in {"grounded","model_failure","voice_failed","voice_succeeded"} or not isinstance(record["sources"],list) or len(record["sources"])>12: raise ValueError("invalid audit")
-    if any(set(x)!={"title","url"} or not isinstance(x["title"],str) or not isinstance(x["url"],str) for x in record["sources"]): raise ValueError("invalid audit sources")
-    if not isinstance(record["tools"],list) or any(x not in {"obsidian_search","voicebox.transcribe","voicebox.speak"} for x in record["tools"]): raise ValueError("invalid tools")
-    root=Path(vault_root).resolve(); candidate=root/"2nd Brain"/"Agents"/"Sessions"/"JARVIS"
+    validate_audit(record)
+    if not hasattr(os,"getuid") or not hasattr(os,"O_NOFOLLOW"): reject("platform")
+    uid=os.getuid(); root=Path(vault_root)
+    if not root.is_absolute(): reject("root")
+    owned_nosymlink(root,uid,"root"); root=root.resolve(strict=True)
+    candidate=root/"2nd Brain"/"Agents"/"Sessions"/"JARVIS"
     current=root
-    for part in ("2nd Brain","Agents","Sessions","JARVIS"):
-        current=current/part
-        if current.is_symlink(): raise ValueError("unsafe audit parent")
-    base.mkdir(parents=True,exist_ok=True,mode=0o700); base=candidate.resolve()
-    if not base.is_relative_to(root): raise ValueError("unsafe audit parent")
+    for part in ("2nd Brain","Agents","Sessions"):
+        current=current/part; owned_nosymlink(current,uid,"parent")
+    if candidate.exists() or candidate.is_symlink():
+        owned_nosymlink(candidate,uid,"parent"); base=candidate.resolve(strict=True)
+    else:
+        candidate.mkdir(mode=0o700,parents=True,exist_ok=False)
+        base=candidate.resolve(strict=True)
+    owned_nosymlink(base,uid,"parent")
+    if not base.is_relative_to(root): reject("parent")
     target=base/(record["request_id"]+".json")
-    if target.exists() or target.is_symlink() or not target.resolve().is_relative_to(base): raise ValueError("audit exists or unsafe")
-    flags=os.O_CREAT|os.O_EXCL|os.O_WRONLY|getattr(os,"O_NOFOLLOW",0)
-    descriptor=os.open(target,flags,0o600)
-    with os.fdopen(descriptor,"w",encoding="utf-8") as stream: json.dump(record,stream,ensure_ascii=False); stream.write("\n")
+    if target.exists() or target.is_symlink() or not target.resolve().is_relative_to(base): reject("destination")
+    payload=(json.dumps(record,ensure_ascii=False)+"\n").encode("utf-8")
+    descriptor=os.open(target,os.O_CREAT|os.O_EXCL|os.O_WRONLY|os.O_NOFOLLOW,0o600)
+    with os.fdopen(descriptor,"wb") as stream: stream.write(payload)
+    owned_nosymlink(base,uid,"parent")
     return target
 ```
 
-- [ ] Tests use synthetic IDs/titles/URLs only and assert second write, `../`, symlink parent/target, extra/missing fields, unsupported tool/outcome, and over-12 sources are refused without modifying an existing sentinel file. `evidence_reconciliation` is a bounded object/string distinguishing retrieved passages, model claims, TTS acknowledgement and human audible confirmation. Whole transcripts/replies and public raw logs are prohibited.
+- [ ] Write the failing tests first using only `tempfile.TemporaryDirectory()` as the authorized synthetic root; create `2nd Brain/Agents/Sessions` inside that fixture, never touch a real vault. Use `new_audit(...)` with synthetic `verified-proof` source `id`, canonical `obsidian://open?vault=Synthetic&file=proof.md`, same-second Z timestamps, `obsidian_search`, and evidence `used_source_ids=["verified-proof"]`, `receipt_status="verified"`, `note="Synthetic evidence checked."`. Assert the real created file's parsed JSON equals the record, mode is 0600, parent is beneath the fixture root, and request ID is 32 lowercase hex characters. Calling `write_audit` twice with that same record must raise `FileExistsError` from `O_EXCL` and preserve the original bytes; two distinct UUID records with identical timestamps must both succeed. Also test missing preexisting JARVIS parent creation (fixing the former undefined `base`), non-root ownership via mocked `lstat().st_uid`, every existing root/parent symlink, target symlink, missing platform attributes, `../`, unknown/missing fields, invalid Z times, reversed times, malformed request IDs, noncanonical URI/path escape, duplicate/over-10/oversized sources, invalid/oversized/non-ASCII tools, invalid evidence status/unknown source ID/oversized note, recursive private keys, unsupported objects, and over-32-KiB payloads. Each schema rejection must assert the exact `invalid_audit_field:<key>` contract and sentinel non-modification. Optional Markdown output, if later enabled, may use only a fixed JSON-derived template with no invented PII or YAML transclusion; it receives the same validated bounded record.
 
 - [ ] Implement exactly `validate`, `index`, `search`, `export`, and internal `research-worker`. Search/export print private content only to the owner's terminal/file; public dry-run tests use synthetic DBs. No defaults point to public raw files. `validate` emits IDs only. `search --query` emits actual hit fields. `export --output` uses create-exclusive mode 0600; model mode reads a bounded model result and audits outcomes separately.
 
@@ -439,7 +510,7 @@ document.querySelector("#brief-file").addEventListener("change",async event=>{
 - [ ] Rerun all regressions. Run `~/OpenJarvis/.venv/bin/jarvis model list` once under 30 seconds. If no installed model returns, report provider/network blocked and stop. Choose a returned CPU-appropriate model and make exactly one `bounded_direct(...,"Reply with READY.")` call at 180 seconds; no download/fallback/retry. Only success unlocks one research request.
 - [ ] Validate both private roots, directly read each connector, index, retrieve today's evidence, export a source brief and inspect citations/freshness. For model-card mode, pass `retrieval_envelope(hits, local_date)` from the exact selected hits to one `bounded_direct` call and require its cited JSON claims; never relabel independent research citations as those hit references. Separately, call `bounded_research` once with the exact harmless prompt **“Summarize today's approved work and blocked tasks in three sentences.”** Its effective limits are five searches/tool iterations, zero temperature, 512 output tokens, 8192 context, 180-second process-group timeout—not ignored CLI generation flags. On failure emit `model_failure` audit and stop.
 - [ ] Display: **“Run in your terminal/open VoiceBox when you're present. Confirm microphone permission and keep other voice hooks disabled for this single test.”** Do not launch it autonomously. After owner confirmation, make one bounded `tools/list` JSON-RPC request to `/mcp` with `X-Voicebox-Client-Id: jarvis-pipe`. Require actual `voicebox.transcribe` and `voicebox.speak` schemas and configured 20/30-second push-to-talk timeout. No stop/cancel control unless discovery explicitly supports it.
-- [ ] Owner initiates one capture through the repaired existing path. Verify transcript normalization, selected sources, response labels/citations, strict TTS acknowledgement (`speak_result=true`) and actual audible playback. HTTP/JSON alone is not playback proof. Record create-only audit fields `request_id`, `started_at`, `finished_at`, bounded private `sources` title/URL, `outcome` (`grounded`, `model_failure`, `voice_failed`, `voice_succeeded`), allowed `tools`, and `evidence_reconciliation`; keep full transcript/reply out of public tests/logs. No repeated voice generation or always-on listening.
+- [ ] Owner initiates one capture through the repaired existing path. Verify transcript normalization, selected sources, response labels/citations, strict TTS acknowledgement (`speak_result=true`) and actual audible playback. HTTP/JSON alone is not playback proof. Record create-only audit fields `request_id`, `started_at`, `finished_at`, bounded private `sources` objects with `id`, canonical `uri`, and `observed_at`, `outcome` (`grounded`, `model_failure`, `voice_failed`, `voice_succeeded`), allowed `tools`, and `evidence_reconciliation`; keep full transcript/reply out of public tests/logs. No repeated voice generation or always-on listening.
 - [ ] Independently review public and private diffs plus observed diagnostics; roll back only the private caller from backup on failure. Run final `python3 -m unittest discover -s tests -v && node --test tests/rwanda_ledger.test.mjs`, `git diff --check`, and explicit placeholder/private-data scan. Request exactly **“User explicit writes start approved foundation code”** before implementation if still in review. Do not push automatically.
 
 ## Excluded follow-ups
