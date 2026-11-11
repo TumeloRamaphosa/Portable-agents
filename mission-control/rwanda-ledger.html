@@ -55,6 +55,15 @@
   const status = document.querySelector("#status");
   const button = document.querySelector("#load");
   function showError(message) { status.textContent = message; status.classList.add("error"); }
+  function clearLedger() {
+    document.querySelector("#company").textContent = "Not loaded";
+    document.querySelector("#generated").textContent = "Not loaded";
+    document.querySelector("#count").textContent = "0";
+    const container = document.querySelector("#jobs");
+    container.replaceChildren();
+    container.className = "empty";
+    container.textContent = "No jobs recorded.";
+  }
   button.addEventListener("click", async () => {
     status.classList.remove("error");
     status.textContent = "Loading local ledger…";
@@ -95,7 +104,8 @@
       }
       status.textContent = `Loaded ${ledger.jobs.length} recorded job(s).`;
     } catch (error) {
-      showError(`Ledger unavailable or invalid: ${error.message}`);
+      clearLedger();
+      showError(`Ledger unavailable or invalid: ${error.message}. Previous data is not shown.`);
     }
   });
 </script>

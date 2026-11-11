@@ -10,7 +10,7 @@ SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 REQUIRED_FIELDS = (
     "schema_version", "id", "status", "country", "sectors", "coordinator",
     "owner", "deployment_writer", "shared_repository", "execution_repository",
-    "git_host_target", "agents", "human_approval_required",
+    "git_host_target", "agents", "human_approval_required", "evidence_status",
 )
 ALLOWED_FIELDS = frozenset((*REQUIRED_FIELDS, "allowed_tools", "evidence_status"))
 REQUIRED_APPROVALS = frozenset({
@@ -44,6 +44,8 @@ def validate_company(document: dict) -> list[str]:
         errors.append("schema_version: must equal integer 1")
     if "status" in document and document["status"] != "planned":
         errors.append("status: must equal planned")
+    if "evidence_status" in document and document["evidence_status"] != "not-verified":
+        errors.append("evidence_status: must equal not-verified")
     for field in ("id", "country", "coordinator", "owner", "deployment_writer", "shared_repository", "execution_repository", "git_host_target"):
         if field in document:
             errors.extend(_nonempty_string(document, field))
@@ -88,11 +90,18 @@ def validate_company(document: dict) -> list[str]:
     tools = document.get("allowed_tools")
     if "allowed_tools" in document:
         if isinstance(tools, dict):
-            errors.extend(f"allowed_tools.{tool}: tool is not allowed" for tool in tools if tool not in ALLOWED_TOOLS)
+            tool_entries = [(repr(tool), tool) for tool in tools]
         elif isinstance(tools, list):
-            errors.extend(f"allowed_tools.{tool}: tool is not allowed" for tool in tools if tool not in ALLOWED_TOOLS)
+            tool_entries = [(str(index), tool) for index, tool in enumerate(tools)]
         else:
+            tool_entries = []
             errors.append("allowed_tools: must be an object or list")
+        for path, tool in tool_entries:
+            field = f"allowed_tools[{path}]"
+            if not isinstance(tool, str) or not tool.strip():
+                errors.append(f"{field}: must be a nonempty string")
+            elif tool not in ALLOWED_TOOLS:
+                errors.append(f"{field}: tool is not allowed")
 
     return sorted(set(errors))
 

@@ -51,6 +51,16 @@ test("static UI has no dispatch, persistence, mock metrics, or markup injection 
   assert.match(html, /Not connected to agent execution/);
 });
 
+test("reload failure clears stale ledger details and says previous data is not shown", async () => {
+  const html = await readFile(new URL("../mission-control/rwanda-ledger.html", import.meta.url), "utf8");
+  assert.match(html, /function clearLedger\(\)/);
+  for (const id of ["company", "generated", "count", "jobs"]) {
+    assert.match(html, new RegExp(`clearLedger[\\s\\S]*#${id}`));
+  }
+  assert.match(html, /catch \(error\) \{\s*clearLedger\(\);\s*showError\(/);
+  assert.match(html, /Previous data is not shown/);
+});
+
 test("checked-in ledger fixture is empty and current-schema", async () => {
   const work = JSON.parse(await readFile(new URL("../work/rwanda/jobs.json", import.meta.url), "utf8"));
   const copy = JSON.parse(await readFile(new URL("../mission-control/jobs.json", import.meta.url), "utf8"));
