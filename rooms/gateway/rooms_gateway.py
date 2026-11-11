@@ -158,6 +158,7 @@ def snapshot():
         agents = sorted(buckets[r["id"]], key=lambda a: (STATUSES + ("offline",)).index(a["status"]))
         rooms.append({
             "id": r["id"], "name": r["name"], "lead": r.get("lead"), "accent": r.get("accent"),
+            "reel": r.get("reel"),
             "computer": {**comp_cfg, "connected": bool(live), "online": bool(live and live["online"]),
                          "last_seen": live and live["last_seen"], "hostname": live and live["hostname"]},
             "agents": agents, "counts": counts(agents),
@@ -214,6 +215,19 @@ async def rooms_json(request: Request):
 @mcp.custom_route("/", methods=["GET"])
 async def rooms_page(request: Request):
     return FileResponse(WEB_PAGE)
+
+
+MEDIA_DIR = (HERE.parent / "web" / "media").resolve()
+
+
+@mcp.custom_route("/media/{name}", methods=["GET"])
+async def media(request: Request):
+    """Promo reels and posters. Only plain files directly inside web/media are served."""
+    name = request.path_params["name"]
+    target = (MEDIA_DIR / name).resolve()
+    if target.parent != MEDIA_DIR or not target.is_file() or target.suffix.lower() not in (".mp4", ".jpg", ".png", ".webm"):
+        return PlainTextResponse("not found", status_code=404)
+    return FileResponse(target, headers={"Cache-Control": "public, max-age=86400"})
 
 
 @mcp.custom_route("/healthz", methods=["GET"])

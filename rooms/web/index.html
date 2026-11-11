@@ -61,6 +61,14 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
 dialog label{display:flex;flex-direction:column;gap:6px;font-size:11px;letter-spacing:.1em;margin-bottom:14px;color:var(--dim)}
 dialog input{background:#0B0A07;border:1px solid var(--line);color:var(--cream);padding:9px;font-size:13px}
 .row{display:flex;gap:10px;justify-content:flex-end}
+.reel{margin:0;position:relative;background:#000;border-bottom:1px solid var(--line);aspect-ratio:16/9;overflow:hidden}
+.reel.tall{aspect-ratio:16/9}
+.reel video{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.18) saturate(1.05)}
+.reel.tall video{object-fit:contain;background:radial-gradient(ellipse at center,#1f1709,#0a0805 70%)}
+.reel figcaption{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;
+  background:linear-gradient(transparent,rgba(10,8,5,.92));font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow)}
+.reel figcaption span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reel .snd{min-height:30px;padding:4px 10px;background:rgba(10,8,5,.7);flex:none}
 @media (max-width:700px){.top{position:static}}
 @media (prefers-reduced-motion:no-preference){.pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{50%{opacity:.35}}}
 </style>
@@ -119,27 +127,48 @@ dialog input{background:#0B0A07;border:1px solid var(--line);color:var(--cream);
       <span class="meta">${esc(meta)}${a.title ? ' · ' + esc(a.title) : ''}</span></li>`;
   }
 
+  // Reels live in web/media. Served by the gateway at /media/…, or beside this page when opened on its own.
+  const mediaUrl = (src, isDemo) => /^https?:/.test(src) ? src : (!isDemo && gw ? new URL(src, gw.replace(/\/?$/, '/')).href : src);
+  function reelHtml(reel, isDemo) {
+    return `<figure class="reel${reel.vertical ? ' tall' : ''}">
+      <video src="${esc(mediaUrl(reel.src, isDemo))}" poster="${esc(mediaUrl(reel.poster || '', isDemo))}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(reel.title || 'promo reel')}"></video>
+      <figcaption><span>▶ ${esc(reel.title || 'PROMO')}</span>${reel.sound ? '<button class="btn snd" type="button" aria-pressed="false">♪ SOUND OFF</button>' : ''}</figcaption>
+    </figure>`;
+  }
+
   function render(d, isDemo) {
     const all = d.rooms.flatMap(r => r.agents).concat(d.unassigned.agents);
     const n = s => all.filter(a => a.status === s).length;
     document.getElementById('totals').innerHTML =
       `<span><b>${all.length}</b> AGENTS</span><span><b style="color:var(--working)">${n('working')}</b> WORKING</span><span><b style="color:var(--blocked)">${n('blocked')}</b> BLOCKED</span><span><b>${d.computers.filter(c=>c.online).length}/${d.computers.length}</b> COMPUTERS ONLINE</span>`;
 
-    document.getElementById('rooms').innerHTML = d.rooms.map(r => {
+    // Each room card is built once (so its promo reel keeps playing); only its live part refreshes.
+    const grid = document.getElementById('rooms');
+    const ids = d.rooms.map(r => r.id).join('|');
+    if (grid.dataset.ids !== ids) { grid.innerHTML = ''; grid.dataset.ids = ids; }
+    d.rooms.forEach(r => {
+      let card = grid.querySelector(`[data-room="${CSS.escape(r.id)}"]`);
+      if (!card) {
+        card = document.createElement('article');
+        card.className = 'room'; card.dataset.room = r.id; card.setAttribute('aria-label', `${r.name} room`);
+        card.innerHTML = `<div class="rh"></div>${r.reel ? reelHtml(r.reel, isDemo) : ''}<div class="dyn"></div>`;
+        const btn = card.querySelector('.snd');
+        if (btn) btn.onclick = () => { const v = card.querySelector('video'); v.muted = !v.muted; if (!v.muted) v.play().catch(() => {});
+          btn.textContent = v.muted ? '♪ SOUND OFF' : '♪ SOUND ON'; btn.setAttribute('aria-pressed', String(!v.muted)); };
+        grid.appendChild(card);
+      }
       const c = r.computer, total = r.agents.length || 1;
       const pcState = !c.connected ? ['NOT CONNECTED','var(--offline)'] : c.online ? ['ONLINE','var(--done)'] : [`OFFLINE · ${ago(c.last_seen)}`,'var(--blocked)'];
       const bar = ORDER.filter(s => r.counts[s]).map(s => `<span style="width:${100*r.counts[s]/total}%;background:${COL[s]}" title="${s} ${r.counts[s]}"></span>`).join('');
       const counts = ORDER.filter(s => r.counts[s]).map(s => `<span><span style="color:${COL[s]}">■</span> ${r.counts[s]} ${s}</span>`).join('');
-      return `<article class="room" style="--accent:${esc(r.accent)}" aria-label="${esc(r.name)} room">
-        <div class="rh"><span class="rn">${esc(r.name)}</span><span class="lead">LEAD · ${esc(r.lead || '—')}</span>
+      card.querySelector('.rh').innerHTML = `<span class="rn">${esc(r.name)}</span><span class="lead">LEAD · ${esc(r.lead || '—')}</span>
           <div class="pc"><span class="dot" style="background:${pcState[1]}" aria-hidden="true"></span>
             <span class="lbl" title="${esc(c.note || '')}">${esc(c.label || c.id)}${c.hostname ? ' · ' + esc(c.hostname) : ''}</span>
-            <span class="st" style="color:${pcState[1]}">${pcState[0]}</span></div></div>
-        ${r.agents.length ? `<div class="bar" aria-hidden="true">${bar}</div><div class="counts">${counts}</div>
+            <span class="st" style="color:${pcState[1]}">${pcState[0]}</span></div>`;
+      card.querySelector('.dyn').innerHTML = r.agents.length ? `<div class="bar" aria-hidden="true">${bar}</div><div class="counts">${counts}</div>
           <ul class="agents">${r.agents.map(agentRow).join('')}</ul>`
-          : `<div class="empty">No agents reporting yet.<br>Run the relay on <b>${esc(c.id)}</b> to bring this room online.</div>`}
-      </article>`;
-    }).join('');
+          : `<div class="empty">No agents reporting yet.<br>Run the relay on <b>${esc(c.id)}</b> to bring this room online.</div>`;
+    });
 
     const un = d.unassigned.agents;
     document.getElementById('unSec').hidden = !un.length;
@@ -186,6 +215,12 @@ dialog input{background:#0B0A07;border:1px solid var(--line);color:var(--cream);
       room('coffee','Studex Coffee','CashClaw','#B8924E',{ id:'coffee-desk', label:'Coffee desk (to assign)', hostname:'macbook' }, false,
         [off(A('cashclaw','hermes','working','coffee','coffee-desk',61))]),
     ];
+    const R = {
+      'global-markets': { src: 'media/ghost-hall.mp4', poster: 'media/ghost-hall.jpg', title: 'Business Ghosts · the hall' },
+      'dark-factory': { src: 'media/studbot-presenter.mp4', poster: 'media/studbot-presenter.jpg', title: 'StudBot preview · WhatsApp AI assistant', sound: true, vertical: true },
+      'coffee': { src: 'media/coffee-tiger.mp4', poster: 'media/coffee-tiger.jpg', title: 'Studex Coffee · the tiger pour', sound: true },
+    };
+    rooms.forEach(r => { r.reel = R[r.id] || null; });
     return { rooms, unassigned: { agents: [], counts: {} },
       computers: rooms.map(r => ({ id: r.computer.id, hostname: r.computer.hostname, online: r.computer.online, last_seen: r.computer.last_seen, herdr: true, errors: [] })) };
   }

@@ -76,6 +76,13 @@ Needs Python 3.8+ and herdr 0.8+. No other installs. To keep it running, use `re
 (up to about 5.5 hours) and replay in order when the connection is back. The room shows the computer as
 offline with each agent's last known status until then.
 
+## Promo reels
+
+A room can carry a short promo video: add a `reel` to it in `rooms.json` (`src`, `poster`, `title`, `sound`,
+`vertical`) and put the file in `web/media/`. It plays muted on a loop at the top of the room, with a sound
+button when the clip has audio. Current reels: Coffee (tiger pour), Super Agents (StudBot presenter),
+Global Markets (Business Ghosts hall). Keep files under ~2 MB: `ffmpeg -i in.mp4 -vf scale='min(1280,iw)':-2 -c:v libx264 -preset veryfast -crf 26 -movflags +faststart out.mp4`.
+
 ## Agents asking about rooms (MCP)
 
 Point any MCP client at `https://<your-gateway>/mcp`:

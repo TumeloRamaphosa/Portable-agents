@@ -13,8 +13,18 @@
         "kind": "cloud",
         "note": "Shopify, ads and content agents"
       },
-      "workspaces": ["meat", "auto-meat", "studexmeat", "content"],
-      "agents": ["naledi", "eddie", "ralf", "content"]
+      "workspaces": [
+        "meat",
+        "auto-meat",
+        "studexmeat",
+        "content"
+      ],
+      "agents": [
+        "naledi",
+        "eddie",
+        "ralf",
+        "content"
+      ]
     },
     {
       "id": "global-markets",
@@ -27,8 +37,25 @@
         "kind": "cloud",
         "note": "RFQs, trading desk, Project Chronos"
       },
-      "workspaces": ["markets", "global-markets", "chronos", "sgm"],
-      "agents": ["katjana", "cryptopia", "orgo-gm", "market-lead", "ledger"]
+      "workspaces": [
+        "markets",
+        "global-markets",
+        "chronos",
+        "sgm"
+      ],
+      "agents": [
+        "katjana",
+        "cryptopia",
+        "orgo-gm",
+        "market-lead",
+        "ledger"
+      ],
+      "reel": {
+        "src": "media/ghost-hall.mp4",
+        "poster": "media/ghost-hall.jpg",
+        "title": "Business Ghosts · the hall",
+        "sound": false
+      }
     },
     {
       "id": "dark-factory",
@@ -41,8 +68,30 @@
         "kind": "cloud",
         "note": "SaaS build, software factory, Stud-Bot"
       },
-      "workspaces": ["dark-factory", "factory", "super-agents", "studbot", "orch", "infra"],
-      "agents": ["product", "adam-smasher", "claudio-cto", "codex", "openclaw", "grok", "hermes-core"]
+      "workspaces": [
+        "dark-factory",
+        "factory",
+        "super-agents",
+        "studbot",
+        "orch",
+        "infra"
+      ],
+      "agents": [
+        "product",
+        "adam-smasher",
+        "claudio-cto",
+        "codex",
+        "openclaw",
+        "grok",
+        "hermes-core"
+      ],
+      "reel": {
+        "src": "media/studbot-presenter.mp4",
+        "poster": "media/studbot-presenter.jpg",
+        "title": "StudBot preview · WhatsApp AI assistant",
+        "sound": true,
+        "vertical": true
+      }
     },
     {
       "id": "coffee",
@@ -55,8 +104,21 @@
         "kind": "local",
         "note": "Café Noir, Rwanda supply. No dedicated machine yet"
       },
-      "workspaces": ["coffee", "cafe-noir", "founders-den"],
-      "agents": ["coffee", "cashclaw"]
+      "workspaces": [
+        "coffee",
+        "cafe-noir",
+        "founders-den"
+      ],
+      "agents": [
+        "coffee",
+        "cashclaw"
+      ],
+      "reel": {
+        "src": "media/coffee-tiger.mp4",
+        "poster": "media/coffee-tiger.jpg",
+        "title": "Studex Coffee · the tiger pour",
+        "sound": true
+      }
     }
   ]
 }
