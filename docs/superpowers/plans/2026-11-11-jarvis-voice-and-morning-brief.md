@@ -307,14 +307,25 @@ def z_time(value,key):
     if not isinstance(value,str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",value): reject(key)
     try: return datetime.strptime(value,"%Y-%m-%dT%H:%M:%SZ")
     except ValueError: reject(key)
+MAX_AUDIT_DEPTH=8; MAX_AUDIT_NODES=256
+
 def assert_no_private_fields(value):
-    if isinstance(value,dict):
-        for key,child in value.items():
-            if not isinstance(key,str) or key.lower() in PRIVATE: reject(str(key))
-            assert_no_private_fields(child)
-    elif isinstance(value,list):
-        for child in value: assert_no_private_fields(child)
-    elif not isinstance(value,(str,int,float,bool,type(None))): reject("types")
+    # Stack entries are (object, depth); the root is depth zero.
+    stack=[(value,0)]; visited_ids=set(); visited_nodes=0
+    while stack:
+        current,depth=stack.pop()
+        if depth>MAX_AUDIT_DEPTH: reject("audit_size_or_nesting")
+        if isinstance(current,(dict,list)):
+            identity=id(current)
+            if identity in visited_ids: reject("audit_size_or_nesting")
+            visited_ids.add(identity); visited_nodes+=1
+            if visited_nodes>MAX_AUDIT_NODES: reject("audit_size_or_nesting")
+            children=current.values() if isinstance(current,dict) else current
+            if isinstance(current,dict):
+                for key in current:
+                    if not isinstance(key,str) or key.lower() in PRIVATE: reject(str(key))
+            stack.extend((child,depth+1) for child in children)
+        elif not isinstance(current,(str,int,float,bool,type(None))): reject("types")
 def validate_audit(record):
     if not isinstance(record,dict): reject("record")
     for key in FIELDS-set(record): reject(key)
@@ -384,7 +395,7 @@ def write_audit(vault_root,record):
     return target
 ```
 
-- [ ] Write the failing tests first using only `tempfile.TemporaryDirectory()` as the authorized synthetic root; create `2nd Brain/Agents/Sessions` inside that fixture, never touch a real vault. Use `new_audit(...)` with synthetic `verified-proof` source `id`, canonical `obsidian://open?vault=Synthetic&file=proof.md`, same-second Z timestamps, `obsidian_search`, and evidence `used_source_ids=["verified-proof"]`, `receipt_status="verified"`, `note="Synthetic evidence checked."`. Assert the real created file's parsed JSON equals the record, mode is 0600, parent is beneath the fixture root, and request ID is 32 lowercase hex characters. Calling `write_audit` twice with that same record must raise `FileExistsError` from `O_EXCL` and preserve the original bytes; two distinct UUID records with identical timestamps must both succeed. Also test missing preexisting JARVIS parent creation (fixing the former undefined `base`), non-root ownership via mocked `lstat().st_uid`, every existing root/parent symlink, target symlink, missing platform attributes, `../`, unknown/missing fields, invalid Z times, reversed times, malformed request IDs, noncanonical URI/path escape, duplicate/over-10/oversized sources, invalid/oversized/non-ASCII tools, invalid evidence status/unknown source ID/oversized note, recursive private keys, unsupported objects, and over-32-KiB payloads. Each schema rejection must assert the exact `invalid_audit_field:<key>` contract and sentinel non-modification. Optional Markdown output, if later enabled, may use only a fixed JSON-derived template with no invented PII or YAML transclusion; it receives the same validated bounded record.
+- [ ] Write the failing tests first using only `tempfile.TemporaryDirectory()` as the authorized synthetic root; create `2nd Brain/Agents/Sessions` inside that fixture, never touch a real vault. Use `new_audit(...)` with synthetic `verified-proof` source `id`, canonical `obsidian://open?vault=Synthetic&file=proof.md`, same-second Z timestamps, `obsidian_search`, and evidence `used_source_ids=["verified-proof"]`, `receipt_status="verified"`, `note="Synthetic evidence checked."`. Assert the real created file's parsed JSON equals the record, mode is 0600, parent is beneath the fixture root, and request ID is 32 lowercase hex characters. Calling `write_audit` twice with that same record must raise `FileExistsError` from `O_EXCL` and preserve the original bytes; two distinct UUID records with identical timestamps must both succeed. Also test missing preexisting JARVIS parent creation (fixing the former undefined `base`), non-root ownership via mocked `lstat().st_uid`, every existing root/parent symlink, target symlink, missing platform attributes, `../`, unknown/missing fields, invalid Z times, reversed times, malformed request IDs, noncanonical URI/path escape, duplicate/over-10/oversized sources, invalid/oversized/non-ASCII tools, invalid evidence status/unknown source ID/oversized note, recursive private keys, unsupported objects, and over-32-KiB payloads. Each schema rejection must assert the exact `invalid_audit_field:<key>` contract and sentinel non-modification. Add `AuditValidationTests.test_rejects_cyclic_dict_without_creating_file`, `test_rejects_cyclic_list_without_creating_file`, `test_rejects_nine_nested_containers_without_creating_file`, and `test_rejects_over_256_nodes_without_creating_file`: start from a valid synthetic record, respectively set `evidence_reconciliation["note"]` to a self-referencing dict/list, a chain of nine child containers below the root, and a list of 257 empty dicts; call `write_audit` beneath a fresh temporary root and assert `AuditError.key == "audit_size_or_nesting"` plus `not (temporary_root/"2nd Brain"/"Agents"/"Sessions"/"JARVIS"/(record["request_id"]+".json")).exists()`. The nine-container fixture must exceed depth 8 as counted from root depth zero, and the budget fixture must exceed 256 visited containers before any later scalar-type validation can mask the nesting error. These tests must complete under a 10-second external test timeout and never produce `RecursionError`; existing nested `transcript`/`reply` tests remain mandatory. Before replacing the recursive function, run each new exact test with `python3 -m unittest tests.test_jarvis_audit.AuditValidationTests.<test_name> -v` and record the expected failure; after replacement run all four together with `python3 -m unittest tests.test_jarvis_audit.AuditValidationTests -v`, then run `python3 -m unittest discover -s tests -v && node --test tests/rwanda_ledger.test.mjs` and assert the same sentinel paths remain absent. Optional Markdown output, if later enabled, may use only a fixed JSON-derived template with no invented PII or YAML transclusion; it receives the same validated bounded record.
 
 - [ ] Implement exactly `validate`, `index`, `search`, `export`, and internal `research-worker`. Search/export print private content only to the owner's terminal/file; public dry-run tests use synthetic DBs. No defaults point to public raw files. `validate` emits IDs only. `search --query` emits actual hit fields. `export --output` uses create-exclusive mode 0600; model mode reads a bounded model result and audits outcomes separately.
 
