@@ -87,6 +87,8 @@ Expected Obsidian path on the operator Mac:
 
 `/Users/tumeloramaphosa/Documents/Obsidian Vault/Auto-Meat`
 
+**Checklist-driven deploy:** use [Obsidian Herdr Bridge](https://github.com/Daniel-Steinberger/obsidian-herdr) with template `integrations/obsidian-herdr/automeat-clickclack.md.example` → vault `herdr/` — see [OBSIDIAN_HERDR_BRIDGE.md](../OBSIDIAN_HERDR_BRIDGE.md).
+
 Create the folder if missing. Vault sync POST is attempted by the deploy script when the API exists; failures are reported without body secrets.
 
 ### 6. Status report (every 30 min until done)

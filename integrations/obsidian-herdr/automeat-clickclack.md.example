@@ -1,0 +1,13 @@
+---
+herdr-workspace: automeat
+---
+
+# AutoMeat → ClickClack :3100
+
+Hermes on Mac host only. Full doc: `docs/deployments/AUTOMEAT_CLICKCLACK.md`
+
+- [ ] `scripts/agent-fleet-check.sh paperclip` → ok
+- [ ] `AUTOMEAT_ENV_FILE` sourced (local path, never commit)
+- [ ] `scripts/deploy-automeat-clickclack.sh` dry-run / register
+- [ ] Voice hook dry-run only — no real Twilio dial
+- [ ] Log PASS/FAIL checklist to Obsidian (no secret values)

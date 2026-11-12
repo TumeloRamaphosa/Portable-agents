@@ -151,6 +151,7 @@ After agent sessions: `./scripts/agent-work-archive.sh` → [Lenovo Drive folder
 
 ## Related
 
+- [OBSIDIAN_HERDR_BRIDGE.md](./OBSIDIAN_HERDR_BRIDGE.md) — drive ZTE-005 from Obsidian checklists into Herdr
 - [STUDEX_FIVE_NODE_DEPLOY.md](./STUDEX_FIVE_NODE_DEPLOY.md)
 - [OPENCLAW_LOBSTER.md](./OPENCLAW_LOBSTER.md)
 - [Buzz engineering blog — configuring agents](https://engineering.block.xyz/blog/configuring-agents-in-buzz)
