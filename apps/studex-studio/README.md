@@ -14,6 +14,7 @@ This folder is the place to start. Other content work still lives under `agents/
 | Path | What it is |
 |---|---|
 | [PLAN.md](./PLAN.md) | Product and build plan: rooms, desktop shell (Domicile), machines, approval gates, phased MVP. Plan only. No install, download, spend or post. |
+| [app/](./app/) | **Phase 1 dashboard** — Vite + React. See [app/README.md](./app/README.md) for `npm run dev` and vault init. |
 
 ## The rest of the desk
 
