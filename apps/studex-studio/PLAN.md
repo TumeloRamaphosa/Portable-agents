@@ -5,7 +5,7 @@
 **Home:** `apps/studex-studio/` in [TumeloRamaphosa/Portable-agents](https://github.com/TumeloRamaphosa/Portable-agents)
 **Owner:** Tumelo Ramaphosa (Agent Chief Lord) · Studex
 **Desk:** Schpielberg (content and film)
-**Prepared:** 12 Nov 2026, SAST · updated the same day
+**Prepared:** 12 Nov 2026, SAST · vision expanded same day (Agent Chief Lord)
 **Status:** PLAN ONLY. Nothing has been built, installed, downloaded, rendered or spent.
 
 Start here: [README.md](./README.md) is the index for this app and for the rest of the content desk.
@@ -39,7 +39,7 @@ This plan does not invent clients, revenue or testimonials. Meat (Wagyu Biltong 
 - Local first. Paid polish (Magnific, paid Higgsfield, or any paid OpenMontage provider) only after Tumelo or Katlego say yes, and only on the winners.
 - Obsidian is the system of record. The app writes into the vault; it does not replace it.
 - Naledi checks the line. Tumelo or Katlego approve. A score is not permission.
-- Never generate the founder's likeness, or StudBot's or Naledi's. Use his originals.
+- Never generate the founder's likeness, or StudBot's or Naledi's. Use his originals. **Virtual influencers** (later phase) are clearly AI; same likeness rule applies.
 - Never post to Instagram `laisa_aesthetics`. Blotato is scheduled drafts only. Nothing publishes itself.
 - Brand: ground `#050503`, accent `#C5A163`. Archivo Black headlines, IBM Plex Mono straps (type is added in post on finished pictures and film).
 - Hugging Face weights may be pulled from his account. The token goes through the secure box only, never into chat, files or repos.
@@ -61,19 +61,41 @@ One web UI, three shells, a local queue, a mesh of machines.
               Director node (MacBook, later also Mac mini)
                  - job queue (SQLite)
                  - vault adapter (Obsidian)
-                 - chat (Ollama, optional Muse Glimmer as director)
-                 - mesh router
+                 - chat → **model house** (single OpenAI-style API; OmniRoute picks the node)
+                 - mesh router + build/render workspace broker
                         |
           Robuska's mom's house
                         |
         +---------------+---------------+
         |               |               |
-     Razer           big babushka     other nodes
-   (render +         (planned          (Gitea,
-    Domicile          heavier           coding)
-    shell)            render +
-                      Domicile)
+     Razer           big babushka     Linux VMs / Orgo
+   (Ollama +          (same +          (burst render;
+    LM Studio;         heavier           later phase)
+    render +           render;
+    Domicile           Domicile)
+    shell)             shell)
 ```
+
+## Expanded vision (short · prioritised · phased)
+
+Agent Chief Lord's north star stays the same: local-first film company in one app. What follows is **additive**; ship the thin 2D shell and vault first, then layer the rest.
+
+| Priority | Layer | What | When |
+|---|---|---|---|
+| 1 | Vault + gates + thin UI | Master OS layout, rooms, Obsidian jobs | **Phase 1** (now) |
+| 2 | Mesh queue + local render | Job router, Razer rooms, Coding Station | **Phase 2** |
+| 3 | **Model house** | OmniRoute + Ollama + LM Studio (`lms server` / llmster) on Razer, big babushka, Linux VMs; agents hit **one** endpoint; router picks machine over Robuska's mom's house | **Phase 2** (Ollama only) → **Phase 3** (full house) |
+| 4 | **Build / render workspaces** | Per-job workspace on a fleet node or **Orgo** cloud VM; Blender, Resolve, ComfyUI, OpenMontage, Open Higgsfield (paid Higgsfield only after G3); orchestration via **pstack** and **gstack** skills | **Phase 2** (local Razer) → **Phase 3** (+ Orgo) |
+| 5 | Desk + assembly + publish path | Domicile / Tauri / PWA, OpenMontage, Blotato drafts | **Phase 3** |
+| 6 | **The Brain** | 3D creative space (Three.js / React Three Fiber; WebXR where supported): content plan, calendar, pipeline, Hermes (**Hermes OS** / Herald) in Studex Dark Factory (Berserk-inspired, restyled), **Herdr** agent panes + terminals, chat to agents | **Phase 4 (later)** — Phase 1–3 stay 2D |
+| 7 | **Virtual influencers** | AI personas that help run the platform and that users can talk to; never synthetic founder / StudBot / Naledi | **Phase 4 (later)** |
+| 8 | **XREAL glasses** | Extra display for the desktop app (browser Brain when ready); **WebXR on device — verify** before promising | **Phase 4 (later)** |
+
+**Model house (detail, Phase 3):** LM Studio runs local weights as a headless OpenAI-compatible server alongside Ollama on Razer, big babushka and Linux VMs. **OmniRoute** is the only outward door agents see — nicknamed **model house** in UI copy. No per-machine endpoints in agent config; routing stays on Robuska's mom's house.
+
+**Build / render (detail):** When an agent needs to compile, batch, or render, the queue allocates a **workspace** (disk + GPU profile) on the best local node or an approved Orgo VM. Tools are the same as the rooms: Blender, DaVinci Resolve, ComfyUI, OpenMontage, Open Higgsfield. Skills **pstack** / **gstack** wire agent plans to those workspaces without bypassing gates.
+
+**The Brain (detail, later):** Not a replacement for Screening or the vault — an optional **immersive shell** around the same jobs. Flat panels remain available on Fold and Mac. Hermes/Herald carries the Berserk-inspired layout forward with Studex Dark Factory (`#050503` / `#C5A163`, Archivo Black, IBM Plex Mono).
 
 **Suggested stack (Phase 1 can ship in a browser, without Tauri, Expo or Domicile)**
 
@@ -85,6 +107,8 @@ One web UI, three shells, a local queue, a mesh of machines.
 | Mobile | PWA first, Expo wrap next | Fold6 works in a browser this week; Expo later for a home-screen app |
 | Job queue | SQLite on the director node | Simple, local, no cloud |
 | Mesh router | Small service on each machine, capability ads (text / image / video / voice / code) | Sends the job to the machine that can actually run it |
+| Model house (later) | OmniRoute over Ollama + LM Studio OpenAI-compatible servers | One API for all agents; pick node by model + load (**Phase 3**) |
+| Build broker (later) | Workspace slots on fleet nodes + Orgo | pstack / gstack launch Blender, ComfyUI, OpenMontage, etc. (**Phase 2–3**) |
 | Network | Robuska's mom's house | Keep the fleet talking without putting addresses in this repo |
 | Source of truth | Obsidian vault | Scripts, shot lists, reviews and final cuts live as notes and attachments |
 | Coding Station | Deep links into Cursor, plus Gitea and GitHub | Do not rebuild an IDE; open the work where it already lives |
@@ -111,7 +135,7 @@ The Studex Studio web UI becomes the Domicile shell on the **Razer (Pop!_OS)** a
 
 He already has a **Studex Master OS** HTML mock: a gold-on-obsidian full-screen shell, a left sidebar, agent pods along the bottom, and status dots in the header for local services. Use that *layout* as the starting point. Restyle it to the current brand: ground `#050503`, accent `#C5A163`, Archivo Black headlines, IBM Plex Mono straps. Do not copy the mock into this repo. Do not copy its partner list (those names are restricted parties per the compliance list). Do not put ports, addresses or invented revenue on the screen or in git.
 
-Header status dots, **service names only**: Model door, Jev, ClawX, Factory, desk bridge. The dots show whether each service is up. How they are reached stays off this plan and out of the repo.
+Header status dots, **service names only**: Model house, Jev, ClawX, Factory, desk bridge. The dots show whether each service is up. How they are reached stays off this plan and out of the repo.
 
 Sidebar in the Studio shell should map to our rooms and desks (Today, Jobs, Writers' Room, Art, Camera, Sound, Edit Bay, Marketing, Screening, Coding Station, Chat, Settings) — not to the mock's ecosystem or partner grids.
 
@@ -147,17 +171,19 @@ The local, zero-key path uses Piper TTS, open archives, optional free stock keys
 
 **Okara marketing team** — the Marketing room: packs, captions and calendar copy for approved cuts. They draft. They do not send or post.
 
-**App chrome (keep it small)**
+**App chrome — Phase 1–3 (2D, keep it small)**
 
 1. **Today** — one active job, the next gate, mesh status (which machines are up), and the service dots (names only).
 2. **Jobs** — list, then a job page: script, shots, drafts, reviews.
 3. **Rooms** — the floor above.
-4. **Queue** — what is running, waiting, or blocked, and which machine has it.
+4. **Queue** — what is running, waiting, or blocked, which machine or workspace has it.
 5. **Screening** — the approval desk.
-6. **Coding Station** and **Chat**.
+6. **Coding Station** and **Chat** (local / model house first).
 7. **Settings** — vault path, machines, models. No secrets in the UI log or in git.
 
 On the Fold: Today, the current job, Screening, and Chat are the first-class panes. Rooms and Queue sit behind them.
+
+**The Brain — Phase 4 (later, 3D shell)** Same data as above, rendered as an interactive art/creative space (Three.js / React Three Fiber). Side and floating panels: **content plan**, **calendar**, **pipeline**, **Hermes OS / Herald** (Studex Dark Factory skin), **Herdr** agent panes and terminals, **chat** to agents. Optional WebXR; **XREAL** as a desktop-app display — confirm WebXR support on the exact glasses/build before shipping.
 
 ## Data flow into Obsidian
 
@@ -236,7 +262,9 @@ Done when: Tumelo can open Today in a laptop browser, see one job, open the vaul
 ### Phase 2 — once the Razer is up
 
 - Real job queue and mesh router over Robuska's mom's house.
+- **Build / render workspaces (local only):** allocate a Razer workspace; agents invoke ComfyUI / Open Higgsfield via **pstack** / **gstack** where wired. Orgo stays off until Phase 3.
 - Art Department and Camera Room on the Razer (ComfyUI, Wan / LTX, Open Higgsfield). Local drafts only.
+- Chat and Writers' Room through **Ollama on the mesh** (prep for model house; OmniRoute not required yet).
 - Coding Station pane (Cursor, Gitea, GitHub).
 - Chat pane, local first. Claude / ChatGPT via Magnific MCP stay on "build, don't run".
 - After a yes: try Domicile **nested in a window** on the Razer's current desktop, loading the same Studio UI as the shell. Do not take over the login session yet.
@@ -246,6 +274,8 @@ Done when: a locked script can request a local still or a short clip, the Razer 
 
 ### Phase 3 — desk, pocket and assembly
 
+- **Model house live:** LM Studio headless (`lms server` / llmster) on Razer, big babushka and Linux VMs **alongside** Ollama; **OmniRoute** as the single agent-facing router over Robuska's mom's house.
+- **Build / render:** workspaces on fleet nodes **or Orgo**; Blender, Resolve, ComfyUI, OpenMontage, Open Higgsfield in the toolbox; paid Higgsfield still G3-only; **pstack** / **gstack** as the glue.
 - Domicile as the login shell on the Razer and, once it is on a Linux x86-64 OS, on big babushka.
 - Tauri desktop shell for the Mac.
 - PWA, then Expo, on the Z Fold6.
@@ -254,7 +284,16 @@ Done when: a locked script can request a local still or a short clip, the Razer 
 - Blotato scheduled-draft handoff after G5, with `laisa_aesthetics` blocked.
 - Marketing room for the Okara team.
 
-Done when: he can review a cut on the Fold, approve it, and have a draft queued in Blotato without anything posting — and, on the Razer, the same UI can sit as the desktop shell.
+Done when: he can review a cut on the Fold, approve it, and have a draft queued in Blotato without anything posting — and, on the Razer, the same UI can sit as the desktop shell. Agents call **one** model endpoint and one workspace broker, not per-box URLs.
+
+### Phase 4 — later (Brain, glasses, personas)
+
+- **The Brain:** 3D Studex creative space (Three.js / R3F); panels for plan, calendar, pipeline, Hermes OS / Herald, Herdr terminals, agent chat. Coexists with the 2D UI; does not replace vault or gates.
+- **XREAL:** use as desktop companion display; **verify WebXR** on target hardware before marketing it.
+- **Virtual influencers:** onboard AI personas for operations and user chat; label as AI; **no** generated likeness of founder, StudBot, or Naledi.
+- Optional: WebXR-in-Browser for Brain on supported devices.
+
+Done when: a job can be navigated in the Brain, models route through model house, and a virtual influencer can answer a studio FAQ without bypassing gates — still nothing auto-posts.
 
 ## Open decisions
 
@@ -268,6 +307,10 @@ These are the only questions that should block a later phase. Phase 1 does not n
 6. Whether Muse Glimmer shares the MacBook with Hermes, or runs on another node so the director machine does not run out of memory.
 7. Domicile: nested window first (recommended), or login session, and only after a yes.
 8. OpenMontage: local tool only, or also as a network service (AGPL-3.0 obligations differ). Install nothing until he says yes.
+9. OmniRoute + LM Studio rollout order (Razer first vs big babushka first).
+10. Orgo: which job classes may burst to cloud, and spend cap.
+11. Brain vs 2D: default shell per client (Fold stays 2D-first?).
+12. XREAL + WebXR: supported modes on his glasses and desktop stack (**to verify**).
 
 ## What this plan does not do
 
