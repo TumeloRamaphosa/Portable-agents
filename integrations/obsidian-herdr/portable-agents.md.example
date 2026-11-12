@@ -1,0 +1,17 @@
+---
+herdr-workspace: portable-agents
+---
+
+# Portable-agents — factory queue
+
+Repo: `https://github.com/TumeloRamaphosa/Portable-agents` (branch `cursor/pov-course-needle-1375`)
+
+## ZTE-004 five-node
+- [ ] Tailscale on Mac Mini, MacBook, Lenovo, MSI
+- [ ] Paperclip :3100 healthy on Mac Mini (`scripts/agent-fleet-check.sh paperclip`)
+- [ ] Hermes gateways on workers (`STUDEX_FIVE_NODE_DEPLOY.md` phase 3)
+- [ ] `gitea-mirror-push.sh` after each host clone
+- [ ] `agent-work-archive.sh` → Drive folder 16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR
+
+## Docs
+- [ ] Skim `docs/STUDEX_FIVE_NODE_DEPLOY.md` for current phase

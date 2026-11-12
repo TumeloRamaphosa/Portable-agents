@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "ZTE-001",
+      "title": "Install pstack and run first /poteto-mode task",
+      "ownerBot": "GROK-BUILD",
+      "playbookHint": "setup + verify typecheck",
+      "verification": "npm run typecheck exits 0",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-10-31T12:45:00+02:00"
+    },
+    {
+      "id": "ZTE-002",
+      "title": "Deploy AutoMeat agent to ClickClack :3100",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "Hermes on orchestrator host — not cloud agent",
+      "verification": "docs/deployments/AUTOMEAT_CLICKCLACK.md checklist all PASS",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-10-31T20:02:00+02:00"
+    },
+    {
+      "id": "ZTE-003",
+      "title": "Wire Studex lab mesh (Mac Mini hub, MacBook, MSI)",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_LAB_MESH.md phases 1–3 on physical hosts",
+      "verification": "scripts/lab-mesh-preflight.sh PASS on each joined host",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-01T16:57:00+02:00"
+    },
+    {
+      "id": "ZTE-004",
+      "title": "Five-node deploy: Lenovo + MSI Bazzite + Gitea mirror + Drive archive",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_FIVE_NODE_DEPLOY.md phases 0–6",
+      "verification": "agent-work-archive.sh + gitea-mirror-push.sh on all hosts; Drive folder receives deploy/ stubs",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-09T11:45:00+03:00"
+    },
+    {
+      "id": "ZTE-005",
+      "title": "Buzz (buzz.xyz) agents on MSI",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/BUZZ_MSI_AGENTS.md — desktop agent Studex-MSI + relay to Mac Mini",
+      "verification": "scripts/msi-buzz-preflight.sh PASS on MSI; agent workdir = Portable-agents",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-11-09T15:55:00+01:00"
+    }
+  ]
+}

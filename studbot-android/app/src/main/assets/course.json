@@ -1,0 +1,9 @@
+{
+  "title": "Sovereign Operator I",
+  "steps": [
+    { "title": "Orient on the stack", "bearing": 12, "body": "Mission Control is the pane of glass; NEEDLE keeps bearing on the path ahead." },
+    { "title": "Validate air-gap mode", "bearing": 48, "body": "Confirm the agent loop closes on local weights with no outbound network." },
+    { "title": "LiteLLM gateway", "bearing": 95, "body": "Route models through one on-device OpenAI-compatible endpoint." },
+    { "title": "Calibrate NEEDLE", "bearing": 188, "body": "NEEDLE is the compass UI — bearing toward the next checkpoint in POV mode." }
+  ]
+}
