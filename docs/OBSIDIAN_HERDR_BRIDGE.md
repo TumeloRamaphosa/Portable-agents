@@ -166,7 +166,10 @@ cd Portable-agents && ./scripts/agent-work-archive.sh
 
 Paste the preflight output path into an Obsidian **done** note if you want a paper trail outside Git.
 
+## Related docs
+
 - [HERDR_MSI_PAIRING.md](./HERDR_MSI_PAIRING.md) — Herdr + Claude on lab + `herdr machine add` MSI
+- [BUZZ_MSI_AGENTS.md](./BUZZ_MSI_AGENTS.md)
 - [STUDEX_FIVE_NODE_DEPLOY.md](./STUDEX_FIVE_NODE_DEPLOY.md)
 - [deployments/AUTOMEAT_CLICKCLACK.md](./deployments/AUTOMEAT_CLICKCLACK.md)
 - [PSTACK_GROKBOTS_ZTE.md](./PSTACK_GROKBOTS_ZTE.md)
