@@ -1,0 +1,18 @@
+---
+herdr-workspace: studex-ops
+---
+
+# Local ops stand-up
+
+Run once per day on hub + workers:
+
+- [ ] `cd Portable-agents && ./scripts/studex-local-ops-up.sh --start-hermes-gateway`
+- [ ] `scripts/agent-fleet-check.sh paperclip $PAPERCLIP_URL`
+- [ ] `herdr` → workspace studex-ops → pane: `hermes doctor`
+- [ ] Paperclip UI: Hermes Lead heartbeat policy ok
+
+## AutoMeat (Mac Mini only)
+
+- [ ] `export AUTOMEAT_ENV_FILE=...` and `AUTOMEAT_REGISTER_JSON=...` (local paths)
+- [ ] `./scripts/studex-local-ops-up.sh --automeat-check`
+- [ ] Obsidian herdr/automeat.md **continuous** or one step at a time

@@ -2,6 +2,8 @@
 
 How to bring **Paperclip Valley OS** back up and add **Hermes agents running MiniMax models** to the company, on the Paperclip host and on our VMs.
 
+**Stand up Herdr terminal + Hermes + AutoMeat together:** [STUDEX_LOCAL_OPS.md](./STUDEX_LOCAL_OPS.md) · `npm run ops:up:full`
+
 Commands checked against the vendor docs on 2026-10-31. Sources are at the bottom.
 
 > This repo is **public** and `scripts/autopush.sh` runs `git add -A`. Never put API keys, invite prompts or VM addresses in tracked files. Keep keys in `~/.hermes/.env` (mode 600) or Paperclip secrets.

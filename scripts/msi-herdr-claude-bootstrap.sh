@@ -19,6 +19,7 @@ fi
 
 mkdir -p "$HOME/.claude/hooks"
 herdr integration install claude 2>/dev/null || true
+command -v hermes >/dev/null 2>&1 && herdr integration install hermes 2>/dev/null || true
 
 echo ""
 echo "Next steps on MSI:"

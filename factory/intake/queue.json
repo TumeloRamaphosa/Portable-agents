@@ -50,6 +50,16 @@
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-09T15:55:00+01:00"
+    },
+    {
+      "id": "ZTE-006",
+      "title": "Local ops: Hermes + Herdr + AutoMeat stand-up",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_LOCAL_OPS.md — studex-local-ops-up.sh on Mac Mini",
+      "verification": "npm run ops:up:full; AutoMeat register on hub with --automeat-check when env set",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-15T11:50:00+01:00"
     }
   ]
 }
