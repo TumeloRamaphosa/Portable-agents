@@ -6,6 +6,8 @@
     "factory:status": "node scripts/factory-status.mjs",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
     "ops:up": "bash scripts/studex-local-ops-up.sh",
-    "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail"
+    "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",
+    "fleet:connect": "bash scripts/studex-fleet-connect.sh --soft-fail",
+    "fleet:connect:full": "bash scripts/studex-fleet-connect.sh --herdr-add-machines --soft-fail"
   }
 }

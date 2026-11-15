@@ -1,5 +1,7 @@
 # Studex local operations — stand up
 
+> **Multi-VM fleet** (this computer + Dark Factory + Naledsi + AutoMeat): see **[STUDEX_FLEET_MESH.md](./STUDEX_FLEET_MESH.md)** and `npm run fleet:connect`.
+
 One picture: **Paperclip** assigns work → **Hermes** runs in **Herdr** terminals (persistent) → **AutoMeat** registers on `:3100` → **Obsidian** checklists drive Herdr → artifacts go to **Drive/Gitea**.
 
 ```

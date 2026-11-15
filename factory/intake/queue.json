@@ -60,6 +60,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-15T11:50:00+01:00"
+    },
+    {
+      "id": "ZTE-007",
+      "title": "Fleet mesh: this host + Dark Factory + Naledsi VMs",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/STUDEX_FLEET_MESH.md — npm run fleet:connect on each node",
+      "verification": "studex-fleet-connect.sh PASS; Paperclip invites for both VMs; Herdr lists Dark Factory + Naledsi",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-15T11:55:00+01:00"
     }
   ]
 }

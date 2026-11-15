@@ -1,0 +1,12 @@
+---
+herdr-workspace: dark-factory
+---
+
+# Dark Factory VM (ZTE)
+
+Factory OS: `mission-control/factory/index.html` · queue: `factory/intake/queue.json`
+
+- [ ] Tailscale up; `npm run factory:status`
+- [ ] `./scripts/hermes-gateway-tmux.sh`
+- [ ] Paperclip external agent invited (Hermes gateway)
+- [ ] `./scripts/agent-work-archive.sh --dry-run`
