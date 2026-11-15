@@ -44,6 +44,11 @@ echo "=== Studex fleet connect (role=$ROLE host=$HOSTNAME_SHORT) ==="
 echo "Doc: docs/STUDEX_FLEET_MESH.md"
 echo ""
 
+if [ -x "$ROOT/scripts/claude-session-preflight.sh" ]; then
+  echo ">>> Claude Code sessions"
+  "$ROOT/scripts/claude-session-preflight.sh" || warn "claude session preflight"
+fi
+
 "$ROOT/scripts/studex-local-ops-up.sh" --soft-fail $([ "$AUTOMEAT" = true ] && echo --automeat-check || true) || FAILURES=$((FAILURES + 1))
 
 PAPERCLIP_URL="${PAPERCLIP_URL:-http://127.0.0.1:3100}"

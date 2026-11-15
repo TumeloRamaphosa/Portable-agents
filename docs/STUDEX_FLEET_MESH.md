@@ -27,6 +27,8 @@ Connect **this machine**, **operations SSM** (Studex Session Mesh), **AutoMeat**
 | **Mac Mini** | Hub, AutoMeat, Paperclip | `LAB_HOST_MACMIN` | `hermes_local` Lead | `automeat`, `studex-ops` |
 | **Dark Factory VM** | Grokbots ZTE / factory | `LAB_HOST_DARK_FACTORY` | `hermes_gateway` | `dark-factory` |
 | **Naledsi VM** | Ops / intake / mirror workloads | `LAB_HOST_NALEDSI` | `hermes_gateway` | `naledsi` |
+
+Also **Naledi - GoBot** (Notion) under Auto-Meat — same VM role; Claude sessions doc: [CLAUDE_CODE_SESSIONS.md](./CLAUDE_CODE_SESSIONS.md).
 | **MSI** | GPU + Buzz | `LAB_HOST_MSI` | `hermes_gateway` | `msi-buzz` |
 
 Fill **Tailscale names** in `docs/lab-mesh.env` (gitignored). LAN fallbacks optional.

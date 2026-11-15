@@ -21,7 +21,7 @@ Studex **Black Cloud** / **Portable Agents** repo. Read `README.md` and `PLAN.md
 
 ## Lab machines (Mac Mini hub, MacBook dev, MSI GPU)
 
-Wiring three hosts: **`docs/STUDEX_LAB_MESH.md`**. Local hostnames in **`docs/lab-mesh.env`** (from `docs/lab-mesh.env.example`, gitignored).
+Wiring three hosts: **`docs/STUDEX_LAB_MESH.md`**. Fleet (Dark Factory, Naledsi, AutoMeat): **`docs/STUDEX_FLEET_MESH.md`**. Claude Code sessions per host: **`docs/CLAUDE_CODE_SESSIONS.md`**. Local hostnames in **`docs/lab-mesh.env`** (from `docs/lab-mesh.env.example`, gitignored).
 
 Preflight on any machine:
 
