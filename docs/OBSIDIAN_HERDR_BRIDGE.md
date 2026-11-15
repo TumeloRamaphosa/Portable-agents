@@ -36,13 +36,33 @@ Obsidian vault (Auto-Meat / Studex)
 
 ### 1. Herdr
 
+**If you see `bash: herdr: command not found`**, install the CLI first (Obsidian plugin talks to a **running** Herdr + this binary):
+
+| Platform | Install |
+|----------|---------|
+| **Linux** | `curl -fsSL https://herdr.dev/install.sh \| sh` |
+| **macOS** | `brew install herdr` or same `install.sh` |
+| **Windows** | `powershell -ExecutionPolicy Bypass -c "irm https://herdr.dev/install.ps1 \| iex"` |
+| **From repo** | `./scripts/install-herdr.sh` |
+
+Linux installs to `~/.local/bin/herdr`. If PATH is missing it:
+
 ```bash
-# Follow upstream install for macOS/Linux — ensure herdr is on PATH
+export PATH="$HOME/.local/bin:$PATH"
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc   # or ~/.zshrc
+source ~/.bashrc
 herdr --version
-# API socket default: ~/.config/herdr/herdr.sock (or $HERDR_SOCKET_PATH)
 ```
 
-Start a session and open a **workspace** whose name matches your note (e.g. `msi-buzz`, `portable-agents`).
+Then **start Herdr** (not optional for the plugin):
+
+```bash
+herdr
+```
+
+Detach with `Ctrl+b` then `q`; reattach with `herdr`. Socket default: `~/.config/herdr/herdr.sock`.
+
+Upstream: [herdr.dev](https://herdr.dev) · [herdrdev/herdr](https://github.com/herdrdev/herdr) (v0.9.5+ for Obsidian Bridge).
 
 ### 2. Herdr Bridge plugin
 
