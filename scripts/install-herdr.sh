@@ -51,6 +51,11 @@ fi
 if command -v herdr >/dev/null 2>&1 || [ -x "$BINDIR/herdr" ]; then
   echo "OK — start with: herdr"
   echo "Obsidian plugin needs socket at ~/.config/herdr/herdr.sock (after herdr is running)"
+  if command -v herdr >/dev/null 2>&1 && command -v claude >/dev/null 2>&1; then
+    mkdir -p "$HOME/.claude/hooks"
+    herdr integration install claude 2>/dev/null || true
+    echo "Herdr Claude integration: $(herdr integration status 2>/dev/null | grep '^claude:' || echo 'run after claude is on PATH')"
+  fi
 else
   exit 1
 fi
