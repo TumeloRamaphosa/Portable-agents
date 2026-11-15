@@ -41,7 +41,6 @@ console.log("=== Studex ZTE factory ===");
 console.log("Intake:", byStatus);
 items
   .filter((it) => it.status === "queued")
-  .slice(0, 5)
   .forEach((it) => console.log(`  queued: ${it.id} · ${it.title} · ${it.ownerBot}`));
 
 const pulse = loadPulseLines();

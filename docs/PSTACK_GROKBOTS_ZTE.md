@@ -15,6 +15,10 @@ Three layers that stack cleanly on Portable Agents:
 3. For autonomous-style runs, agents follow `.cursor/skills/grokbots-zero-touch/SKILL.md`.
 4. Durable prefs: `.cursor/skills/permanent-memory/SKILL.md` + Notion Memory.
 
+## Progress
+
+Run **`npm run project:status`** for factory queue + lab checks. Snapshot: **`docs/PROJECT_STATUS.md`**.
+
 ## Relation to other ops
 
 - **Mission Control** (`mission-control/index.html`) — business / sovereign missions (PwC, Rwanda, DC).
