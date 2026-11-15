@@ -143,6 +143,7 @@ You choose what is open in Herdr before sending to-dos:
 | Portable-agents coding | `claude` / Cursor CLI |
 | Buzz harness on MSI | run Buzz **Goose/Pi** on MSI; Mac vault drives **checklist only** |
 | Factory ZTE | checklist text = plain-English steps + script paths from this repo |
+| **Hermes on phone (ZTE-008)** | Phone runs Hermes + Tailscale; vault checklist on **Mac** — template `integrations/obsidian-herdr/hermes-phone.md.example` → [HERMES_PHONE.md](./HERMES_PHONE.md) |
 
 Checklist text should be **self-contained** (include repo path and script name) because the agent only sees the line you send.
 
@@ -168,6 +169,7 @@ Paste the preflight output path into an Obsidian **done** note if you want a pap
 
 ## Related docs
 
+- [HERMES_PHONE.md](./HERMES_PHONE.md) — phone Hermes + same vault ZTE-008 checklist
 - [HERDR_MSI_PAIRING.md](./HERDR_MSI_PAIRING.md) — Herdr + Claude on lab + `herdr machine add` MSI
 - [BUZZ_MSI_AGENTS.md](./BUZZ_MSI_AGENTS.md)
 - [STUDEX_FIVE_NODE_DEPLOY.md](./STUDEX_FIVE_NODE_DEPLOY.md)

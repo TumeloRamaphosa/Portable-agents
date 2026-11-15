@@ -1,0 +1,19 @@
+---
+herdr-workspace: hermes-phone
+---
+
+# Hermes on phone — mesh + Paperclip (ZTE-008)
+
+Runbook: `docs/HERMES_PHONE.md` · Plugin: [Daniel-Steinberger/obsidian-herdr](https://github.com/Daniel-Steinberger/obsidian-herdr)
+
+**Roles:** Phone = Hermes chat + Tailscale + optional Paperclip **task_bridge**. Mac Mini = Herdr + Obsidian Bridge drives **desktop** panes (`hermes` / `claude`); not the phone binary.
+
+- [ ] Tailscale on phone (same tailnet as `macmini`)
+- [ ] Set `LAB_HOST_PHONE=<MagicDNS>` in `docs/lab-mesh.env` on hub
+- [ ] `./scripts/hermes-phone-preflight.sh` PASS from a mesh host
+- [ ] Hermes on phone: MiniMax OAuth; chat works on cellular + Wi‑Fi via tailnet
+- [ ] Paperclip :3100 reachable (`curl -fsS http://macmini:3100/api/health` or hub health route)
+- [ ] Invite external agent / **task_bridge** key scoped for phone Hermes (not company admin)
+- [ ] Optional: `HOME_HUB_URL` → `curl http://macmini:3088/api/health` from phone
+- [ ] Mac: `herdr` running; vault `herdr/hermes-phone.md` mapped via Herdr Bridge ▶ next step
+- [ ] Mark ZTE-008 done in `factory/intake/queue.json` when verified

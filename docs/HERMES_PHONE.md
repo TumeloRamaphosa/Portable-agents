@@ -97,8 +97,23 @@ Checks: `LAB_HOST_PHONE` ping (if set), Paperclip URL, home hub URL, docs only f
 
 ---
 
+## 7 — Obsidian Herdr Bridge (same vault, different device)
+
+Your vault can track **ZTE-008** with the **[Herdr Bridge](https://github.com/Daniel-Steinberger/obsidian-herdr)** plugin ([OBSIDIAN_HERDR_BRIDGE.md](./OBSIDIAN_HERDR_BRIDGE.md)) while **Hermes on the phone** handles chat and Paperclip approvals.
+
+| Where | What runs |
+|-------|-----------|
+| **Phone** | Hermes app, Tailscale, browser/Shortcuts to `:3100` / `:3088` |
+| **Mac Mini / MacBook** | `herdr`, Obsidian Desktop + Herdr Bridge, Unix socket |
+| **Obsidian mobile** (optional) | Read/sync checklists — Bridge **▶ next step** needs Desktop + live Herdr |
+
+Copy `integrations/obsidian-herdr/hermes-phone.md.example` → vault `herdr/hermes-phone.md`, workspace **`hermes-phone`** in Herdr. Desktop sends checklist lines to a `hermes` or `claude` pane on the hub; the phone does not replace that socket.
+
+---
+
 ## Related
 
+- [OBSIDIAN_HERDR_BRIDGE.md](./OBSIDIAN_HERDR_BRIDGE.md)
 - [STUDEX_FLEET_MESH.md](./STUDEX_FLEET_MESH.md)
 - [PROJECT_STATUS.md](./PROJECT_STATUS.md)
 - [HERMES_INTAKE.md](./HERMES_INTAKE.md) (commercial intake site — not Nous Hermes)
