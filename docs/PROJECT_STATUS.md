@@ -7,7 +7,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | Check | Status |
 |-------|--------|
 | `npm run typecheck` | Pass (Mission Control course + Studbot JS) |
-| Factory intake | 7 items **queued**, 0 **done** |
+| Factory intake | 9 items **queued**, 0 **done** |
 | Factory pulse | 0 events |
 | PR branch | `cursor/pov-course-needle-1375` |
 
