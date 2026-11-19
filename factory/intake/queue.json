@@ -90,6 +90,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-19T14:10:00+01:00"
+    },
+    {
+      "id": "ZTE-010",
+      "title": "Deploy today: GCP verify + Dark Factory site + studexmeat wiring",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/DEPLOYMENT_PLAN.md + integrations/obsidian-herdr/deploy-today-gcp.md.example",
+      "verification": "www.studexmeat.com SSL OK; Cloud Run verify 200; factory public URL 200; Studbot unlock PASS",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:15:00+01:00"
     }
   ]
 }
