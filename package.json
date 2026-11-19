@@ -6,6 +6,8 @@
     "factory:status": "node scripts/factory-status.mjs",
     "project:status": "bash scripts/project-status.sh",
     "msi:brain-preflight": "bash scripts/msi-brain-preflight.sh",
+    "gcp:preflight": "bash scripts/gcp-preflight.sh",
+    "gcp:deploy-verify": "bash scripts/gcp-deploy-verify.sh",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
     "ops:up": "bash scripts/studex-local-ops-up.sh",
     "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",

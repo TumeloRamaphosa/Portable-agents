@@ -95,7 +95,7 @@
       "id": "ZTE-010",
       "title": "Deploy today: GCP verify + Dark Factory site + studexmeat wiring",
       "ownerBot": "GROK-SHIP",
-      "playbookHint": "docs/DEPLOYMENT_PLAN.md + integrations/obsidian-herdr/deploy-today-gcp.md.example",
+      "playbookHint": "docs/GCP_SETUP.md + docs/DEPLOYMENT_PLAN.md + deploy-today-gcp.md.example",
       "verification": "www.studexmeat.com SSL OK; Cloud Run verify 200; factory public URL 200; Studbot unlock PASS",
       "policy": ["production_secret"],
       "status": "queued",
@@ -130,6 +130,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-19T14:35:00+01:00"
+    },
+    {
+      "id": "ZTE-014",
+      "title": "GCP replaces Orgo: GCE workers + Cloud Run verify + no ORGO_API_KEY",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/GCP_SETUP.md + scripts/gcp-deploy-verify.sh + gce-dark-factory.example.sh",
+      "verification": "gcp-preflight PASS; Cloud Run /health 200; at least one GCE VM on tailnet with factory:status; Orgo not in new provisioning",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:40:00+01:00"
     }
   ]
 }

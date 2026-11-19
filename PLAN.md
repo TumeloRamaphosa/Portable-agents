@@ -156,7 +156,7 @@ catalog and a single pilot, not the ecosystem diagram.
 | AB has not signed the NDA | Cannot release PRD or architecture | SCHALK |
 | Alibaba ECS SSH is publickey-only, no access | Cannot deploy client VMs | JENSEN |
 | Paperclip Valley OS down 17+ days | Orchestration layer offline | RALF |
-| Codex workers 0 of 10 up | No automated coding capacity | RALF |
+| Codex workers 0 of 10 up | No automated coding capacity | RALF · provision **GCE** per `docs/GCP_SETUP.md` (not Orgo) |
 | No DC site, power feed or fibre path identified | Phase 4 is a hypothesis, not a plan | NALEDI-CEO |
 | `INVESTMENT.md` describes a different company | No usable financial model | CASHCLAW |
 

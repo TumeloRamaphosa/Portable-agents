@@ -4,7 +4,7 @@ herdr-workspace: studex-ops
 
 # Deploy today — GCP · Dark Factory · studexmeat.com (ZTE-010)
 
-Runbook: `docs/DEPLOYMENT_PLAN.md`
+Runbook: `docs/GCP_SETUP.md` + `docs/DEPLOYMENT_PLAN.md` (GCP replaces Orgo)
 
 ## studexmeat.com (Shopify)
 

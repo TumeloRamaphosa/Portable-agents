@@ -2,6 +2,8 @@
 
 **Goal:** Ship three public surfaces on a clear split: **Shopify** owns commerce, **GCP** hosts Studex APIs and **client** stacks, **Dark Factory** is the factory UI + ZTE worker (VM + optional public read-only site).
 
+**Platform default:** **GCP** replaces **Orgo** for cloud workers and APIs. Step-by-step: [GCP_SETUP.md](./GCP_SETUP.md) (`Dockerfile.verify`, `gcp-deploy-verify.sh`, GCE bootstrap).
+
 ## Surface map
 
 | Surface | Role | Host | Repo / source |
@@ -71,18 +73,11 @@
 3. Build and deploy from repo root (example; adjust project/region):
 
 ```bash
-gcloud config set project STUDEX_PLATFORM_PROJECT
-gcloud artifacts repositories create portable-agents \
-  --repository-format=docker --location=africa-south1
-
-# Dockerfile.verify (add to repo when ready) or use buildpacks:
-gcloud run deploy studbot-verify \
-  --source=. \
-  --region=africa-south1 \
-  --allow-unauthenticated \
-  --set-secrets=SHOPIFY_ADMIN_API_TOKEN=shopify-admin:latest \
-  --set-env-vars=SHOPIFY_STORE_DOMAIN=57228b-3.myshopify.com
+# From repo root (after lab-mesh.env has GCP_PROJECT_ID + Secret Manager shopify-admin):
+./scripts/gcp-deploy-verify.sh
 ```
+
+Artifact: `Dockerfile.verify` + `api/server.mjs` in this repo.
 
 4. Map custom domain e.g. `api.studexmeat.com` or `verify.studexmeat.com` → Cloud Run (managed cert).
 5. Set `STUDBOT_VERIFY_URL=https://verify.studexmeat.com/api/verify-subscription`.
@@ -174,6 +169,10 @@ Paperclip: invite as external agent ([STUDEX_FLEET_MESH.md](./STUDEX_FLEET_MESH.
 Tracked as **ZTE-010** in `factory/intake/queue.json` (GCP + Dark Factory site + studexmeat wiring).
 
 ---
+
+## Command centers UI
+
+After CC0 local agents are up, use [mission-control/hub/index.html](../mission-control/hub/index.html) — CC1 GCP, CC2 VMs, CC3 bare metal ([COMMAND_CENTERS.md](./COMMAND_CENTERS.md)).
 
 ## Related
 

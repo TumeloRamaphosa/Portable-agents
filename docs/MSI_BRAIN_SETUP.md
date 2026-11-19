@@ -185,6 +185,8 @@ Factory: **ZTE-013** (MSI brain stack).
 MacBook: `herdr machine add msi-gpu --label MSI` (from [HERDR_MSI_PAIRING.md](./HERDR_MSI_PAIRING.md)).  
 Lenovo and VMs repeat the same pattern with their templates.
 
+**Cloud (not Orgo):** public verify + factory site + GCE workers → [GCP_SETUP.md](./GCP_SETUP.md).
+
 ## Related
 
 - [OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)

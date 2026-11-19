@@ -7,7 +7,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | Check | Status |
 |-------|--------|
 | `npm run typecheck` | Pass (Mission Control course + Studbot JS) |
-| Factory intake | 13 items **queued**, 0 **done** |
+| Factory intake | 14 items **queued**, 0 **done** |
 | Factory pulse | 0 events |
 | PR branch | `cursor/pov-course-needle-1375` |
 
@@ -41,7 +41,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **Buzz / MSI** | `BUZZ_MSI_AGENTS.md` |
 | **OpenClaw** | Lobster plugin doc |
 | **Cash Claw** | `CASHCLAW_STRATEGY.md`, `integrations/obsidian-herdr/cashclaw.md.example` |
-| **Deploy (GCP / Meat / Factory)** | `DEPLOYMENT_PLAN.md`, ZTE-010 |
+| **Deploy (GCP / Meat / Factory)** | `GCP_SETUP.md` (Orgo replaced), `DEPLOYMENT_PLAN.md`, ZTE-010, ZTE-014 |
 
 ## Not connected yet (needs your infra)
 
