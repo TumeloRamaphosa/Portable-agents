@@ -173,6 +173,10 @@ Obsidian checklist: `integrations/obsidian-herdr/gcp-stack.md.example` → `herd
 
 ---
 
+## Where agents save during deploy
+
+See [DEPLOY_TIMELINE_AND_SAVES.md](./DEPLOY_TIMELINE_AND_SAVES.md) — git, Obsidian `brain/`, **Stud-Bot-Depo**, Notion Memory.
+
 ## Related
 
 - [DEPLOYMENT_PLAN.md](./DEPLOYMENT_PLAN.md) — commerce + today order

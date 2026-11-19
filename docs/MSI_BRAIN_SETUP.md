@@ -187,6 +187,10 @@ Lenovo and VMs repeat the same pattern with their templates.
 
 **Cloud (not Orgo):** public verify + factory site + GCE workers → [GCP_SETUP.md](./GCP_SETUP.md).
 
+## Deploy order + save paths
+
+Full timeline (MSI → GCP → Drive depot): [DEPLOY_TIMELINE_AND_SAVES.md](./DEPLOY_TIMELINE_AND_SAVES.md).
+
 ## Related
 
 - [OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)

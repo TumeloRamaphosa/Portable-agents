@@ -42,6 +42,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **OpenClaw** | Lobster plugin doc |
 | **Cash Claw** | `CASHCLAW_STRATEGY.md`, `integrations/obsidian-herdr/cashclaw.md.example` |
 | **Deploy (GCP / Meat / Factory)** | `GCP_SETUP.md` (Orgo replaced), `DEPLOYMENT_PLAN.md`, ZTE-010, ZTE-014 |
+| **Where agents save work** | `DEPLOY_TIMELINE_AND_SAVES.md` → git, Obsidian, [Stud-Bot-Depo](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6), Notion |
 
 ## Not connected yet (needs your infra)
 

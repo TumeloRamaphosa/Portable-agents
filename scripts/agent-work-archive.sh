@@ -51,7 +51,7 @@ echo "Staged: $DEST"
 echo "Drive folder: https://drive.google.com/drive/folders/$FOLDER_ID"
 
 RCLONE_REMOTE="${GDRIVE_RCLONE_REMOTE:-gdrive}"
-RCLONE_PATH="${GDRIVE_RCLONE_PATH:-Lenovo/studex-archive}"
+RCLONE_PATH="${GDRIVE_RCLONE_PATH:-Stud-Bot-Depo/archive}"
 
 if [ "$DRY" = true ]; then
   echo "Dry run — not uploading. Sync this folder with Google Drive Desktop or rclone."
