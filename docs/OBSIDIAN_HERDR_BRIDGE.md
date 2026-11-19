@@ -145,6 +145,10 @@ You choose what is open in Herdr before sending to-dos:
 | Factory ZTE | checklist text = plain-English steps + script paths from this repo |
 | **Hermes on phone (ZTE-008)** | Phone runs Hermes + Tailscale; vault checklist on **Mac** — template `integrations/obsidian-herdr/hermes-phone.md.example` → [HERMES_PHONE.md](./HERMES_PHONE.md) |
 | **Cash Claw** | Mission Control finance lane **or** GitHub CashClaw — template `integrations/obsidian-herdr/cashclaw.md.example` (pick one lane in section 0) |
+| **MacBook mesh** | `macbook-llm-mesh.md.example` → [LLM_MESH_BRIDGE.md](./LLM_MESH_BRIDGE.md) |
+| **MSI mesh** | `msi-llm-mesh.md.example` + `msi-buzz.md.example` |
+| **Lenovo** | `lenovo-lab.md.example` |
+| **VM remote** | `vm-remote.md.example` (SSH/VNC, socket forward) |
 
 Checklist text should be **self-contained** (include repo path and script name) because the agent only sees the line you send.
 

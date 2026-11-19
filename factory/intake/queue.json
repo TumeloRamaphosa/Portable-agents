@@ -100,6 +100,16 @@
       "policy": ["production_secret"],
       "status": "queued",
       "createdAt": "2026-11-19T14:15:00+01:00"
+    },
+    {
+      "id": "ZTE-011",
+      "title": "Obsidian company hub + LLM mesh (MacBook, MSI, Lenovo, VMs)",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/OBSIDIAN_COMPANY_HUB.md + LLM_MESH_BRIDGE.md + per-host herdr/*.md",
+      "verification": "llm-mesh-preflight.sh PASS on each host; herdr socket + vault herdr/ on MacBook, MSI, Lenovo; vm-remote checklist on GCP VM",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:25:00+01:00"
     }
   ]
 }

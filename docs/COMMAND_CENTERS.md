@@ -24,18 +24,23 @@ Phase 4 ──► CC3 Bare metal Command Center (Black Cloud Node, DC, on-prem r
 | **CC2** | **VMs** | CTO / arch | dark-factory, Naledsi, MSI, Lenovo, cloud VMs | [vms](../mission-control/vms/index.html), [STUDEX_FLEET_MESH.md](./STUDEX_FLEET_MESH.md) |
 | **CC3** | **Bare metal** | Sovereign / DC | Black Cloud Node, Cape Town DC, Rwanda pilot | [bare-metal](../mission-control/bare-metal/index.html), [PLAN.md](../PLAN.md) |
 
-## CC0 — Local (do this first)
+## CC0 — Local (Obsidian company hub first)
 
-| Check | Command / link |
-|-------|----------------|
-| pstack | `/add-plugin pstack` → `/setup-pstack` → ZTE-001 |
-| Factory queue | `npm run factory:status` |
-| Hub ops | `npm run ops:up:full` · [STUDEX_LOCAL_OPS.md](./STUDEX_LOCAL_OPS.md) |
-| Claude pane | `herdr` → `claude` · [CLAUDE_CODE_SESSIONS.md](./CLAUDE_CODE_SESSIONS.md) |
-| Company | Paperclip health · [AGENT_COMPANY_SETUP.md](./AGENT_COMPANY_SETUP.md) |
-| Obsidian | Herdr Bridge checklists under `integrations/obsidian-herdr/` |
+**One pattern:** vault `herdr/` + Herdr Bridge + agent pane on **each** machine (Mac Mini, MacBook, MSI, Lenovo, VMs).
 
-Local agents **must** be healthy before CC1–CC3 show green status (status is manual/checklist until telemetry lands).
+| Machine | Vault note | LLM mesh |
+|---------|------------|----------|
+| Mac Mini | `studex-ops.md` | Hub + optional Ollama |
+| MacBook | `macbook-llm-mesh.md.example` | OmniRoute + pstack |
+| MSI | `msi-llm-mesh.md.example` | Ollama GPU + gateway |
+| Lenovo | `lenovo-lab.md.example` | Lab worker |
+| VM | `vm-remote.md.example` | SSH/VNC + Ollama/OmniRoute |
+
+Docs: [OBSIDIAN_COMPANY_HUB.md](./OBSIDIAN_COMPANY_HUB.md) · [LLM_MESH_BRIDGE.md](./LLM_MESH_BRIDGE.md) · `./scripts/llm-mesh-preflight.sh`
+
+Paperclip `:3100` remains **company control** on Mac Mini; Obsidian is **per-host execution** checklists.
+
+Local agents **must** be healthy before CC1–CC3 (GCP, VMs inventory, bare metal).
 
 ## CC1 — GCP
 

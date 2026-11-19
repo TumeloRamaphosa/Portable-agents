@@ -1,0 +1,15 @@
+---
+herdr-workspace: lenovo
+---
+
+# Lenovo — five-node lab worker
+
+Runbook: `docs/STUDEX_FIVE_NODE_DEPLOY.md` · `docs/LLM_MESH_BRIDGE.md`
+
+- [ ] Tailscale `lenovo-lab` in `lab-mesh.env`
+- [ ] Clone Portable-agents; `gitea-mirror-push.sh` after pulls
+- [ ] Ollama (CPU or small GPU) + OmniRoute on Lenovo OR route via MSI/MacBook
+- [ ] `./scripts/llm-mesh-preflight.sh`
+- [ ] `herdr` workspace **lenovo**; pane `claude` or `hermes`
+- [ ] `agent-work-archive.sh` → Drive folder (sanitized)
+- [ ] `./scripts/lab-mesh-preflight.sh` PASS

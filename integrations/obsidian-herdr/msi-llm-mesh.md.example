@@ -1,0 +1,26 @@
+---
+herdr-workspace: msi-buzz
+---
+
+# MSI — GPU Ollama + OmniRoute + Buzz
+
+Runbook: `docs/LLM_MESH_BRIDGE.md` · `docs/BUZZ_MSI_AGENTS.md`
+
+## MSI worker
+
+- [ ] WSL2 or Bazzite; Tailscale `msi-gpu`
+- [ ] Ollama with GPU: `ollama pull` model sized to VRAM
+- [ ] OmniRoute local OR use tailnet `OMNIROUTE_URL` on MacBook (pick one)
+- [ ] `./scripts/llm-mesh-preflight.sh` on MSI
+- [ ] `./scripts/msi-buzz-preflight.sh` when Buzz installed
+
+## Herdr
+
+- [ ] `herdr` on MSI (socket on MSI, not Mac)
+- [ ] Obsidian on Mac can SSH-forward socket — `OBSIDIAN_HERDR_BRIDGE.md`
+- [ ] Vault `herdr/msi.md` = this checklist
+
+## Hermes / Paperclip
+
+- [ ] `hermes-gateway` + `tailscale serve 8642`
+- [ ] Paperclip external agent invite; manager Hermes Lead
