@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CC0 — Local Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#111;--line:rgba(201,168,76,.18);--paper:#F5F1E8;--muted:#8A8578;--live:#4ADE80;--warn:#F2B035;
+--mono:'Space Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--display:'Bebas Neue',Impact,sans-serif}
+body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px}
+a{color:var(--gold)}.wrap{max-width:1100px;margin:0 auto;padding:28px}
+h1{font-family:var(--display);font-size:42px;letter-spacing:.08em;margin:16px 0}
+.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);padding:16px;margin:12px 0}
+.cmd{background:#0d0d0d;border:1px solid var(--line);padding:10px;font-size:11px;margin:6px 0}
+table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+th{color:var(--muted);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../hub/index.html">← Command Hub</a>
+  <h1>CC0 LOCAL AGENTS</h1>
+  <p style="font-family:var(--serif);color:#CFC9B8;max-width:65ch">Claude business model on your metal: Paperclip company graph, Hermes execution, Herdr panes, pstack on MacBook.</p>
+
+  <div class="card">
+    <h2 style="font-family:var(--display);color:var(--gold);letter-spacing:.12em">pstack + Grokbots</h2>
+    <div class="cmd">/add-plugin pstack</div>
+    <div class="cmd">/setup-pstack</div>
+    <div class="cmd">/poteto-mode  → ZTE-001</div>
+    <p><a href="../factory/index.html">Factory OS</a> · <a href="../../docs/PSTACK_GROKBOTS_ZTE.md">Docs</a></p>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:var(--display);color:var(--gold);letter-spacing:.12em">Local ops</h2>
+    <div class="cmd">npm run ops:up:full</div>
+    <div class="cmd">npm run project:status</div>
+    <div class="cmd">herdr  →  claude | hermes</div>
+    <p><a href="../../docs/STUDEX_LOCAL_OPS.md">STUDEX_LOCAL_OPS</a> · <a href="../../docs/AGENT_COMPANY_SETUP.md">Paperclip + Hermes</a></p>
+  </div>
+
+  <div class="card">
+    <h2 style="font-family:var(--display);color:var(--gold);letter-spacing:.12em">Claude business harness (optional)</h2>
+    <p style="color:var(--muted);font-size:12px">claude-ops plugin — briefings, inbox, CI rhythm. Complements Mission Control role views.</p>
+    <p><a href="../../docs/NEEDLE_AND_OPS_STACK.md#claude-ops-optional">NEEDLE_AND_OPS_STACK</a></p>
+  </div>
+
+  <table>
+    <thead><tr><th>Agent</th><th>Local runtime</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Hermes Lead</td><td>Mac Mini</td><td style="color:var(--warn)">wire</td></tr>
+      <tr><td>AutoMeat</td><td>Paperclip hub</td><td style="color:var(--warn)">ZTE-002</td></tr>
+      <tr><td>GROK-* Grokbots</td><td>Cursor pstack</td><td style="color:var(--warn)">ZTE queue</td></tr>
+      <tr><td>Herdr workspaces</td><td>Obsidian Bridge</td><td style="color:var(--live)">templates in repo</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

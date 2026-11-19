@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studex Command Hub — GSTK</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#111;--line:rgba(201,168,76,.18);--paper:#F5F1E8;--muted:#8A8578;--live:#4ADE80;--warn:#F2B035;
+--mono:'Space Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--display:'Bebas Neue',Impact,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px;line-height:1.55}
+a{color:var(--gold)}.wrap{max-width:1200px;margin:0 auto;padding:28px}
+h1{font-family:var(--display);font-size:clamp(32px,5vw,56px);letter-spacing:.08em;margin:0 0 12px}
+.lede{font-family:var(--serif);font-size:19px;color:#CFC9B8;max-width:70ch;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);padding:20px;border-left:3px solid var(--muted)}
+.card.p0{border-left-color:var(--live)}.card h2{font-family:var(--display);font-size:20px;letter-spacing:.12em;margin:0 0 8px;color:var(--gold)}
+.card .phase{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.card p{font-size:12px;color:#BDB8A8;margin:0 0 14px}
+.btn{display:inline-block;border:1px solid var(--line);padding:10px 14px;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.stack{margin-top:24px;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../index.html">← Business Mission Control</a>
+  <h1>COMMAND HUB</h1>
+  <p class="lede"><strong>GSTK</strong> — Grokbots Studex Tool Kit: <strong>pstack</strong> ships code, <strong>Claude / Hermes</strong> run the company locally, then GCP · VMs · bare metal each get their own pane.</p>
+  <div class="grid">
+    <article class="card p0">
+      <div class="phase">Phase 1 — first</div>
+      <h2>CC0 Local</h2>
+      <p>Mac hub, Herdr, Paperclip, Cursor pstack, local agents.</p>
+      <a class="btn" href="../local/index.html">Open local CC</a>
+    </article>
+    <article class="card">
+      <div class="phase">Phase 2</div>
+      <h2>CC1 GCP</h2>
+      <p>studexmeat verify, Factory site, client project pattern.</p>
+      <a class="btn" href="../gcp/index.html">Open GCP CC</a>
+    </article>
+    <article class="card">
+      <div class="phase">Phase 3</div>
+      <h2>CC2 VMs</h2>
+      <p>GCP compute + Dark Factory + Naledsi + lab machines.</p>
+      <a class="btn" href="../vms/index.html">Open VM CC</a>
+    </article>
+    <article class="card">
+      <div class="phase">Phase 4</div>
+      <h2>CC3 Bare metal</h2>
+      <p>Black Cloud Node, Cape Town DC, sovereignty path.</p>
+      <a class="btn" href="../bare-metal/index.html">Open bare metal CC</a>
+    </article>
+  </div>
+  <p class="stack">Factory OS · <a href="../factory/index.html">Grokbots ZTE</a> · <a href="../../docs/COMMAND_CENTERS.md">Architecture doc</a></p>
+</div>
+</body>
+</html>
