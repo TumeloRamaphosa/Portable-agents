@@ -19,6 +19,7 @@ Connect **this machine**, **operations SSM** (Studex Session Mesh), **AutoMeat**
                     Tailscale SSM (same tailnet)
          AutoMeat agent  ← registered on hub only
          Obsidian herdr/*.md  →  Herdr workspaces
+         OpenBot per host     →  speak / handoff between agents (docs/OPENBOT_NODE_MESH.md)
 ```
 
 | Node | Typical role | Env key | Hermes | Herdr workspace |

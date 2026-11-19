@@ -5,6 +5,7 @@
 1. **One Obsidian vault** (or one `herdr/` folder per machine) — checklists are the company record.
 2. **[Herdr Bridge](https://github.com/Daniel-Steinberger/obsidian-herdr)** — ▶ next step sends lines to agents in a pane.
 3. **Agents in the pane** — `claude`, `hermes`, `ollama` CLI, etc. on **that** computer only.
+4. **OpenBot** on the same computer — chat and handoffs between agents ([OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)).
 4. **Tailscale** — optional sync/read vault; **execution** stays on the host that owns the socket.
 
 Same pattern on **Mac Mini, MacBook, MSI, Lenovo, each VM**: copy a template → `herdr/<machine>.md` → `herdr-workspace` → run Herdr locally.

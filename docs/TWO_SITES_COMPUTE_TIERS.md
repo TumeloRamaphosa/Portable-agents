@@ -30,7 +30,7 @@ Both sites **sell / explain** the stack; neither replaces **Obsidian + Herdr** o
 | **Hub** | Mac Mini | Always-on, moderate | Lead + AutoMeat + Paperclip | `herdr/studex-ops.md` |
 | **Dark Factory** | GCP VM / big box | **Largest** in lab | Many gateways, ZTE, Buzz, mirrors | `herdr/dark-factory.md` |
 | **Studex Computer** | Black Cloud Node / appliance | **Sized for buyer** | One operator fleet, air-gap path | `herdr/studex-computer.md` (template) |
-| **MacBook / MSI / Lenovo** | Dev & GPU lab | Between hub and DF | Per-machine Herdr | `macbook` / `msi` / `lenovo` |
+| **MacBook / MSI / Lenovo** | Dev & GPU lab | Between hub and DF | Per-machine Herdr + **OpenBot** | `macbook` / `msi` / `lenovo` |
 
 **Rule:** Dark Factory holds **more setups** (extra Hermes workspaces, OmniRoute upstreams, client sandboxes). **Studex Computer** ships a **curated subset** — Mission Control, Studbot, local models, no factory secrets.
 

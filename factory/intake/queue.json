@@ -110,6 +110,16 @@
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-19T14:25:00+01:00"
+    },
+    {
+      "id": "ZTE-012",
+      "title": "OpenBot on each VM and computer (agent speak + handoff)",
+      "ownerBot": "GROK-ARCH",
+      "playbookHint": "docs/OPENBOT_NODE_MESH.md + integrations/obsidian-herdr/openbot-node.md.example per host",
+      "verification": "OpenBot installed on MacBook, MSI, Lenovo, Dark Factory VM; OmniRoute linked; one successful agent handoff per node",
+      "policy": [],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:30:00+01:00"
     }
   ]
 }
