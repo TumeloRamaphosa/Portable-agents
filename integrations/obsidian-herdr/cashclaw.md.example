@@ -4,6 +4,8 @@ herdr-workspace: cashclaw
 
 # Cash Claw — pick one lane (do not mix in one Herdr pane)
 
+**Studex forward strategy:** [CASHCLAW_STRATEGY.md](../../docs/CASHCLAW_STRATEGY.md) · factory **ZTE-009**.
+
 Mission Control **CASHCLAW** = ROM / pricing / raise prep in this repo (`PLAN.md`, `mission-control/index.html`).  
 **GitHub CashClaw** projects = agent monetization (OpenClaw skills or Moltlaunch marketplace).  
 Keep this note as the decision + setup checklist only.

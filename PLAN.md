@@ -29,6 +29,8 @@ Three products, one stack. They are not separate businesses.
 P1 is the software. P2 is the box P1 runs on when there is no cloud. P3 is the floor
 under both when there is. **Sell P1 first — it needs zero capital.**
 
+**Cash Claw (forward strategy):** Mission Control **CASHCLAW** owns ROM, pricing, and raise prep; optional vendor CashClaw (OpenClaw skills / marketplace) runs only on trusted workers after Paperclip is healthy. See [docs/CASHCLAW_STRATEGY.md](docs/CASHCLAW_STRATEGY.md).
+
 ---
 
 ## SEQUENCING — WHY THIS ORDER

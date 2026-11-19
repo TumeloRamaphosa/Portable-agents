@@ -80,6 +80,16 @@
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-15T15:35:00+01:00"
+    },
+    {
+      "id": "ZTE-009",
+      "title": "Cash Claw strategy: CASHCLAW ROM + vault checklist + optional vendor pilot",
+      "ownerBot": "CASHCLAW",
+      "playbookHint": "docs/CASHCLAW_STRATEGY.md + integrations/obsidian-herdr/cashclaw.md.example",
+      "verification": "herdr/cash-claw.md in vault with section 0 lane chosen; INVESTMENT.md blocker triaged; vendor pilot only after Paperclip health PASS",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:10:00+01:00"
     }
   ]
 }

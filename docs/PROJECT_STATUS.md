@@ -23,6 +23,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | ZTE-006 | Herdr + Hermes + AutoMeat ops | GROK-ARCH | Mac Mini |
 | ZTE-007 | Fleet + Dark Factory + Naledsi | GROK-ARCH | VMs + Paperclip invites |
 | ZTE-008 | Hermes on phone in mesh | GROK-ARCH | Tailscale on phone (see below) |
+| ZTE-009 | Cash Claw strategy (ROM + optional vendor pilot) | CASHCLAW | `INVESTMENT.md` alignment; hub optional for B |
 
 **pstack on this cloud run:** plugin lives in **your Cursor desktop** — not installable inside the cloud VM. Use [factory/README.md](../factory/README.md) + [grokbots-zero-touch skill](../.cursor/skills/grokbots-zero-touch/SKILL.md) from Mac/Cursor while this agent ships repo changes.
 
@@ -39,6 +40,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **AutoMeat** | `deploy-automeat-clickclack.sh`, Notion/Naledi link |
 | **Buzz / MSI** | `BUZZ_MSI_AGENTS.md` |
 | **OpenClaw** | Lobster plugin doc |
+| **Cash Claw** | `CASHCLAW_STRATEGY.md`, `integrations/obsidian-herdr/cashclaw.md.example` |
 
 ## Not connected yet (needs your infra)
 
