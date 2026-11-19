@@ -11,7 +11,7 @@ Repo: `https://github.com/TumeloRamaphosa/Portable-agents` (branch `cursor/pov-c
 - [ ] Paperclip :3100 healthy on Mac Mini (`scripts/agent-fleet-check.sh paperclip`)
 - [ ] Hermes gateways on workers (`STUDEX_FIVE_NODE_DEPLOY.md` phase 3)
 - [ ] `gitea-mirror-push.sh` after each host clone
-- [ ] `agent-work-archive.sh` → Drive folder 16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR
+- [ ] `agent-work-archive.sh` → Drive folder 1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6
 
 ## Docs
 - [ ] Skim `docs/STUDEX_FIVE_NODE_DEPLOY.md` for current phase

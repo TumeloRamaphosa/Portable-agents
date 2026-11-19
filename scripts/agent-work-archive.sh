@@ -13,7 +13,7 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
-FOLDER_ID="${GDRIVE_ARCHIVE_FOLDER_ID:-16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR}"
+FOLDER_ID="${GDRIVE_ARCHIVE_FOLDER_ID:-1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6}"
 ARCHIVE_ROOT="${STUDEX_ARCHIVE_ROOT:-$HOME/.studex/archive}"
 HOST_TAG="$(hostname -s 2>/dev/null || hostname)"
 STAMP="$(date -u +%Y%m%d-%H%M%S)"

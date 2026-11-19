@@ -6,7 +6,7 @@ Single runbook to run **Portable-agents + Hermes** across the lab, mirror git to
 |-------|----------|
 | **Public git (now)** | [github.com/TumeloRamaphosa/Portable-agents](https://github.com/TumeloRamaphosa/Portable-agents) |
 | **This branch (latest work)** | `cursor/pov-course-needle-1375` — [PR #1](https://github.com/TumeloRamaphosa/Portable-agents/pull/1) |
-| **Agent work archive (Drive)** | [Lenovo folder](https://drive.google.com/drive/folders/16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR) |
+| **Agent work archive (Drive)** | [MSI / agent archive](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6) |
 | **Mesh detail** | [STUDEX_LAB_MESH.md](./STUDEX_LAB_MESH.md) |
 | **Hermes + Paperclip** | [AGENT_COMPANY_SETUP.md](./AGENT_COMPANY_SETUP.md) |
 
@@ -169,12 +169,12 @@ Workflow:
 
 ## Phase 5 — Google Drive archives (agents + Studbot)
 
-**Folder:** [drive.google.com/.../16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR](https://drive.google.com/drive/folders/16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR?usp=sharing)
+**Folder:** [drive.google.com/.../1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6)
 
 Set in `docs/lab-mesh.env`:
 
 ```bash
-GDRIVE_ARCHIVE_FOLDER_ID=16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR
+GDRIVE_ARCHIVE_FOLDER_ID=1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6
 STUDEX_ARCHIVE_ROOT=~/.studex/archive
 ```
 

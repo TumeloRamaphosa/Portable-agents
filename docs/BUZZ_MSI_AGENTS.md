@@ -145,7 +145,7 @@ MSI_BUZZ_AGENT_NAME=Studex-MSI
 
 ## 8 — Deliverables → Google Drive
 
-After agent sessions: `./scripts/agent-work-archive.sh` → [Lenovo Drive folder](https://drive.google.com/drive/folders/16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR) (`msi-bazzite/` or hostname subfolder).
+After agent sessions: `./scripts/agent-work-archive.sh` → [Drive archive](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6) (`msi-bazzite/` or hostname subfolder).
 
 ---
 

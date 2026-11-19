@@ -139,10 +139,12 @@ Skill: `.cursor/skills/permanent-memory/SKILL.md`.
 
 ## Phase 5 — Google Drive
 
+**Target folder (verified):** [Stud-Bot-Depo](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6) — `1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6`.
+
 In `docs/lab-mesh.env` (MSI, gitignored):
 
 ```bash
-GDRIVE_ARCHIVE_FOLDER_ID=16Ke46oCGb_Xd0CmlL9bjDtXEvgmKsEmR
+GDRIVE_ARCHIVE_FOLDER_ID=1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6
 STUDEX_ARCHIVE_ROOT=~/.studex/archive
 STUDEX_ROLE=msi
 # Optional upload:
