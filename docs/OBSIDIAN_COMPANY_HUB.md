@@ -33,8 +33,11 @@ Paperclip `:3100` stays on **Mac Mini** for **company tasks**; Obsidian is **how
 | `herdr/macbook.md` | MacBook | `macbook-llm-mesh.md.example` |
 | `herdr/msi.md` | MSI GPU | `msi-buzz.md.example` + `msi-llm-mesh.md.example` |
 | `herdr/lenovo.md` | Lenovo | `lenovo-lab.md.example` |
-| `herdr/dark-factory.md` | VM | `dark-factory.md.example` |
+| `herdr/dark-factory.md` | **Heavy VM / big box** | `dark-factory.md.example` |
+| `herdr/studex-computer.md` | **Sold appliance** | `studex-computer.md.example` |
 | `herdr/vm-remote.md` | Any GCP VM | `vm-remote.md.example` |
+
+Site + tier map: [TWO_SITES_COMPUTE_TIERS.md](./TWO_SITES_COMPUTE_TIERS.md) (studexmeat.com + Dark Factory site; DF = bigger compute).
 
 Set `AUTOMEAT_VAULT_PATH` in `docs/lab-mesh.env` (gitignored).
 

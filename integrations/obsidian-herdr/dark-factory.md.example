@@ -2,6 +2,9 @@
 herdr-workspace: dark-factory
 ---
 
+# Tier: **heavy worker** — more agents, bigger compute than Studex Computer hub/appliance.
+# Products also ship on public Factory site; see docs/TWO_SITES_COMPUTE_TIERS.md
+
 # Dark Factory VM (ZTE)
 
 Factory OS: `mission-control/factory/index.html` · queue: `factory/intake/queue.json`

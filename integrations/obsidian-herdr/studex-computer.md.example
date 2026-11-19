@@ -1,0 +1,27 @@
+---
+herdr-workspace: studex-computer
+---
+
+# Studex Computer — operator appliance (sold unit)
+
+Runbook: `docs/TWO_SITES_COMPUTE_TIERS.md` · POV course air-gap step
+
+**Not Dark Factory** — no factory secrets, no client GCP keys, no ZTE write access.
+
+## Operator stack (on device)
+
+- [ ] Ollama + LiteLLM :4000 — local models only
+- [ ] Mission Control served locally (no public inbound)
+- [ ] Studbot web or Android unlock with studexmeat subscription email
+- [ ] Air-gap test: agent loop with network disabled (course checkpoint)
+
+## Avoid on appliance
+
+- [ ] No Paperclip admin keys
+- [ ] No OmniRoute cloud provider keys (optional offline-only)
+- [ ] No VNC exposed; physical console or Tailscale opt-in only
+
+## Handoff from factory
+
+- [ ] Image built and signed on Dark Factory; artifact hash recorded in vault (not git)
+- [ ] Buyer gets **Studex Computer** tier doc only — not `dark-factory.md`
