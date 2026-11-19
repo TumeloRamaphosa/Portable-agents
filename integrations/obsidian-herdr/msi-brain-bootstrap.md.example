@@ -1,0 +1,48 @@
+---
+herdr-workspace: msi-brain
+---
+
+# MSI — brain + repo + agents (master)
+
+Runbook: `docs/MSI_BRAIN_SETUP.md` · Factory **ZTE-013**
+
+## Repo (agents work here)
+
+- [ ] WSL: `~/Portable-agents` cloned; branch tracked
+- [ ] `docs/lab-mesh.env` with `STUDEX_ROLE=msi`
+- [ ] `npm run typecheck` optional smoke
+
+## LLM + speak
+
+- [ ] Ollama GPU model pulled
+- [ ] OmniRoute :20128 + key in lab-mesh.env only
+- [ ] OpenBot installed; handoff test between two agents
+- [ ] `./scripts/llm-mesh-preflight.sh` PASS
+
+## Herdr panes
+
+- [ ] `herdr` workspace **msi-brain** or **msi-buzz**
+- [ ] Pane `claude` cwd = Portable-agents
+- [ ] Hermes gateway optional: `hermes-gateway-tmux.sh`
+
+## Obsidian brain (RAG source)
+
+- [ ] Vault has `brain/` (notes) and `herdr/` (checklists)
+- [ ] Herdr Bridge enabled; `AUTOMEAT_VAULT_PATH` set
+- [ ] No API keys in vault notes
+
+## Notion
+
+- [ ] MacBook/Cursor: save MSI facts to Notion Memory (hostname, model, paths) — no secrets
+
+## Google Drive
+
+- [ ] `GDRIVE_ARCHIVE_FOLDER_ID` in lab-mesh.env
+- [ ] `./scripts/agent-work-archive.sh` — manifest under `~/.studex/archive`
+- [ ] Optional rclone → `MSI/` subfolder on Drive
+- [ ] Export sanitized `brain/export/` for Notebook LM when ready
+
+## Verify
+
+- [ ] `./scripts/msi-brain-preflight.sh` PASS
+- [ ] Mark ZTE-013 queued → done when all above checked

@@ -120,6 +120,16 @@
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-19T14:30:00+01:00"
+    },
+    {
+      "id": "ZTE-013",
+      "title": "MSI brain: repo + OpenBot + Obsidian brain/ + Notion + Drive",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/MSI_BRAIN_SETUP.md + msi-brain-bootstrap.md.example",
+      "verification": "msi-brain-preflight.sh PASS on MSI; agent-work-archive.sh manifest; OpenBot handoff",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-19T14:35:00+01:00"
     }
   ]
 }
