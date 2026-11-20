@@ -12,5 +12,7 @@ __pycache__/
 integrations/home-hub/home.env
 integrations/home-hub/cameras.json
 docs/lab-mesh.env
+graphify-out/
+floorplan/
 .venv/
 .cursor/skills/studex-corporate/

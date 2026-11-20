@@ -7,7 +7,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | Check | Status |
 |-------|--------|
 | `npm run typecheck` | Pass (Mission Control course + Studbot JS) |
-| Factory intake | 14 items **queued**, 0 **done** |
+| Factory intake | 15 items **queued**, 0 **done** |
 | Factory pulse | 0 events |
 | PR branch | `cursor/pov-course-needle-1375` |
 
@@ -43,6 +43,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **Cash Claw** | `CASHCLAW_STRATEGY.md`, `integrations/obsidian-herdr/cashclaw.md.example` |
 | **Deploy (GCP / Meat / Factory)** | `GCP_SETUP.md` (Orgo replaced), `DEPLOYMENT_PLAN.md`, ZTE-010, ZTE-014 |
 | **Where agents save work** | `DEPLOY_TIMELINE_AND_SAVES.md` → git, Obsidian, [Stud-Bot-Depo](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6), Notion |
+| **Client planning (Graphify + Floorplan)** | [CLIENT_BUILD_PLANNING.md](./CLIENT_BUILD_PLANNING.md), `npm run planning:setup`, ZTE-015 |
 
 ## Not connected yet (needs your infra)
 
