@@ -1,5 +1,7 @@
 # Obsidian + Herdr = company command (one pattern per machine)
 
+**Front door:** [STUDEX_OPERATING_SYSTEM.md](./STUDEX_OPERATING_SYSTEM.md) — Hermes + Obsidian Herdr + agents on the mesh.
+
 **Local CC0 is not “many dashboards.”** It is:
 
 1. **One Obsidian vault** (or one `herdr/` folder per machine) — checklists are the company record.
