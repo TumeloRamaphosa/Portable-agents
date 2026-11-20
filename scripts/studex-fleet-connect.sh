@@ -75,6 +75,7 @@ check_host "${LAB_HOST_DARK_FACTORY:-}" "dark-factory"
 check_host "${LAB_HOST_NALEDSI:-}" "naledsi"
 check_host "${LAB_HOST_MSI:-}" "msi"
 check_host "${LAB_HOST_MACMIN:-}" "mac-mini"
+check_host "${LAB_HOST_PHONE:-}" "phone"
 
 herdr_add() {
   local ssh_target="$1"
@@ -102,6 +103,7 @@ herdr_add() {
 herdr_add "${HERDR_SSH_DARK_FACTORY:-${LAB_HOST_DARK_FACTORY:-}}" "Dark Factory"
 herdr_add "${HERDR_SSH_NALEDSI:-${LAB_HOST_NALEDSI:-}}" "Naledsi"
 herdr_add "${HERDR_SSH_MSI:-${LAB_HOST_MSI:-}}" "MSI"
+herdr_add "${HERDR_SSH_PHONE:-${LAB_HOST_PHONE:-}}" "Phone"
 
 ARCHIVE="$HOME/.studex/archive/fleet/$(date -u +%Y%m%d-%H%M%S)"
 mkdir -p "$ARCHIVE"
@@ -115,7 +117,8 @@ pass "fleet snapshot $ARCHIVE"
 
 echo ""
 echo "=== Fleet next steps ==="
-echo "  1. Tailscale: ensure dark-factory, naledsi, macmini on same tailnet"
+echo "  1. Tailscale: macmini, phone, msi, dark-factory, naledsi on same tailnet"
+echo "     Phone: docs/PHONE_OS_TAILSCALE.md · ./scripts/phone-os-preflight.sh"
 echo "  2. Each VM: ./scripts/hermes-gateway-tmux.sh && tailscale serve --bg 8642"
 echo "  3. Paperclip: invite Dark Factory + Naledsi Hermes gateways"
 echo "  4. AutoMeat: Mac Mini only — ./scripts/studex-local-ops-up.sh --automeat-check"

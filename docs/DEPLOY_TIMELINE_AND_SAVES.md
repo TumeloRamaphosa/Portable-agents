@@ -33,7 +33,8 @@ Agent session ends
 | **3** | **GCP platform** | [GCP_SETUP.md](./GCP_SETUP.md) · ZTE-010 / ZTE-014 | Cloud Run logs in **GCP Logging**; code in **git**; GCE VMs run same **archive script** → **Stud-Bot-Depo** |
 | **4** | **Commerce** | [DEPLOYMENT_PLAN.md](./DEPLOYMENT_PLAN.md) · Shopify + verify API | No agent secrets on storefront; verify config in **Secret Manager** only |
 | **5** | **Dark Factory** | Firebase static + GCE worker | Factory UI on GCP; queue status in archive manifest `factory-status.txt` |
-| **6** | **Every node** | OpenBot + Herdr per host · ZTE-011–012 | Per-host `hostname` folder in Drive; Obsidian `herdr/<host>.md` checklists |
+| **6** | **Phone on tailnet** | [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md) · ZTE-008 | Phone reaches `:3100` / `:3088`; work runs on Mac/MSI; archive from desktop |
+| **7** | **Every node** | OpenBot + Herdr per host · ZTE-011–012 | Per-host `hostname` folder in Drive; Obsidian `herdr/<host>.md` checklists |
 
 **Rule:** After any agent milestone on **any** host, run:
 

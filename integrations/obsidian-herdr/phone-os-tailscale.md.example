@@ -1,0 +1,38 @@
+---
+herdr-workspace: phone-os
+---
+
+# Phone OS on Tailscale — agents in the mesh (ZTE-008)
+
+Runbook: `docs/PHONE_OS_TAILSCALE.md` · Hermes: `docs/HERMES_PHONE.md`
+
+## Tailscale (mesh OS)
+
+- [ ] Tailscale app on phone — **same** Studex account as `macmini`
+- [ ] MagicDNS on; note exact name → `LAB_HOST_PHONE` in hub `lab-mesh.env`
+- [ ] `tailscale ping <phone>` PASS from MacBook
+- [ ] `./scripts/phone-os-preflight.sh` PASS on hub
+
+## Phone agent shell
+
+- [ ] **iOS:** Hermes + Shortcuts hub health; `PHONE_OS=ios`
+- [ ] **Android:** Termux + `phone-termux-bootstrap.sh`; optional `sshd` + Tailscale SSH
+- [ ] OpenBot mobile → Mac hub (optional)
+- [ ] No API keys in Obsidian mobile notes
+
+## Paperclip + Hermes
+
+- [ ] Hermes on phone: MiniMax OAuth
+- [ ] `http://macmini:3100` reachable on tailnet (browser test)
+- [ ] External invite **task_bridge** — not admin key
+- [ ] Test task assigned → completed from phone
+
+## Desktop Herdr (work runs here)
+
+- [ ] Mac: Herdr socket live; workspace `phone-os` or `hermes-phone`
+- [ ] Bridge ▶ runs steps on `hermes` / `claude` panes on **Mac/MSI**, not phone CPU
+- [ ] After milestone: Mac/MSI `./scripts/agent-work-archive.sh` → Stud-Bot-Depo
+
+## Done
+
+- [ ] ZTE-008 verified; link vault note in Notion Memory (hostname only)

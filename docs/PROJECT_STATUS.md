@@ -50,14 +50,15 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 |-------|----------------|
 | **Paperclip `:3100`** | Run on Mac Mini (not up in cloud VM) |
 | **Hermes gateways** | Install + `tailscale serve` on workers |
-| **Phone Hermes** | Tailscale + optional API bridge to hub ([HERMES_PHONE.md](./HERMES_PHONE.md)) |
+| **Phone OS + Tailscale** | [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md), `phone-os-preflight.sh`, ZTE-008 |
+| **Phone Hermes** | [HERMES_PHONE.md](./HERMES_PHONE.md) · Paperclip task_bridge |
 | **Studbot Android ↔ Hermes** | Still local LiteRT; no phone Hermes RPC in repo |
 | **pstack plugin** | Cursor desktop `/add-plugin pstack` |
 
 ## Recommended next 3 moves
 
 1. **Cursor (MacBook):** `/add-plugin pstack` → close **ZTE-001** with one `/poteto-mode` task + `npm run typecheck`.
-2. **Phone:** Tailscale on → verify Hermes → `npm run factory:status` via SSH to hub optional ([HERMES_PHONE.md](./HERMES_PHONE.md)).
+2. **Phone:** Tailscale on → [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md) → `npm run phone:preflight` on Mac ([HERMES_PHONE.md](./HERMES_PHONE.md)).
 3. **Mac Mini:** `npm run fleet:connect:full` + Paperclip onboard + invite phone/worker Hermes gateways.
 
 ## Commands

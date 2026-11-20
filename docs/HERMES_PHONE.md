@@ -1,5 +1,7 @@
 # Hermes on your phone (Studex mesh)
 
+**Tailscale + phone OS (Termux / agents in mesh):** [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md) — start there for ZTE-008.
+
 You already run **Hermes on the phone** — wire it to **Paperclip**, **home hub**, and **Portable-agents** without exposing ports to the public internet.
 
 ## Roles
@@ -83,7 +85,8 @@ From [AGENT_COMPANY_SETUP.md](./AGENT_COMPANY_SETUP.md):
 On a machine with `lab-mesh.env`:
 
 ```bash
-./scripts/hermes-phone-preflight.sh
+./scripts/phone-os-preflight.sh
+# or legacy: ./scripts/hermes-phone-preflight.sh
 ```
 
 Checks: `LAB_HOST_PHONE` ping (if set), Paperclip URL, home hub URL, docs only for in-phone Hermes binary.

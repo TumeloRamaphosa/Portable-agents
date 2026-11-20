@@ -73,10 +73,10 @@
     },
     {
       "id": "ZTE-008",
-      "title": "Hermes on phone joined to Tailscale + Paperclip task bridge",
+      "title": "Phone OS on Tailscale: Hermes + Paperclip + agents in mesh",
       "ownerBot": "GROK-ARCH",
-      "playbookHint": "docs/HERMES_PHONE.md + integrations/obsidian-herdr/hermes-phone.md.example",
-      "verification": "hermes-phone-preflight.sh PASS; phone on tailnet; optional Paperclip external agent",
+      "playbookHint": "docs/PHONE_OS_TAILSCALE.md + hermes-phone.md + phone-os-tailscale.md.example",
+      "verification": "phone-os-preflight.sh PASS; tailscale ping LAB_HOST_PHONE; Paperclip task_bridge or hub health from phone",
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-15T15:35:00+01:00"
