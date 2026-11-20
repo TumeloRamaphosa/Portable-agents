@@ -109,6 +109,10 @@ Factory: **ZTE-015**.
 
 ---
 
+## Daily reports + agent memory
+
+See **[APP_MAP_DAILY_ROUTINE.md](./APP_MAP_DAILY_ROUTINE.md)** — 09:00/17:00 rhythm, Obsidian `brain/`, Notion paste, `npm run planning:daily-report`.
+
 ## Related
 
 - [DEPLOYMENT_PLAN.md](./DEPLOYMENT_PLAN.md) — client GCP template

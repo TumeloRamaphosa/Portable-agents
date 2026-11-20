@@ -1,0 +1,28 @@
+---
+herdr-workspace: studex-ops
+---
+
+# Daily app map report — Graphify + Floorplan
+
+Runbook: `docs/APP_MAP_DAILY_ROUTINE.md` · ZTE-015
+
+## AM (≈ 09:00 SAST)
+
+- [ ] `git pull` · `npm run factory:status`
+- [ ] Floorplan: update if merges yesterday
+- [ ] Graphify: refresh if large refactor
+- [ ] `npm run planning:daily-report -- --slot am`
+- [ ] Fill `DAILY_SUMMARY.md` in archive · paste to Notion AM brief
+
+## PM (≈ 17:00 SAST)
+
+- [ ] Floorplan Recent work vs factory queue ZTE-*
+- [ ] `npm run planning:daily-report -- --slot pm`
+- [ ] `agent-work-archive.sh` → Stud-Bot-Depo
+- [ ] Obsidian `brain/daily/YYYY-MM-DD-pm.md` done/blocked/tomorrow
+- [ ] Notion consolidated (5 lines)
+
+## Agent memory (weekly)
+
+- [ ] Refresh `brain/apps/portable-agents.md` from GRAPH_REPORT + floorplan parts
+- [ ] Notion Memory: facts only, no keys

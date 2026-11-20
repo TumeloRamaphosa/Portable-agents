@@ -43,7 +43,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **Cash Claw** | `CASHCLAW_STRATEGY.md`, `integrations/obsidian-herdr/cashclaw.md.example` |
 | **Deploy (GCP / Meat / Factory)** | `GCP_SETUP.md` (Orgo replaced), `DEPLOYMENT_PLAN.md`, ZTE-010, ZTE-014 |
 | **Where agents save work** | `DEPLOY_TIMELINE_AND_SAVES.md` → git, Obsidian, [Stud-Bot-Depo](https://drive.google.com/drive/u/2/folders/1HpmisLt5bLxAMtjtU5pwt2PxKIqxwvs6), Notion |
-| **Client planning (Graphify + Floorplan)** | [CLIENT_BUILD_PLANNING.md](./CLIENT_BUILD_PLANNING.md), `npm run planning:setup`, ZTE-015 |
+| **Client planning (Graphify + Floorplan)** | [CLIENT_BUILD_PLANNING.md](./CLIENT_BUILD_PLANNING.md), [APP_MAP_DAILY_ROUTINE.md](./APP_MAP_DAILY_ROUTINE.md), `planning:daily-report`, ZTE-015 |
 
 ## Not connected yet (needs your infra)
 

@@ -146,7 +146,7 @@
       "title": "Client planning stack: Graphify + Floorplan on dev hosts",
       "ownerBot": "GROK-ARCH",
       "playbookHint": "docs/CLIENT_BUILD_PLANNING.md + planning-tools-setup.sh + client-build-planning.md.example",
-      "verification": "graphify install + /graphify on Portable-agents; Floorplan map or blueprint for one client or this repo; exports archived to Stud-Bot-Depo",
+      "verification": "graphify + floorplan on Portable-agents; planning-daily-report am/pm once; APP_MAP_DAILY_ROUTINE in Obsidian brain/; archive to Stud-Bot-Depo",
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-20T17:10:00+01:00"
