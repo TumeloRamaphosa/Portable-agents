@@ -32,6 +32,9 @@ else
   warn "Termux tailscale optional — use Android Tailscale app + curl above"
 fi
 
+command -v claude >/dev/null 2>&1 && pass "claude CLI" || warn "claude not installed here (normal on phone) — use Hermes app; run Claude on Mac/MSI"
+
 echo ""
 echo "Next: Hermes app + Paperclip task_bridge (docs/HERMES_PHONE.md)"
+echo "For claude CLI on MSI/WSL only: ./scripts/install-claude-cli.sh"
 echo "Hub runs: ./scripts/phone-os-preflight.sh with LAB_HOST_PHONE set"

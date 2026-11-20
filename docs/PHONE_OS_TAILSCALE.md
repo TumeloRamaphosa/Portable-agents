@@ -99,6 +99,8 @@ npm run fleet:connect -- --soft-fail
 4. **OpenBot** (optional) — mobile app → desktop hub agent ([OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)).
 5. **Mission Control** — open `mission-control/hub/index.html` from git mirror or static host on tailnet.
 
+**Claude Code (`claude` command):** not bundled in git. **Phone:** use **Hermes**, not `claude` in Termux. **MSI / WSL / Mac:** `./scripts/install-claude-cli.sh` then `claude auth login`.
+
 ### Android — Termux as phone “work OS”
 
 On the phone (Termux):
