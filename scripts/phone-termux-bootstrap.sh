@@ -32,9 +32,19 @@ else
   warn "Termux tailscale optional — use Android Tailscale app + curl above"
 fi
 
-command -v claude >/dev/null 2>&1 && pass "claude CLI" || warn "claude not installed here (normal on phone) — use Hermes app; run Claude on Mac/MSI"
+command -v claude >/dev/null 2>&1 && pass "claude CLI" || warn "claude not installed — bash scripts/termux-claude-setup.sh"
+
+command -v herdr >/dev/null 2>&1 && pass "herdr CLI" || warn "herdr missing — bash scripts/termux-hermes-herdr-setup.sh"
+
+if [ -S "${HOME}/.config/herdr/herdr.sock" ] 2>/dev/null; then
+  pass "herdr socket (Herdr running)"
+else
+  warn "start Herdr: bash scripts/termux-herdr-start.sh"
+fi
+
+command -v hermes >/dev/null 2>&1 && pass "hermes CLI" || warn "hermes CLI missing — Hermes app OK; bash scripts/termux-hermes-herdr-setup.sh"
 
 echo ""
-echo "Next: Hermes app + Paperclip task_bridge (docs/HERMES_PHONE.md)"
+echo "Connect: docs/TERMUX_HERMES_HERDR.md · Hermes app + Paperclip task_bridge"
 echo "For claude CLI on MSI/WSL only: ./scripts/install-claude-cli.sh"
 echo "Hub runs: ./scripts/phone-os-preflight.sh with LAB_HOST_PHONE set"

@@ -18,6 +18,8 @@ Hermes on phone does **not** replace **Hermes Lead** on Mac Mini; it is a **mobi
 
 ---
 
+**Termux `hermes: command not found`:** run `bash scripts/termux-hermes-herdr-setup.sh` — [TERMUX_HERMES_HERDR.md](./TERMUX_HERMES_HERDR.md).
+
 ## 1 — Tailscale on the phone
 
 1. Install Tailscale (iOS / Android).
