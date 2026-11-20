@@ -8,7 +8,7 @@ pass() { echo "PASS  $1"; }
 warn() { echo "WARN  $1"; }
 fail() { echo "FAIL  $1"; }
 
-echo "=== Termux Hermes + Herdr connect ==="
+echo "=== Termux Claude + Hermes + Herdr ==="
 echo "Doc: docs/TERMUX_HERMES_HERDR.md"
 echo "repo=$ROOT"
 echo ""
@@ -33,12 +33,23 @@ if ! command -v herdr >/dev/null 2>&1 && [ -x "${HOME}/.local/bin/herdr" ]; then
 fi
 command -v herdr >/dev/null 2>&1 && pass "herdr=$(command -v herdr)" || fail "herdr not on PATH — add ~/.local/bin to ~/.bashrc"
 
-# --- Claude (optional pane) ---
+# --- Claude Code CLI ---
 if ! command -v claude >/dev/null 2>&1; then
-  warn "claude not installed — run: bash scripts/termux-claude-setup.sh"
-else
+  warn "installing Claude Code CLI…"
+  if bash "$ROOT/scripts/termux-claude-setup.sh"; then
+    export PATH="${PREFIX:-}/bin:${HOME}/.local/bin:$PATH"
+    bash "$ROOT/scripts/install-claude-cli-path.sh" || true
+  else
+    warn "claude install failed on this ARM build — use Mac/MSI pane or Hermes app"
+  fi
+fi
+if command -v claude >/dev/null 2>&1; then
   pass "claude=$(command -v claude)"
+  claude --version 2>/dev/null | head -1 || true
   herdr integration install claude 2>/dev/null && pass "herdr ↔ claude integration" || warn "herdr claude integration skipped"
+  warn "login once: claude auth login"
+else
+  warn "claude not on PATH — source ~/.bashrc then: bash scripts/termux-claude-setup.sh"
 fi
 
 # --- Hermes CLI (Nous) ---
@@ -71,7 +82,8 @@ echo "=== Start connected stack (this phone) ==="
 echo "  source ~/.bashrc"
 echo "  cd $ROOT"
 echo "  herdr                    # creates panes; socket ~/.config/herdr/herdr.sock"
-echo "  # In UI: open pane hermes or claude, cwd = Portable-agents"
+echo "  claude auth login       # first time only"
+echo "  # In Herdr: panes named hermes and claude, cwd = Portable-agents"
 echo ""
 echo "=== Mesh check ==="
 echo "  curl -fsS -m 6 http://macmini:3100/api/health && echo Paperclip ok"

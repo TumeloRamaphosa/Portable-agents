@@ -1,4 +1,4 @@
-# Termux: `hermes` + `herdr` connect (Android)
+# Termux: Claude + Hermes + Herdr (Android)
 
 You saw:
 
@@ -16,10 +16,13 @@ On Termux, **`hermes` is not in git** — you install **Herdr** + **Hermes CLI**
 ```bash
 cd ~/Portable-agents    # or ~/studex/Portable-agents
 git pull
-bash scripts/termux-hermes-herdr-setup.sh
+bash scripts/termux-agent-stack-setup.sh
+# same as: bash scripts/termux-hermes-herdr-setup.sh
 source ~/.bashrc
 herdr --version
+claude --version
 hermes --version        # may still be missing on ARM — see below
+claude auth login       # browser / device code — first time
 ```
 
 Start the connected stack:

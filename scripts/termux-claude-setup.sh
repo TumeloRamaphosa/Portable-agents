@@ -29,5 +29,6 @@ if command -v herdr >/dev/null 2>&1; then
   herdr integration install claude 2>/dev/null || true
   echo "Herdr: start herdr and open a pane named claude"
 else
-  echo "Herdr optional on phone — Hermes app handles most agent chat."
+  echo "Install Herdr + Hermes: bash scripts/termux-agent-stack-setup.sh"
 fi
+echo "Auth: claude auth login"

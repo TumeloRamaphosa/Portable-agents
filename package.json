@@ -15,6 +15,7 @@
     "planning:daily-report": "bash scripts/planning-daily-report.sh",
     "paperclip:backup": "bash scripts/paperclip-backup.sh",
     "ops:status-report": "bash scripts/ops-status-report.sh",
+    "phone:agent-stack": "bash scripts/termux-agent-stack-setup.sh",
     "phone:hermes-herdr": "bash scripts/termux-hermes-herdr-setup.sh",
     "phone:herdr": "bash scripts/termux-herdr-start.sh",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
