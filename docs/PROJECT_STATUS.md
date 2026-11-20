@@ -50,7 +50,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 |-------|----------------|
 | **Paperclip `:3100`** | Run on Mac Mini (not up in cloud VM) |
 | **Hermes gateways** | Install + `tailscale serve` on workers |
-| **Phone OS + Tailscale** | [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md), `phone-os-preflight.sh`, ZTE-008 |
+| **Phone OS + Tailscale** | [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md), [NOTION_VM_COMMAND.md](./NOTION_VM_COMMAND.md), ZTE-008 |
 | **Phone Hermes** | [HERMES_PHONE.md](./HERMES_PHONE.md) · Paperclip task_bridge |
 | **Studbot Android ↔ Hermes** | Still local LiteRT; no phone Hermes RPC in repo |
 | **pstack plugin** | Cursor desktop `/add-plugin pstack` |

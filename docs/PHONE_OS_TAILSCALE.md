@@ -4,6 +4,10 @@
 
 **ZTE-008** · complements [HERMES_PHONE.md](./HERMES_PHONE.md) · save path: [DEPLOY_TIMELINE_AND_SAVES.md](./DEPLOY_TIMELINE_AND_SAVES.md)
 
+**Platform order:** **Android + Termux first** (your device). **iOS** — same tailnet steps later (`PHONE_OS=ios`).
+
+**Notion VM Command:** [Virtual Machine Command](https://app.notion.com/p/41e3ef07399280d6ac21da4b39f9d1bf) · registry how-to → [NOTION_VM_COMMAND.md](./NOTION_VM_COMMAND.md)
+
 ---
 
 ## What “phone OS” means here
