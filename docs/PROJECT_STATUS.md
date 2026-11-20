@@ -35,6 +35,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | **Lab mesh** | `STUDEX_LAB_MESH.md`, `lab-mesh-preflight.sh` |
 | **Five-node + fleet** | `STUDEX_FIVE_NODE_DEPLOY.md`, `studex-fleet-connect.sh` |
 | **Studex OS (Hermes + Herdr + agents)** | [STUDEX_OPERATING_SYSTEM.md](./STUDEX_OPERATING_SYSTEM.md) |
+| **Notion + Obsidian ops** | [NOTION_OBSIDIAN_OPS_BRIDGE.md](./NOTION_OBSIDIAN_OPS_BRIDGE.md), `ops:status-report` |
 | **Local ops** | `STUDEX_LOCAL_OPS.md`, `ops:up`, Hermes gateway tmux |
 | **Herdr + Claude** | `install-herdr.sh`, `hermes-gateway`, Obsidian templates |
 | **Home lounge** | hub `:3088`, cameras, Apple TV, Jellyfin |

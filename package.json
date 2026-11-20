@@ -14,6 +14,7 @@
     "planning:setup": "bash scripts/planning-tools-setup.sh",
     "planning:daily-report": "bash scripts/planning-daily-report.sh",
     "paperclip:backup": "bash scripts/paperclip-backup.sh",
+    "ops:status-report": "bash scripts/ops-status-report.sh",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
     "ops:up": "bash scripts/studex-local-ops-up.sh",
     "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",

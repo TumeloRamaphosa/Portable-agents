@@ -1,0 +1,33 @@
+---
+herdr-workspace: studex-ops
+---
+
+# Notion ↔ Obsidian ops sync (daily)
+
+Runbook: `docs/NOTION_OBSIDIAN_OPS_BRIDGE.md`
+
+## AM ≈ 09:00 SAST
+
+- [ ] `npm run ops:status-report -- am`
+- [ ] Paste **NOTION_PASTE.md** → [Command Centre](https://app.notion.com/p/3f53ef07399281548222f765b9cac2f9) / Agent Dashboard
+- [ ] [Factory Board](https://app.notion.com/p/40618048b07f47e79b9da946e7705b6b): pick today’s **Building** cards (match ZTE-*)
+- [ ] Open matching `herdr/*.md` for ▶ execution
+
+## VM / agent health
+
+- [ ] `./scripts/phone-os-preflight.sh` (if phone in mesh)
+- [ ] `./scripts/studex-fleet-connect.sh --soft-fail`
+- [ ] [VM Registry](https://app.notion.com/p/41b3ef073992811bbd0ac2201d2e5f1d): Status + Last verified (no keys)
+
+## During build
+
+- [ ] Herdr ▶ checklist lines; Factory Board Stage → Building / QA
+- [ ] Paperclip tasks ↔ Hermes panes as needed
+- [ ] Evidence URL before Shipped
+
+## PM ≈ 17:00 SAST
+
+- [ ] `npm run ops:status-report -- pm`
+- [ ] `npm run planning:daily-report -- --slot pm` (optional app map)
+- [ ] `agent-work-archive.sh` → Stud-Bot-Depo
+- [ ] Notion consolidated daily (5 lines)

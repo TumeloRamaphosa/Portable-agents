@@ -94,6 +94,10 @@ Herdr workspace `msi-buzz` or `msi-brain`; pane **Hermes gateway** for Paperclip
 
 ---
 
+## Notion + Obsidian (what to build + progress)
+
+**Notion** = Factory Board + VM Registry + daily briefs. **Obsidian `herdr/`** = ▶ steps. Sync: [NOTION_OBSIDIAN_OPS_BRIDGE.md](./NOTION_OBSIDIAN_OPS_BRIDGE.md) · `npm run ops:status-report`.
+
 ## Daily “boot into the OS”
 
 | Time | You | Agents together |
@@ -151,6 +155,7 @@ Obsidian: **Test connection to Herdr (ping)** in command palette.
 | Goal | Template |
 |------|----------|
 | OS entry checklist | `studex-os-boot.md.example` (this doc) |
+| Notion ↔ Herdr daily | `notion-ops-sync.md.example` |
 | Phone | `android-phone-os.md.example` |
 | MSI brain | `msi-brain-bootstrap.md.example` |
 | Daily maps | `daily-app-map-report.md.example` |
