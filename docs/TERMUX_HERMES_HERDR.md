@@ -1,13 +1,13 @@
 # Termux: Claude + Hermes + Herdr (Android)
 
-You saw:
+Typical errors:
 
 ```text
-hermes
-bash: hermes: command not found
+hermes: command not found
+claude: command not found
 ```
 
-On Termux, **`hermes` is not in git** — you install **Herdr** + **Hermes CLI** (or use the **Hermes app** if CLI build fails).
+Install **Herdr**, **Claude Code** (`npm` → `claude`), and **Hermes CLI** (or the **Hermes app** if Hermes CLI fails on ARM).
 
 ---
 
