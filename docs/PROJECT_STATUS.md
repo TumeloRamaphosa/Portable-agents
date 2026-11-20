@@ -7,7 +7,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 | Check | Status |
 |-------|--------|
 | `npm run typecheck` | Pass (Mission Control course + Studbot JS) |
-| Factory intake | 15 items **queued**, 0 **done** |
+| Factory intake | 16 items **queued**, 0 **done** |
 | Factory pulse | 0 events |
 | PR branch | `cursor/pov-course-needle-1375` |
 
@@ -50,7 +50,7 @@ Snapshot for **pstack / Grokbots ZTE**, **agent mesh**, and **Hermes on phone**.
 
 | Piece | What’s missing |
 |-------|----------------|
-| **Paperclip `:3100`** | Run on Mac Mini (not up in cloud VM) |
+| **Paperclip `:3100`** | Primary Mac Mini; VM standby [PAPERCLIP_ALWAYS_ON.md](./PAPERCLIP_ALWAYS_ON.md), ZTE-016 |
 | **Hermes gateways** | Install + `tailscale serve` on workers |
 | **Phone OS + Tailscale** | [PHONE_OS_TAILSCALE.md](./PHONE_OS_TAILSCALE.md), [NOTION_VM_COMMAND.md](./NOTION_VM_COMMAND.md), ZTE-008 |
 | **Phone Hermes** | [HERMES_PHONE.md](./HERMES_PHONE.md) · Paperclip task_bridge |

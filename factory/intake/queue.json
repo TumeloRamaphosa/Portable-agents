@@ -150,6 +150,16 @@
       "policy": [],
       "status": "queued",
       "createdAt": "2026-11-20T17:10:00+01:00"
+    },
+    {
+      "id": "ZTE-016",
+      "title": "Paperclip always-on: backup + GCP hub VM standby drill",
+      "ownerBot": "GROK-SHIP",
+      "playbookHint": "docs/PAPERCLIP_ALWAYS_ON.md + paperclip-backup.sh + hub-gcp on tailnet",
+      "verification": "paperclip-backup tarball to Stud-Bot-Depo; standby VM restore health once; PAPERCLIP_URL documented in lab-mesh.env",
+      "policy": ["production_secret"],
+      "status": "queued",
+      "createdAt": "2026-11-20T17:20:00+01:00"
     }
   ]
 }

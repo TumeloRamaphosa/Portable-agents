@@ -11,7 +11,7 @@ Use this doc as the **front door**. Deeper dives linked at the end.
 | Layer | What you use | Where it runs |
 |-------|----------------|---------------|
 | **1 — Mesh** | Tailscale MagicDNS | Phone, Mac Mini, MacBook, MSI, GCP VMs |
-| **2 — Company tasks** | Paperclip `:3100` + **Hermes Lead** | Mac Mini (hub) |
+| **2 — Company tasks** | Paperclip `:3100` + **Hermes Lead** | Mac Mini (hub); **VM standby** optional — [PAPERCLIP_ALWAYS_ON.md](./PAPERCLIP_ALWAYS_ON.md) |
 | **3 — Execution OS** | **Herdr** + **Obsidian Herdr Bridge** | Each machine with a vault folder `herdr/` |
 | **4 — Agent runtimes** | `hermes`, `claude`, OpenBot | **Inside Herdr panes** on that machine |
 
