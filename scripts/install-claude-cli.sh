@@ -17,9 +17,12 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
+if [ -n "${TERMUX_VERSION:-}" ] && [ -z "${CLAUDE_NPM_PREFIX:-}" ]; then
+  CLAUDE_NPM_PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
+fi
 PREFIX="${CLAUDE_NPM_PREFIX:-$HOME/.local}"
 mkdir -p "$PREFIX/bin"
-export PATH="$PREFIX/bin:$PATH"
+export PATH="$PREFIX/bin:$HOME/.local/bin:$PATH"
 
 echo "Installing @anthropic-ai/claude-code → $PREFIX"
 npm install -g @anthropic-ai/claude-code --prefix "$PREFIX" \
@@ -37,4 +40,8 @@ echo ""
 echo "Next:"
 echo "  export PATH=\"$PREFIX/bin:\$PATH\"   # add to ~/.bashrc"
 echo "  claude auth login"
+echo "  bash scripts/install-claude-cli-path.sh"
+echo "  source ~/.bashrc && claude auth login"
 echo "  cd Portable-agents && herdr integration install claude   # if herdr installed"
+echo ""
+echo "Android Termux one-shot: bash scripts/termux-claude-setup.sh"

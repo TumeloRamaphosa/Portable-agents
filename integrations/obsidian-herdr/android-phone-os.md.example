@@ -14,8 +14,10 @@ Notion: [Virtual Machine Command](https://app.notion.com/p/41e3ef07399280d6ac21d
 
 ## Termux agent shell
 
-- [ ] `pkg install git curl openssh`
-- [ ] Shallow clone Portable-agents; `bash scripts/phone-termux-bootstrap.sh`
+- [ ] `pkg install git curl openssh nodejs`
+- [ ] Shallow clone Portable-agents; `bash scripts/termux-claude-setup.sh`
+- [ ] `source ~/.bashrc` → `claude --version` → `claude auth login`
+- [ ] `bash scripts/phone-termux-bootstrap.sh`
 - [ ] Optional: `sshd` + Tailscale SSH for Mac to reach phone
 
 ## Apps

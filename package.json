@@ -10,6 +10,7 @@
     "gcp:deploy-verify": "bash scripts/gcp-deploy-verify.sh",
     "phone:preflight": "bash scripts/phone-os-preflight.sh",
     "claude:install": "bash scripts/install-claude-cli.sh",
+    "claude:install:termux": "bash scripts/termux-claude-setup.sh",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
     "ops:up": "bash scripts/studex-local-ops-up.sh",
     "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",
