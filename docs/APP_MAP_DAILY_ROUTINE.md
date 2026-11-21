@@ -59,7 +59,11 @@ Notion Memory (optional one-liner): *“Portable-agents architecture snapshots l
 
 ---
 
-## Daily routine (SAST — match Command Centre 09:00 / 17:00)
+**Desktop mix (OpenBot + one vault + 07:00 / 19:00 Lagos):** [DESKTOP_OPENBOT_DAILY_MIX.md](./DESKTOP_OPENBOT_DAILY_MIX.md)
+
+## Daily routine (07:00 objectives / 19:00 close — Lagos UTC+1)
+
+Legacy label **09:00 / 17:00 SAST** ≈ same rhythm one hour ahead in SAST; use **`npm run daily:routine`** slots `07-objectives` and `19-close`.
 
 ### Morning (≈ 09:00) — orient
 

@@ -18,6 +18,7 @@
     "phone:agent-stack": "bash scripts/termux-agent-stack-setup.sh",
     "phone:hermes-herdr": "bash scripts/termux-hermes-herdr-setup.sh",
     "phone:herdr": "bash scripts/termux-herdr-start.sh",
+    "daily:routine": "bash scripts/daily-routine-run.sh",
     "home:hub": "node integrations/home-hub/hub_server.mjs",
     "ops:up": "bash scripts/studex-local-ops-up.sh",
     "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",

@@ -36,7 +36,7 @@ Use this doc as the **front door**. Deeper dives linked at the end.
 1. **Paperclip** creates the task (company-wide).
 2. **Hermes** on the right host runs tools (gateway on MSI/VM, Lead on Mini).
 3. **Obsidian** checklist line → Herdr Bridge **▶** → same or other pane (`claude` ↔ `hermes` handoff via OpenBot optional).
-4. **OpenBot** = talk/handoff between named agents on one desktop ([OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)).
+4. **OpenBot** = talk/handoff between named agents on one desktop ([OPENBOT_NODE_MESH.md](./OPENBOT_NODE_MESH.md)) · daily wiki + 07:00/19:00 → [DESKTOP_OPENBOT_DAILY_MIX.md](./DESKTOP_OPENBOT_DAILY_MIX.md).
 
 ---
 

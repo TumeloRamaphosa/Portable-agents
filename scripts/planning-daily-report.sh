@@ -39,33 +39,58 @@ else
   echo "No floorplan/ yet — Claude Code: 'Make me a floorplan of this app.'" >"$DEST/planning/floorplan-recent.txt"
 fi
 
-cat >"$DEST/planning/DAILY_SUMMARY.md" <<EOF
-# Studex app map daily report (${SLOT^^}) — ${DATE_LOCAL}
+if [ "$SLOT" = "am" ]; then
+  cat >"$DEST/planning/DAILY_SUMMARY.md" <<EOF
+# Studex objectives (07:00) — ${DATE_LOCAL}
 
 Host: ${HOST_TAG}  
-Repo: Portable-agents  
-Doc: docs/APP_MAP_DAILY_ROUTINE.md
+Doc: docs/DESKTOP_OPENBOT_DAILY_MIX.md
 
-## What we learned about the app today
-- (Graphify: 1–3 bullets from graph-report-excerpt.md)
-- (Floorplan: Recent work / Health — titles only)
+## Objectives today (max 3)
+1.
+2.
+3.
 
-## Factory / queue
-- (paste top lines from factory-status.txt)
+## ZTE / Factory Board ids
+- (from factory-status.txt)
 
-## Done today
+## App context (Graphify + Floorplan)
+- (god nodes / Health titles only — no secrets)
+
+## OpenBot handoff (optional)
+- Ada summary → first Herdr ▶ step:
+
+## Notion paste (objectives, max 5 lines)
+-
+
+EOF
+else
+  cat >"$DEST/planning/DAILY_SUMMARY.md" <<EOF
+# Studex close (19:00) — ${DATE_LOCAL}
+
+Host: ${HOST_TAG}  
+Doc: docs/DESKTOP_OPENBOT_DAILY_MIX.md
+
+## Shipped / done
 -
 
 ## Blocked
 -
 
-## Tomorrow / next ZTE
+## Tomorrow
 -
 
-## Notion paste (max 5 lines, no secrets)
+## App map delta (Graphify + Floorplan)
+- (what changed today)
+
+## Factory / queue
+- (factory-status.txt)
+
+## Notion paste (max 5 lines, Evidence links)
 -
 
 EOF
+fi
 
 echo "Staged: $DEST/planning/"
 echo "Next: edit DAILY_SUMMARY.md → ./scripts/agent-work-archive.sh"
