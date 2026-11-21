@@ -1,0 +1,10 @@
+# Append to docs/lab-mesh.env (gitignored)
+
+# SSH Host from ~/.ssh/config (MagicDNS or LAN)
+HERDR_MSI_SSH=msi-gpu
+
+# When Obsidian on Mac forwards MSI socket:
+# HERDR_SOCKET_PATH=/tmp/herdr-msi.sock
+
+# Local socket when Herdr runs on same machine as Obsidian:
+# HERDR_SOCKET_PATH=~/.config/herdr/herdr.sock

@@ -1,0 +1,14 @@
+{
+  "adapterType": "hermes_gateway",
+  "adapterConfig": {
+    "apiBaseUrl": "https://msi-gpu.TAILNET_NAME.ts.net",
+    "provider": "minimax",
+    "toolsets": "terminal,file,web",
+    "persistSession": true,
+    "worktreeMode": true,
+    "maxTurnsPerRun": 40,
+    "timeoutSec": 1800
+  },
+  "displayName": "AutoMeat Ops (Hermes)",
+  "notes": "Set apiBaseUrl from tailscale serve on the worker. For hermes_local on Mac Mini hub, use adapterType hermes_local and omit apiBaseUrl."
+}

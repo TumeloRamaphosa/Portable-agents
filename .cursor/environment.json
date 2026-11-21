@@ -1,0 +1,4 @@
+{
+  "install": "set -euo pipefail; mkdir -p \"$HOME/.local/bin\"; command -v herdr >/dev/null 2>&1 || curl -fsSL https://herdr.dev/install.sh | sh; command -v claude >/dev/null 2>&1 || (npm install -g @anthropic-ai/claude-code --prefix \"$HOME/.local\" --allow-scripts @anthropic-ai/claude-code 2>/dev/null || npm install -g @anthropic-ai/claude-code --prefix \"$HOME/.local\"); sudo ln -sf \"$HOME/.local/bin/claude\" /usr/local/bin/claude 2>/dev/null || true; sudo ln -sf \"$HOME/.local/bin/herdr\" /usr/local/bin/herdr 2>/dev/null || true; mkdir -p \"$HOME/.claude/hooks\"; command -v herdr >/dev/null 2>&1 && herdr integration install claude 2>/dev/null || true",
+  "start": "bash /workspace/scripts/herdr-server-start.sh"
+}

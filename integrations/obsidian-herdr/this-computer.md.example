@@ -1,0 +1,11 @@
+---
+herdr-workspace: portable-agents
+---
+
+# This computer (Cursor / dev host)
+
+- [ ] `export PATH="$HOME/.local/bin:$PATH"`
+- [ ] `npm run ops:up`
+- [ ] `herdr` → pane: `claude` or `hermes`
+- [ ] `./scripts/studex-fleet-connect.sh --soft-fail`
+- [ ] Push Portable-agents; mirror Gitea if configured

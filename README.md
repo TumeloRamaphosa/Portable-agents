@@ -30,8 +30,15 @@ building. That constraint is the product.
 ## Quick start
 
 ```bash
+# Studbot entry app (launch + local guide)
+open studbot/index.html
+
 # Mission Control console — no build step, no dependencies
 open mission-control/index.html
+
+# Portable Agents POV course (NEEDLE compass + first-person checkpoints)
+open mission-control/course/index.html
+# Optional: from repo root, `python3 -m http.server 8080` then visit /mission-control/course/
 ```
 
 ---
@@ -41,7 +48,25 @@ open mission-control/index.html
 | Path | What's in it |
 |------|--------------|
 | `PLAN.md` | The live integration plan — phases, blockers, counterparties, decision log |
+| `studbot/` | Web entry app — launch surfaces + local Studbot chat (no API) |
+| `studbot-android/` | Native Studbot — ADK Kotlin, NEEDLE, POV course, on-device pulse agent |
+| `shopify/` | Monthly subscription merchant setup + env template |
+| `api/` | `verify-subscription` (Shopify Admin API) for Studbot unlock |
+| `integrations/cactus-needle/` | Cactus Needle Studbot tools + REPL |
+| `docs/NEEDLE_AND_OPS_STACK.md` | Cactus vs AbuZar vs claude-ops vs course compass |
+| `docs/PSTACK_GROKBOTS_ZTE.md` | pstack plugin, Grokbots, zero-touch engineering factory |
+| `docs/deployments/AUTOMEAT_CLICKCLACK.md` | AutoMeat CEO agent → ClickClack/Paperclip :3100 |
+| `docs/HERMES_INTAKE.md` | Commercial project intake — [hermes-intake.vercel.app](https://hermes-intake.vercel.app/) |
+| `docs/STUDEX_LAB_MESH.md` | Mac Mini + MacBook + MSI — Tailscale, Paperclip, Hermes |
+| `docs/lab-mesh.env.example` | Copy to `docs/lab-mesh.env` (local, gitignored) |
+| `home-console/` | Lounge UI — Samsung/JVC, games, Phonon, Linux-Studex bridge |
+| `integrations/home-hub/` | Home hub API (:3088), TV tools, Phonon script |
+| `docs/STUDEX_HOME_LOUNGE.md` | Home automation + gaming + corporate skills map |
+| `mission-control/factory/` | Factory OS dashboard (Grokbots + pstack checklist) |
+| `docs/EDGE_HOSTS.md` | Lab edge hosts (Termux, PS5 Bazzite, dev Linux) — not product roadmap |
 | `mission-control/` | The operator console. Single file, role-switched, offline-capable |
+| `mission-control/course/` | Field training — first-person POV navigation and NEEDLE compass UI (separate surface) |
+| `mission-control/live-agent-demo/` | Runnable pulse watcher — autonomous `out/` notes on anomaly |
 | `docs/` | Investment thesis, SA data centre research, device spec, consulting practice |
 | `engine/` | Deal-scoring engine — multi-agent analysis over the pipeline |
 | `outbound/` | Email drafts staged for AgentMail. Nothing sends automatically |

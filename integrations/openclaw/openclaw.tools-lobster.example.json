@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "alsoAllow": ["lobster"]
+  },
+  "agents": {
+    "entries": {
+      "main": {
+        "tools": {
+          "alsoAllow": ["lobster"]
+        }
+      }
+    }
+  }
+}

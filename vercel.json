@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/verify-subscription", "destination": "/api/verify-subscription.mjs" },
+    { "source": "/api/shopify-webhook", "destination": "/api/shopify-webhook.mjs" }
+  ]
+}

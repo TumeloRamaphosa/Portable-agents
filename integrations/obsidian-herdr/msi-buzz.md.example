@@ -1,0 +1,14 @@
+---
+herdr-workspace: msi-buzz
+---
+
+# MSI — Buzz + Hermes (ZTE-005)
+
+Runbook: `docs/BUZZ_MSI_AGENTS.md` in Portable-agents.
+
+- [ ] Buzz desktop installed (Windows exe or Bazzite deb/AppImage)
+- [ ] Relay URL in Buzz settings → `http://macmini:3000` (Tailscale)
+- [ ] Create agent **Studex-MSI**; workdir = Portable-agents clone
+- [ ] `./scripts/msi-buzz-preflight.sh` PASS on MSI
+- [ ] Hermes gateway + `tailscale serve --bg 8642`; invited in Paperclip
+- [ ] `./scripts/agent-work-archive.sh` (sanitized logs only)

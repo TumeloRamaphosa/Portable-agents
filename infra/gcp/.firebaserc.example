@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "studex-platform"
+  },
+  "targets": {
+    "studex-platform": {
+      "hosting": {
+        "dark-factory": ["dark-factory-studex"]
+      }
+    }
+  }
+}

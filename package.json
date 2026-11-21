@@ -1,0 +1,28 @@
+{
+  "name": "portable-agents-black-cloud",
+  "private": true,
+  "scripts": {
+    "typecheck": "node --check mission-control/course/components/needle.js && node --check mission-control/course/components/pov-course.js && node --check studbot/app.js",
+    "factory:status": "node scripts/factory-status.mjs",
+    "project:status": "bash scripts/project-status.sh",
+    "msi:brain-preflight": "bash scripts/msi-brain-preflight.sh",
+    "gcp:preflight": "bash scripts/gcp-preflight.sh",
+    "gcp:deploy-verify": "bash scripts/gcp-deploy-verify.sh",
+    "phone:preflight": "bash scripts/phone-os-preflight.sh",
+    "claude:install": "bash scripts/install-claude-cli.sh",
+    "claude:install:termux": "bash scripts/termux-claude-setup.sh",
+    "planning:setup": "bash scripts/planning-tools-setup.sh",
+    "planning:daily-report": "bash scripts/planning-daily-report.sh",
+    "paperclip:backup": "bash scripts/paperclip-backup.sh",
+    "ops:status-report": "bash scripts/ops-status-report.sh",
+    "phone:agent-stack": "bash scripts/termux-agent-stack-setup.sh",
+    "phone:hermes-herdr": "bash scripts/termux-hermes-herdr-setup.sh",
+    "phone:herdr": "bash scripts/termux-herdr-start.sh",
+    "daily:routine": "bash scripts/daily-routine-run.sh",
+    "home:hub": "node integrations/home-hub/hub_server.mjs",
+    "ops:up": "bash scripts/studex-local-ops-up.sh",
+    "ops:up:full": "bash scripts/studex-local-ops-up.sh --start-hermes-gateway --soft-fail",
+    "fleet:connect": "bash scripts/studex-fleet-connect.sh --soft-fail",
+    "fleet:connect:full": "bash scripts/studex-fleet-connect.sh --herdr-add-machines --soft-fail"
+  }
+}

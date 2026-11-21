@@ -1,0 +1,24 @@
+---
+herdr-workspace: macbook
+---
+
+# MacBook — LLM mesh + pstack
+
+Runbook: `docs/LLM_MESH_BRIDGE.md` · `docs/OBSIDIAN_COMPANY_HUB.md`
+
+## LLM mesh
+
+- [ ] `ollama` running; at least one model pulled
+- [ ] `omniroute` on :20128; API key in `lab-mesh.env` only
+- [ ] `./scripts/llm-mesh-preflight.sh` PASS
+- [ ] Claude/Hermes base URL → `OMNIROUTE_URL` (this host)
+
+## Agents
+
+- [ ] `herdr` workspace **macbook**
+- [ ] Pane: `claude` for business + ship; pstack `/poteto-mode` in Cursor
+- [ ] Tailscale up; `LAB_HOST_MACBOOK` in hub `lab-mesh.env`
+
+## Vault
+
+- [ ] Checklists under `herdr/` — not scattered notes outside `herdr/`

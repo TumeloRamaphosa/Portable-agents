@@ -1,0 +1,31 @@
+---
+herdr-workspace: studex-ops
+---
+
+# Daily wiki + Graphify/Floorplan (07:00 / 19:00 Lagos)
+
+Runbook: `docs/DESKTOP_OPENBOT_DAILY_MIX.md`
+
+## 07:00 — objectives for the day
+
+- [ ] OpenBot **Ada**: "3 objectives from factory queue + Floorplan health"
+- [ ] `npm run daily:routine -- --slot 07-objectives`
+- [ ] Floorplan: Recent work + top Health titles (no secrets)
+- [ ] Graphify: skim `graphify-out/GRAPH_REPORT.md` or explain today's ZTE area
+- [ ] Write `brain/daily/YYYY-MM-DD-07-objectives.md` (3 bullets + ZTE ids)
+- [ ] Notion Factory Board: set **Building** for chosen ZTE rows
+- [ ] Herdr ▶ first line on today's `herdr/macbook.md` or `herdr/studex-ops.md`
+
+## 19:00 — close
+
+- [ ] Floorplan: "Update the floorplan" if code merged today
+- [ ] `npm run daily:routine -- --slot 19-close`
+- [ ] `npm run ops:status-report -- pm`
+- [ ] `brain/daily/YYYY-MM-DD-19-close.md` — Done / Blocked / Tomorrow
+- [ ] `./scripts/agent-work-archive.sh` → Stud-Bot-Depo
+- [ ] Notion consolidated daily (5 lines, Evidence URLs on shipped work)
+
+## OpenBot + Herdr (same desktop)
+
+- [ ] OpenBot for chat/handoffs; Obsidian ▶ for committed steps
+- [ ] `herdr/openbot-<hostname>.md` PASS on this machine

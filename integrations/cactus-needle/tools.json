@@ -1,0 +1,18 @@
+[
+  {
+    "name": "get_needle_bearing",
+    "description": "Returns NEEDLE compass bearing in degrees and the next POV course checkpoint title for Portable Agents training."
+  },
+  {
+    "name": "advance_pov_course",
+    "description": "Move forward one checkpoint in the first-person POV Portable Agents course."
+  },
+  {
+    "name": "read_pulse",
+    "description": "Read device pulse snapshot: cpu_temp_c and status. Anomaly if temp above 70 or status not ok."
+  },
+  {
+    "name": "write_autonomous_note",
+    "description": "When pulse is anomalous, write AUTONOMOUS_NOTE summary for the operator."
+  }
+]

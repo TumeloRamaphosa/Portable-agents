@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CC0 — Obsidian Company Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#111;--line:rgba(201,168,76,.18);--paper:#F5F1E8;--muted:#8A8578;
+--mono:'Space Mono',monospace;--serif:'Cormorant Garamond',Georgia,serif;--display:'Bebas Neue',Impact,sans-serif}
+body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px}
+a{color:var(--gold)}.wrap{max-width:900px;margin:0 auto;padding:28px}
+h1{font-family:var(--display);font-size:40px;letter-spacing:.08em;margin:16px 0}
+.lede{font-family:var(--serif);color:#CFC9B8;font-size:18px;line-height:1.5}
+ul{line-height:1.9;color:#BDB8A8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../hub/index.html">← Command Hub</a>
+  <h1>CC0 OBSIDIAN + HERDR</h1>
+  <p class="lede">One vault pattern per machine. Agents feed checklists in <code>herdr/*.md</code>; each computer runs its own Herdr socket and LLM mesh.</p>
+  <ul>
+    <li><a href="../../docs/OBSIDIAN_COMPANY_HUB.md">Company hub architecture</a></li>
+    <li><a href="../../docs/LLM_MESH_BRIDGE.md">Ollama + OmniRoute + Higgsfield (media)</a></li>
+    <li><a href="../../docs/OBSIDIAN_HERDR_BRIDGE.md">Herdr Bridge plugin</a></li>
+    <li>Templates: MacBook · MSI · Lenovo · VM → <code>integrations/obsidian-herdr/</code></li>
+    <li><code>./scripts/llm-mesh-preflight.sh</code></li>
+    <li>Paperclip on Mac Mini — company tasks only (<a href="../../docs/AGENT_COMPANY_SETUP.md">setup</a>)</li>
+    <li>pstack on MacBook — <a href="../factory/index.html">Factory OS</a></li>
+  </ul>
+</div>
+</body>
+</html>

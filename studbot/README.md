@@ -1,0 +1,43 @@
+# Studbot (web)
+
+Lightweight **browser entry app** for Portable Agents (Studex / Black Cloud). No build step, no backend — open in a browser or add to home screen via the web manifest.
+
+For the **native Android** Studbot (Google ADK Kotlin, on-device AI, NEEDLE), see [`studbot-android/README.md`](../studbot-android/README.md).
+
+## What it does
+
+- **Launch** Mission Control, the POV course (NEEDLE), and the live-agent demo README
+- **Chat** with a local Studbot guide (keyword routing only; no external APIs)
+
+## Shopify monthly subscription
+
+Subscribers buy **Studbot / Portable Agents** on your Shopify store; unlock with the same email via `studbot/access.js`. Server setup: [`shopify/MERCHANT_SETUP.md`](../shopify/MERCHANT_SETUP.md).
+
+Production `index.html` config:
+
+```javascript
+window.STUDBOT_CONFIG = {
+  requireSubscription: true,
+  verifyUrl: "https://your-app.vercel.app/api/verify-subscription",
+  subscribeUrl: "https://www.studexmeat.com/products/tier-4-operator-4-500-month",
+  sessionDays: 7
+};
+```
+
+## Run
+
+```bash
+open studbot/index.html
+# or from repo root:
+python3 -m http.server 8080
+# → http://localhost:8080/studbot/
+```
+
+## Files
+
+| File | Role |
+|------|------|
+| `index.html` | App shell |
+| `app.js` | Local chat + quick prompts |
+| `styles/app.css` | Studex design tokens |
+| `manifest.webmanifest` | Optional installable PWA metadata |

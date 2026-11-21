@@ -1,0 +1,40 @@
+---
+herdr-workspace: phone-os
+---
+
+# Android phone — Tailscale + Termux (ZTE-008)
+
+Notion: [Virtual Machine Command](https://app.notion.com/p/41e3ef07399280d6ac21da4b39f9d1bf) · Repo: `docs/PHONE_OS_TAILSCALE.md`
+
+## Tailscale
+
+- [ ] Android app, Studex account
+- [ ] MagicDNS on; copy device name → hub `LAB_HOST_PHONE`
+- [ ] `PHONE_OS=android-termux` in `docs/lab-mesh.env` on Mac
+
+## Termux agent shell
+
+- [ ] `pkg install git curl openssh nodejs`
+- [ ] Shallow clone Portable-agents; `bash scripts/termux-claude-setup.sh`
+- [ ] `source ~/.bashrc` → `claude --version` → `claude auth login`
+- [ ] `bash scripts/phone-termux-bootstrap.sh`
+- [ ] Optional: `sshd` + Tailscale SSH for Mac to reach phone
+
+## Apps
+
+- [ ] Hermes + MiniMax OAuth
+- [ ] OpenBot → Mac hub (optional)
+- [ ] Browser: `http://macmini:3100` health on tailnet
+
+## Mac verifies
+
+- [ ] `npm run phone:preflight` PASS
+- [ ] VM Registry row **android-studex-phone** → Status Running (no keys in Notion)
+
+## iOS (later)
+
+- [ ] Same tailnet; `PHONE_OS=ios`; Shortcuts hub health; no Termux
+
+## Archive
+
+- [ ] Mac/MSI `agent-work-archive.sh` → Stud-Bot-Depo after milestone

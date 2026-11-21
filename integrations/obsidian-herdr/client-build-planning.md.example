@@ -1,0 +1,33 @@
+---
+herdr-workspace: client-build
+---
+
+# Client build + planning (Graphify + Floorplan) — ZTE-015
+
+Runbook: `docs/CLIENT_BUILD_PLANNING.md`
+
+## Setup (Mac / MSI)
+
+- [ ] `./scripts/planning-tools-setup.sh`
+- [ ] `graphify install` for Cursor + Claude
+- [ ] Floorplan plugin in Claude Code (`floorplan@floorplan`)
+
+## New client
+
+- [ ] PRD in vault `brain/clients/<slug>/` (no secrets)
+- [ ] Floorplan **blueprint** from PRD
+- [ ] GCP client project stub in Notion VM Registry (Provider: Google Cloud)
+- [ ] Agreement on what ships in git vs Drive only
+
+## During build
+
+- [ ] After major PR: `/graphify .` → review `GRAPH_REPORT.md`
+- [ ] "Update the floorplan" after milestone
+- [ ] Floorplan Health check before staging
+- [ ] `agent-work-archive.sh` → Stud-Bot-Depo
+
+## Handoff
+
+- [ ] Export floorplan HTML (client-safe)
+- [ ] Sanitized graph report only (no env paths with keys)
+- [ ] Mark ZTE-015 done

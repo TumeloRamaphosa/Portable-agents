@@ -1,0 +1,11 @@
+---
+herdr-workspace: naledsi
+---
+
+# Naledsi VM — operations
+
+- [ ] `./scripts/studex-fleet-connect.sh --soft-fail`
+- [ ] `./scripts/gitea-mirror-push.sh`
+- [ ] Hermes gateway + `tailscale serve --bg 8642`
+- [ ] Paperclip task from factory queue (ZTE-003..007)
+- [ ] Drive archive: `./scripts/agent-work-archive.sh`

@@ -1,0 +1,45 @@
+---
+herdr-workspace: cashclaw
+---
+
+# Cash Claw — pick one lane (do not mix in one Herdr pane)
+
+**Studex forward strategy:** [CASHCLAW_STRATEGY.md](../../docs/CASHCLAW_STRATEGY.md) · factory **ZTE-009**.
+
+Mission Control **CASHCLAW** = ROM / pricing / raise prep in this repo (`PLAN.md`, `mission-control/index.html`).  
+**GitHub CashClaw** projects = agent monetization (OpenClaw skills or Moltlaunch marketplace).  
+Keep this note as the decision + setup checklist only.
+
+## 0 — Which CashClaw did you mean?
+
+- [ ] **Studex CASHCLAW (finance lane)** — update `INVESTMENT.md` / ROM; Hermes or `claude` pane; no npm install
+- [ ] **ertugrulakben/cashclaw** — OpenClaw skill pack, Stripe, HYRVE, Guard cost cap → `npx cashclaw init` on a host with OpenClaw
+- [ ] **moltlaunch/cashclaw** — standalone agent + dashboard :3777, Moltlaunch tasks → `npm i -g cashclaw-agent moltlaunch`
+- [ ] **derprofi1313/cash-claw** — OpenClaw fork + AEL + Stripe → clone and build
+
+## 1 — Studex financial lane (repo only)
+
+- [ ] Read `PLAN.md` blocker: INVESTMENT.md vs actual company model
+- [ ] Open Mission Control → CASHCLAW row (ROM matrices, weekly roll-up)
+- [ ] Draft ROM / pricing assumptions in vault (not in git until reviewed)
+- [ ] Weekly: export summary to Drive archive stub via `scripts/agent-work-archive.sh` (sanitized)
+
+## 2 — If using OpenClaw CashClaw skills (ertugrulakben)
+
+- [ ] OpenClaw runtime installed on **one** trusted machine (not phone)
+- [ ] `npx cashclaw init` — workspace `~/.cashclaw/`; Stripe optional at first
+- [ ] Enable **Guard**: per-call and daily USD caps documented in vault (no API keys in notes)
+- [ ] Herdr workspace `cashclaw` → pane runs vendor CLI only; checklists stay in Obsidian
+
+## 3 — Mesh boundaries (Studex)
+
+- [ ] CashClaw marketplace agents are **not** Paperclip Hermes Lead — register separately or keep offline
+- [ ] Paperclip `:3100` remains company control plane (`docs/AGENT_COMPANY_SETUP.md`)
+- [ ] Phone Hermes: chat + `task_bridge` only (`docs/HERMES_PHONE.md`)
+
+## Links (external, verify before production)
+
+- OpenClaw skills: https://github.com/ertugrulakben/cashclaw
+- Moltlaunch agent: https://github.com/moltlaunch/cashclaw
+- Herdr Bridge plugin: https://github.com/Daniel-Steinberger/obsidian-herdr
+- Repo bridge doc: `docs/OBSIDIAN_HERDR_BRIDGE.md`

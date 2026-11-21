@@ -1,0 +1,36 @@
+---
+herdr-workspace: studex-ops
+---
+
+# GCP stack — Orgo replaced (ZTE-010 / ZTE-014)
+
+Runbook: `docs/GCP_SETUP.md`
+
+## Project + secrets
+
+- [ ] `GCP_PROJECT_ID` in lab-mesh.env only
+- [ ] Secret Manager: `shopify-admin` (no token in vault/git)
+- [ ] `./scripts/gcp-preflight.sh` PASS
+
+## Cloud Run
+
+- [ ] `./scripts/gcp-deploy-verify.sh` or CI equivalent
+- [ ] `STUDBOT_VERIFY_URL` in host env; Studbot unlock test PASS
+- [ ] DNS verify.* → managed cert
+
+## Dark Factory site
+
+- [ ] Firebase deploy `mission-control/factory/` → factory.* 200
+- [ ] No Paperclip on public LB
+
+## GCE workers (was Orgo)
+
+- [ ] VM `dark-factory` (or named) on tailnet
+- [ ] `gcp-dark-factory-vm-bootstrap.sh` + Hermes gateway
+- [ ] Paperclip external invite (private)
+- [ ] Codex capacity: N Herdr panes or N VMs — count in vault
+
+## Orgo
+
+- [ ] **Do not** provision new Orgo desktops for Studex
+- [ ] Migrate any still-running Orgo workloads to GCE before renewal

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "fleetName": "Studex Grokbots",
+  "pstackEntry": "/poteto-mode",
+  "pstackSetup": "/setup-pstack",
+  "bots": [
+    {
+      "id": "GROK-BUILD",
+      "name": "Buildbot",
+      "modelRole": "feature, refactoring",
+      "pstackPlaybooks": ["feature", "refactoring", "swarm"],
+      "owns": "Greenfield features and refactors",
+      "rhythm": "One intake item until verify passes"
+    },
+    {
+      "id": "GROK-FIX",
+      "name": "Patchbot",
+      "modelRole": "bug-fix",
+      "pstackPlaybooks": ["bug-fix", "tdd"],
+      "owns": "Repro-first fixes",
+      "rhythm": "Repro → fix → regression check"
+    },
+    {
+      "id": "GROK-PERF",
+      "name": "Perfbot",
+      "modelRole": "perf-issue",
+      "pstackPlaybooks": ["perf-issue", "benchmark-checklist"],
+      "owns": "Measured perf work only",
+      "rhythm": "Benchmark before/after"
+    },
+    {
+      "id": "GROK-ARCH",
+      "name": "Architect",
+      "modelRole": "architect runners",
+      "pstackPlaybooks": ["architect", "how", "why"],
+      "owns": "Types and boundaries before large diffs",
+      "rhythm": "Design note before code"
+    },
+    {
+      "id": "GROK-JUDGE",
+      "name": "Judge",
+      "modelRole": "interrogate reviewers",
+      "pstackPlaybooks": ["interrogate", "arena"],
+      "owns": "Adversarial review before merge",
+      "rhythm": "Panel on risky PRs"
+    },
+    {
+      "id": "GROK-SHIP",
+      "name": "Shipbot",
+      "modelRole": "hillclimb",
+      "pstackPlaybooks": ["overnight", "figure-it-out"],
+      "owns": "CI green, push, PR update",
+      "rhythm": "Land stack when verify is green"
+    }
+  ],
+  "policyGates": [
+    "nda_unsigned",
+    "production_secret",
+    "billing_spend"
+  ]
+}

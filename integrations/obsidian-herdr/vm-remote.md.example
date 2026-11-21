@@ -1,0 +1,31 @@
+---
+herdr-workspace: dark-factory
+---
+
+# VM (GCP / lab) — SSH, VNC, agents
+
+Runbook: `docs/LLM_MESH_BRIDGE.md` · `docs/STUDEX_FLEET_MESH.md`
+
+## Access (no public VNC)
+
+- [ ] Tailscale on VM; MagicDNS name in `LAB_HOST_*`
+- [ ] Prefer `tailscale ssh user@dark-factory` over open port 22
+- [ ] VNC only on tailnet or IAP tunnel — never 0.0.0.0:5900 on public IP
+- [ ] GCP: OS Login or serial console for break-glass
+
+## LLM + agents on VM
+
+- [ ] `ollama` (optional) + `omniroute` on VM
+- [ ] `herdr` + `hermes gateway`; `tailscale serve --bg 8642`
+- [ ] Obsidian checklist lives on **operator Mac**; socket forward if driving from Mac:
+
+```bash
+ssh -N -L /tmp/herdr-vm.sock:/home/you/.config/herdr/herdr.sock dark-factory
+```
+
+- [ ] Plugin socket path → `/tmp/herdr-vm.sock`
+
+## Verify
+
+- [ ] `./scripts/llm-mesh-preflight.sh` on VM
+- [ ] `./scripts/studex-fleet-connect.sh --soft-fail` from hub

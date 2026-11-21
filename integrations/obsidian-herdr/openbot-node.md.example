@@ -1,0 +1,32 @@
+---
+herdr-workspace: openbot
+---
+
+# OpenBot on this host — speak to agents
+
+Runbook: `docs/OPENBOT_NODE_MESH.md` · Download: https://openbot.run/
+
+Replace `HOSTNAME` with MagicDNS name (macbook-pro, msi-gpu, dark-factory, …).
+
+## Install
+
+- [ ] Install OpenBot (macOS / Windows / Linux AppImage) on **this** machine
+- [ ] Provider connected (Claude / Codex / Cursor — one minimum)
+- [ ] OmniRoute on localhost:20128; `OLLAMA_HOST` if GPU — `llm-mesh-preflight.sh` PASS
+- [ ] OpenBot model/base URL → `http://127.0.0.1:20128/v1` when using local route
+
+## Agents (this node)
+
+- [ ] Create 2–4 named agents (roles match hostname — factory agents only on Dark Factory)
+- [ ] Test handoff: Agent A → Agent B one task line from vault
+- [ ] Phone OpenBot app points at **this** desktop tailnet name (optional)
+
+## With Herdr (same box)
+
+- [ ] `herdr` running; separate workspace or pane for `claude`/`hermes`
+- [ ] OpenBot for exploratory chat; Obsidian **▶ next step** for committed checklists
+- [ ] No duplicate secrets — providers auth in OpenBot/OmniRoute UI only
+
+## Hostname
+
+- [ ] `HOSTNAME=____________` · `STUDEX_ROLE` in `lab-mesh.env`

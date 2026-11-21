@@ -1,0 +1,37 @@
+---
+herdr-workspace: studex-os
+---
+
+# Boot into Studex OS — Hermes + Herdr + agents (daily)
+
+Runbook: `docs/STUDEX_OPERATING_SYSTEM.md`
+
+## Mesh
+
+- [ ] Tailscale on (phone + hub + workers)
+- [ ] `npm run fleet:connect -- --soft-fail` on hub/dev Mac
+
+## Herdr + Obsidian
+
+- [ ] `herdr` running; plugin **ping** PASS
+- [ ] Today’s note open: `herdr/studex-ops.md` or `herdr/<this-machine>.md`
+- [ ] Panes: `hermes` and/or `claude` cwd = Portable-agents
+
+## Hermes + Paperclip
+
+- [ ] Mac Mini: Paperclip `http://macmini:3100` health
+- [ ] Hermes Lead on hub; gateways on MSI/VM if assigned
+- [ ] Phone: Hermes app; task_bridge if invited
+
+## Agents together (one task)
+
+- [ ] Paperclip task OR factory ZTE-* picked
+- [ ] Checklist line ▶ sent to pane
+- [ ] OpenBot handoff if two agents needed
+- [ ] Checkbox auto when idle
+
+## Close
+
+- [ ] `npm run factory:status`
+- [ ] `agent-work-archive.sh` → Stud-Bot-Depo
+- [ ] Optional: `planning-daily-report --slot pm`

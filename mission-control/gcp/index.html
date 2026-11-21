@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CC1 — GCP Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--obsidian:#0A0A0A;--panel:#111;--line:rgba(201,168,76,.18);--paper:#F5F1E8;--muted:#8A8578;--live:#4ADE80;--warn:#F2B035;
+--mono:'Space Mono',monospace;--display:'Bebas Neue',Impact,sans-serif}
+body{margin:0;background:var(--obsidian);color:var(--paper);font-family:var(--mono);font-size:13px}
+a{color:var(--gold)}.wrap{max-width:1100px;margin:0 auto;padding:28px}
+h1{font-family:var(--display);font-size:42px;letter-spacing:.08em;margin:16px 0}
+.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);padding:16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+th{color:var(--muted);font-size:9px;letter-spacing:.12em;text-transform:uppercase;text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="../hub/index.html">← Command Hub</a>
+  <h1>CC1 GCP</h1>
+  <p style="color:var(--muted);max-width:60ch">Platform + client pattern. Commerce stays on Shopify; APIs and client stacks on GCP.</p>
+
+  <table>
+    <thead><tr><th>Service</th><th>GCP</th><th>Runbook</th><th>Today</th></tr></thead>
+    <tbody>
+      <tr><td>studbot-verify</td><td>Cloud Run</td><td><a href="../../docs/DEPLOYMENT_PLAN.md">DEPLOYMENT_PLAN</a></td><td style="color:var(--warn)">ZTE-010</td></tr>
+      <tr><td>Dark Factory UI</td><td>Firebase / Run static</td><td>mission-control/factory/</td><td style="color:var(--warn)">deploy</td></tr>
+      <tr><td>Client pilot</td><td>Project client-*</td><td>Secret Manager</td><td style="color:var(--muted)">after CC0</td></tr>
+      <tr><td>Hermes intake</td><td>Cloud Run (later)</td><td><a href="../../docs/HERMES_INTAKE.md">Vercel now</a></td><td style="color:var(--muted)">optional</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card">
+    <h2 style="font-family:var(--display);color:var(--gold)">CHECKLIST</h2>
+    <p style="font-size:12px;color:#BDB8A8">Runbooks: <code>docs/GCP_SETUP.md</code> (Orgo replaced) · vault <code>gcp-stack.md.example</code>. No tokens in git.</p>
+    <p><a href="https://www.studexmeat.com">studexmeat.com</a> (Shopify) · verify API on GCP only</p>
+  </div>
+</div>
+</body>
+</html>

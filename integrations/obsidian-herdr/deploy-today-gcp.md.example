@@ -1,0 +1,34 @@
+---
+herdr-workspace: studex-ops
+---
+
+# Deploy today — GCP · Dark Factory · studexmeat.com (ZTE-010)
+
+Runbook: `docs/GCP_SETUP.md` + `docs/DEPLOYMENT_PLAN.md` (GCP replaces Orgo)
+
+## studexmeat.com (Shopify)
+
+- [ ] Domains: www primary, SSL green
+- [ ] Subscription selling plans on Tier 4 (and Studbot SKU if created)
+- [ ] GCP verify API live; `STUDBOT_VERIFY_URL` set in host env (not git)
+- [ ] Studbot unlock test with test subscriber email
+
+## GCP platform
+
+- [ ] Project + APIs enabled (Run, Secret Manager, Artifact Registry)
+- [ ] Secrets: Shopify admin token, webhook secret
+- [ ] Cloud Run `studbot-verify` deployed (africa-south1 or chosen region)
+- [ ] DNS: verify.* → Cloud Run managed cert
+
+## Dark Factory site
+
+- [ ] Static host: `mission-control/factory/` on Firebase or Cloud Run
+- [ ] Public URL 200 (factory.*)
+- [ ] VM worker: clone repo, lab-mesh.env, Hermes gateway + tailscale serve 8642 (if VM up)
+- [ ] Paperclip external invite for Dark Factory gateway (tailnet only)
+
+## Client template (first GCP client)
+
+- [ ] Separate project or folder named client-*
+- [ ] No production secrets in Portable-agents git
+- [ ] Document region + support contact in vault only
